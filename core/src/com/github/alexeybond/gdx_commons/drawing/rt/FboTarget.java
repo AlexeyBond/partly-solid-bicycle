@@ -1,6 +1,7 @@
 package com.github.alexeybond.gdx_commons.drawing.rt;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.github.alexeybond.gdx_commons.drawing.RenderTarget;
 
@@ -9,9 +10,11 @@ import com.github.alexeybond.gdx_commons.drawing.RenderTarget;
  */
 public class FboTarget implements RenderTarget {
     private final FrameBuffer fbo;
+    private final TextureRegion region = new TextureRegion();
 
     public FboTarget(FrameBuffer fbo) {
         this.fbo = fbo;
+        this.region.setRegion(0,0,fbo.getWidth(),fbo.getHeight());
     }
 
     @Override
@@ -25,8 +28,10 @@ public class FboTarget implements RenderTarget {
     }
 
     @Override
-    public Texture asColorTexture() {
-        return fbo.getColorBufferTexture();
+    public TextureRegion asColorTexture() {
+        // Texture may change on context invalidation
+        region.setTexture(fbo.getColorBufferTexture());
+        return region;
     }
 
     @Override

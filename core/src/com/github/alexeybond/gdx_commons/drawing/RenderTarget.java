@@ -1,6 +1,6 @@
 package com.github.alexeybond.gdx_commons.drawing;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * Render target representable as a texture.
@@ -19,7 +19,7 @@ public interface RenderTarget {
      */
     void end();
 
-    Texture asColorTexture();
+    TextureRegion asColorTexture();
 
     int width();
 

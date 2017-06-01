@@ -12,32 +12,36 @@ public class DrawingState {
     final ShapeRenderer shaper = new ShapeRenderer();
     InternalDrawingState state = InternalDrawingState.NONE;
 
-    SpriteBatch beginBatch() {
+    public SpriteBatch beginBatch() {
         return state.beginBatch(this);
     }
 
-    ShapeRenderer beginFilled() {
+    public ShapeRenderer beginFilled() {
         return state.beginFilled(this);
     }
 
-    ShapeRenderer beginLines() {
+    public ShapeRenderer beginLines() {
         return state.beginLines(this);
     }
 
-    ShapeRenderer beginPoints() {
+    public ShapeRenderer beginPoints() {
         return state.beginPoints(this);
     }
 
-    void flush() {
+    public void flush() {
         state.flush(this);
     }
 
-    void end() {
+    public void end() {
         state.end(this);
     }
 
-    void setProjection(Matrix4 matrix) {
+    public void setProjection(Matrix4 matrix) {
         batch.setProjectionMatrix(matrix);
         shaper.setProjectionMatrix(matrix);
+    }
+
+    public void getProjection(Matrix4 out) {
+        out.set(batch.getProjectionMatrix());
     }
 }

@@ -19,23 +19,26 @@ public class Scene {
         this.drawRunnable = technique.initFor(this);
     }
 
-    Pass getPass(String name) {
+    public Pass getPass(String name) {
         if (!passes.containsKey(name))
             throw new IllegalArgumentException("No pass named \"" + name + "\"");
         return passes.get(name);
     }
 
-    Pass addPass(String name, Pass pass) {
+    public Pass addPass(String name, Pass pass) {
         if (passes.containsKey(name))
             throw new IllegalArgumentException("There already is a pass named \"" + name + "\"");
         return pass;
     }
 
-    DrawingContext context() {
+    public DrawingContext context() {
         return this.drawingContext;
     }
 
-    void draw() {
+    public void draw() {
+        context().renderTo(context().getOutputTarget());
         drawRunnable.run();
+        context().state().flush();
+        context().renderTo((RenderTarget) null);
     }
 }

@@ -2,6 +2,7 @@ package com.github.alexeybond.gdx_commons.drawing;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Predicate;
 import com.github.alexeybond.gdx_commons.drawing.rt.FboTarget;
 
@@ -98,6 +99,13 @@ public class Technique {
     }
 
     /**
+     * Draw a pass again.
+     */
+    protected Runnable repeatPass(String name) {
+        return scene.getPass(name);
+    }
+
+    /**
      * Start drawing to some target.
      *
      * @param name    name of render target slot or {@code null} for output target
@@ -139,6 +147,46 @@ public class Technique {
             @Override
             public void run() {
                 slot1.swap(slot2);
+            }
+        };
+    }
+
+    /**
+     * Draw another scene to current target.
+     */
+    protected Runnable include(final Scene included) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                included.context().setOutputTarget(scene.context().getCurrentRenderTarget());
+                included.draw();
+            }
+        };
+    }
+
+    protected Runnable pushingProjection(final Runnable run) {
+        final Matrix4 projectionBackup = new Matrix4();
+        return new Runnable() {
+            @Override
+            public void run() {
+                DrawingState state = scene.context().state();
+                state.getProjection(projectionBackup);
+                run.run();
+                state.setProjection(projectionBackup);
+            }
+        };
+    }
+
+    protected Runnable withProjection(final ProjectionMode mode) {
+        final Matrix4 tmp = new Matrix4();
+
+        return new Runnable() {
+            @Override
+            public void run() {
+                DrawingContext context = scene.context();
+                RenderTarget target = context.getCurrentRenderTarget();
+                mode.setup(tmp, target.width(), target.height());
+                context.state().setProjection(tmp);
             }
         };
     }

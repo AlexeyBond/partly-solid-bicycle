@@ -33,11 +33,11 @@ public class Pass implements Runnable, Drawable {
         draw(defaultContext);
     }
 
-    void addDrawable(Drawable drawable) {
+    public void addDrawable(Drawable drawable) {
         drawables.add(drawable);
     }
 
-    void removeDrawable(Drawable drawable) {
+    public void removeDrawable(Drawable drawable) {
         drawables.remove(drawable);
     }
 }

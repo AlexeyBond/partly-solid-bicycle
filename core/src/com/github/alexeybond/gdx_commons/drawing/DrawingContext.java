@@ -59,6 +59,13 @@ public class DrawingContext {
     }
 
     /**
+     * {@link RenderTarget} everything in this context is being drawn currently.
+     */
+    public RenderTarget getCurrentRenderTarget() {
+        return currentRenderTarget;
+    }
+
+    /**
      * {@link RenderTarget} everything within this context will be drawn to.
      */
     public RenderTarget getOutputTarget() {

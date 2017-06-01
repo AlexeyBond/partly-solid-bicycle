@@ -2,6 +2,7 @@ package com.github.alexeybond.gdx_commons.drawing.rt;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.github.alexeybond.gdx_commons.drawing.RenderTarget;
 
 /**
@@ -21,7 +22,7 @@ public enum ScreenTarget implements RenderTarget {
     }
 
     @Override
-    public Texture asColorTexture() {
+    public TextureRegion asColorTexture() {
         throw new IllegalStateException("Cannot access screen target as texture.");
     }
 
