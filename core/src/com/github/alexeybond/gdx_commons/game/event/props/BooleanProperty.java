@@ -1,15 +1,12 @@
 package com.github.alexeybond.gdx_commons.game.event.props;
 
-import com.github.alexeybond.gdx_commons.game.event.Event;
-
 /**
  *
  */
-public class BooleanProperty<TInitiator> extends Event<TInitiator> {
+public class BooleanProperty<TInitiator> extends Property<TInitiator> {
     private boolean value;
 
     public BooleanProperty(boolean value) {
-        super(0);
         this.value = value;
     }
 
@@ -17,14 +14,11 @@ public class BooleanProperty<TInitiator> extends Event<TInitiator> {
         return value;
     }
 
-    public void set(TInitiator initiator, boolean value) {
-        if (this.value != value) {
-            this.value = value;
-            trigger(initiator);
-        }
+    public boolean set(TInitiator initiator, boolean value) {
+        return setSilently(value) && trigger(initiator);
     }
 
-    public boolean setSilent(boolean value) {
+    public boolean setSilently(boolean value) {
         if (value != this.value) {
             this.value = value;
             return true;
@@ -35,5 +29,9 @@ public class BooleanProperty<TInitiator> extends Event<TInitiator> {
 
     public static <T> BooleanProperty<T> make(boolean value) {
         return new BooleanProperty<T>(value);
+    }
+
+    public static <T> BooleanProperty<T> make() {
+        return make(false);
     }
 }

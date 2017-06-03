@@ -38,7 +38,11 @@ public class IterableParts<TOwner, T extends Part<TOwner>> implements AParts<TOw
 
     @Override
     public void add(String name, T part) {
+        parent.add(name, part);
 
+        if (part == parent.get(name)) {
+            iterationArray.add(part);
+        }
     }
 
     @Override

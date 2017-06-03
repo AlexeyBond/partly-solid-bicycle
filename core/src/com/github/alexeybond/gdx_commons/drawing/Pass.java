@@ -1,12 +1,14 @@
 package com.github.alexeybond.gdx_commons.drawing;
 
-import java.util.ArrayList;
+import com.badlogic.gdx.utils.Array;
 
 /**
  *
  */
 public class Pass implements Runnable, Drawable {
-    private final ArrayList<Drawable> drawables;
+    public static int DEFAULT_RESERVED_CAPACITY = 32;
+
+    private final Array<Drawable> drawables;
     private final DrawingContext defaultContext;
     private final PassController controller;
 
@@ -14,15 +16,15 @@ public class Pass implements Runnable, Drawable {
         this.defaultContext = defaultContext;
         this.controller = controller;
 
-        this.drawables = new ArrayList<Drawable>();
+        this.drawables = new Array<Drawable>(false, DEFAULT_RESERVED_CAPACITY);
     }
 
     @Override
     public void draw(DrawingContext context) {
         controller.beforePass(context);
-        for (int i = 0; i < drawables.size(); i++) {
+        for (int i = 0; i < drawables.size; i++) {
             controller.beforeItem(context);
-            drawables.get(i).draw(context);
+            drawables.items[i].draw(context);
             controller.afterItem(context);
         }
         controller.afterPass(context);
@@ -38,6 +40,6 @@ public class Pass implements Runnable, Drawable {
     }
 
     public void removeDrawable(Drawable drawable) {
-        drawables.remove(drawable);
+        drawables.removeValue(drawable, true);
     }
 }

@@ -17,6 +17,8 @@ import java.util.Arrays;
  *      // Trigger:
  *      event.trigger(initiator);
  * }</pre>
+ *
+ * @param <TInitiator> type of object initializing the event
  */
 public class Event<TInitiator> {
     private EventListener[] listeners;
@@ -67,13 +69,17 @@ public class Event<TInitiator> {
         return -1;
     }
 
-    public void trigger(TInitiator initiator) {
+    public boolean trigger(TInitiator initiator) {
+        boolean processed = false;
+
         for (int i = 0; i < listeners.length; i++) {
             EventListener listener = listeners[i];
 
             if (null != listener) {
-                listener.onTriggered(initiator, this);
+                processed = processed || listener.onTriggered(initiator, this);
             }
         }
+
+        return processed;
     }
 }

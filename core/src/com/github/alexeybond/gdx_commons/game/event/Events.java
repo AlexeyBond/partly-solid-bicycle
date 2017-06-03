@@ -20,12 +20,16 @@ public class Events<TInitiator> {
     }
 
     public <T extends Event<TInitiator>> T event(String name) {
-        T event = (T) events.get(name);
+        T event = nullableEvent(name);
 
         if (null == event) {
             throw new IllegalArgumentException("No such event: " + name);
         }
 
         return event;
+    }
+
+    public <T extends Event<TInitiator>> T nullableEvent(String name) {
+        return (T) events.get(name);
     }
 }
