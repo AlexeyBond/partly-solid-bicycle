@@ -28,6 +28,7 @@ public class Scene {
     public Pass addPass(String name, Pass pass) {
         if (passes.containsKey(name))
             throw new IllegalArgumentException("There already is a pass named \"" + name + "\"");
+        passes.put(name, pass);
         return pass;
     }
 

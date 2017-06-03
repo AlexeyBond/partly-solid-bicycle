@@ -24,7 +24,7 @@ public class Pass implements Runnable, Drawable {
         controller.beforePass(context);
         for (int i = 0; i < drawables.size; i++) {
             controller.beforeItem(context);
-            drawables.items[i].draw(context);
+            drawables.get(i).draw(context);
             controller.afterItem(context);
         }
         controller.afterPass(context);

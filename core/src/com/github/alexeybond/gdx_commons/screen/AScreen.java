@@ -63,22 +63,24 @@ public class AScreen {
     /**
      * @param front    {@code true} if layer should receive input events before all the previously added layers
      */
-    public final ALayer addLayer(ALayer layer, boolean front) {
+    public final <T extends ALayer> T addLayer(T layer, boolean front) {
         layers.add(layer);
         InputProcessor ip = layer.getInputProcessor();
         if (null != ip) inputMultiplexer.addProcessor(front ? 0 : inputMultiplexer.size(), ip);
         return layer;
     }
 
-    public final ALayer addLayerFront(ALayer layer) {
+    public final <T extends ALayer> T addLayerFront(T layer) {
         return addLayer(layer, true);
     }
 
-    public final ALayer addLayerBack(ALayer layer) {
+    public final <T extends ALayer> T addLayerBack(T layer) {
         return addLayer(layer, false);
     }
 
     public final void resize(int width, int height) {
+        mainViewport.update(width, height);
+
         for (int i = 0; i < layers.size; i++) {
         }
     }
@@ -86,7 +88,7 @@ public class AScreen {
     public void enter(AScreen after) {
         if (keepPrev() && prev == null) {
             this.prev = after;
-        } else {
+        } else if (null != after) {
             after.forget();
         }
     }

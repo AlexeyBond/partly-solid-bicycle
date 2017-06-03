@@ -20,7 +20,7 @@ public class ViewportTarget implements RenderTarget {
     @Override
     public void begin() {
         superTarget.begin();
-        viewport.apply();
+        viewport.apply(true);
     }
 
     @Override

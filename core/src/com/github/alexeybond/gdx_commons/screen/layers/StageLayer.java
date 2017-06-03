@@ -21,7 +21,7 @@ public class StageLayer extends ALayer {
      * @param screen      parent screen
      * @param passName    name of the pass when to draw the stage
      */
-    protected StageLayer(AScreen screen, String passName) {
+    public StageLayer(AScreen screen, String passName) {
         super(screen);
 
         stage = new Stage(screen.viewport(), screen.scene().context().state().beginBatch());
