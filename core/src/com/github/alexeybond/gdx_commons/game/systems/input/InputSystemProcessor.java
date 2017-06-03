@@ -73,7 +73,7 @@ public class InputSystemProcessor implements InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        return mousePos.set(system, screenX, screenY);
+        return mousePos.set(system, system.translateTouchCoordinates(mousePos.ref().set(screenX, screenY)));
     }
 
     @Override

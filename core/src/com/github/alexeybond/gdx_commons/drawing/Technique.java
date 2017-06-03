@@ -74,8 +74,8 @@ public class Technique {
                 RenderTarget out = scene.context().getOutputTarget();
 
                 if (out.width() != savedW || out.height() != savedH) {
-                    savedW = out.width();
-                    savedH = out.height();
+                    savedW = out.getPixelsWidth();
+                    savedH = out.getPixelsHeight();
                     return true;
                 }
 
@@ -229,8 +229,8 @@ public class Technique {
                     slots[i].set(new FboTarget(
                             new FrameBuffer(
                                     Pixmap.Format.RGBA8888,
-                                    out.width(),
-                                    out.height(),
+                                    out.getPixelsWidth(),
+                                    out.getPixelsHeight(),
                                     false)));
                 }
             }

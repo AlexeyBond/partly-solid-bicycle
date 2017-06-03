@@ -6,5 +6,5 @@ import com.badlogic.gdx.math.Matrix4;
  *
  */
 public interface ProjectionMode {
-    void setup(Matrix4 projectionMatrix, int targetWidth, int targetHeight);
+    void setup(Matrix4 projectionMatrix, float targetWidth, float targetHeight);
 }

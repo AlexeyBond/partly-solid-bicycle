@@ -1,7 +1,6 @@
 package com.github.alexeybond.gdx_commons.drawing.rt;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.github.alexeybond.gdx_commons.drawing.RenderTarget;
 
@@ -27,12 +26,22 @@ public enum ScreenTarget implements RenderTarget {
     }
 
     @Override
-    public int width() {
+    public float width() {
+        return getPixelsWidth();
+    }
+
+    @Override
+    public float height() {
+        return getPixelsWidth();
+    }
+
+    @Override
+    public int getPixelsWidth() {
         return Gdx.graphics.getWidth();
     }
 
     @Override
-    public int height() {
+    public int getPixelsHeight() {
         return Gdx.graphics.getHeight();
     }
 

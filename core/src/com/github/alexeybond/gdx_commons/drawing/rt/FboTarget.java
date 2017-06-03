@@ -1,6 +1,5 @@
 package com.github.alexeybond.gdx_commons.drawing.rt;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.github.alexeybond.gdx_commons.drawing.RenderTarget;
@@ -35,12 +34,22 @@ public class FboTarget implements RenderTarget {
     }
 
     @Override
-    public int width() {
+    public float width() {
+        return getPixelsWidth();
+    }
+
+    @Override
+    public float height() {
+        return getPixelsHeight();
+    }
+
+    @Override
+    public int getPixelsWidth() {
         return fbo.getWidth();
     }
 
     @Override
-    public int height() {
+    public int getPixelsHeight() {
         return fbo.getHeight();
     }
 

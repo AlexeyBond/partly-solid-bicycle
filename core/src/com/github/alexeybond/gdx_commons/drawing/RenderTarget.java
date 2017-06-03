@@ -21,9 +21,17 @@ public interface RenderTarget {
 
     TextureRegion asColorTexture();
 
-    int width();
+    /** @return (virtual) width of the target; may be different from actual size in pixels */
+    float width();
 
-    int height();
+    /** @return (virtual) height of the target; may be different from actual size in pixels */
+    float height();
+
+    /** @return (real) width of the target in pixels */
+    int getPixelsWidth();
+
+    /** @return (real) height of the target in pixels */
+    int getPixelsHeight();
 
     /**
      * Called by application when the target will no longer be used.

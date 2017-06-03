@@ -40,12 +40,22 @@ public class ViewportTarget implements RenderTarget {
     }
 
     @Override
-    public int width() {
+    public float width() {
+        return viewport.getWorldWidth();
+    }
+
+    @Override
+    public float height() {
+        return viewport.getWorldHeight();
+    }
+
+    @Override
+    public int getPixelsWidth() {
         return viewport.getScreenWidth();
     }
 
     @Override
-    public int height() {
+    public int getPixelsHeight() {
         return viewport.getScreenHeight();
     }
 
