@@ -1,4 +1,4 @@
-package com.github.alexeybond.gdx_gm2;
+package com.github.alexeybond.gdx_gm2.test_game;
 
 import com.github.alexeybond.gdx_commons.drawing.Technique;
 

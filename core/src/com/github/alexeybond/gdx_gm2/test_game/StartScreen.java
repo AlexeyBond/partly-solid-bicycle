@@ -1,4 +1,4 @@
-package com.github.alexeybond.gdx_gm2;
+package com.github.alexeybond.gdx_gm2.test_game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.github.alexeybond.gdx_commons.drawing.Drawable;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
-import com.github.alexeybond.gdx_commons.drawing.DrawingState;
 import com.github.alexeybond.gdx_commons.screen.AScreen;
 import com.github.alexeybond.gdx_commons.screen.layers.StageLayer;
 
@@ -18,8 +17,8 @@ import com.github.alexeybond.gdx_commons.screen.layers.StageLayer;
  *
  */
 public class StartScreen extends AScreen {
-    public StartScreen(DrawingState drawingState) {
-        super(drawingState, new UIScreenTechnique());
+    public StartScreen() {
+        super(new UIScreenTechnique());
 
         final Stage stage = addLayerFront(new StageLayer(this, "ui")).stage();
 
@@ -43,10 +42,21 @@ public class StartScreen extends AScreen {
             }
         });
 
+        TextButton textButton3 = new TextButton("EXIT", new TextButton.TextButtonStyle(
+                null, null, null, new BitmapFont()
+        ));
+        textButton3.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.exit();
+            }
+        });
+
         VerticalGroup group = new VerticalGroup();
 
         group.addActor(textButton1);
         group.addActor(textButton2);
+        group.addActor(textButton3);
 
         group.setFillParent(true);
         group.pad(50);

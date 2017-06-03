@@ -3,8 +3,15 @@ package com.github.alexeybond.gdx_commons.screen;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.github.alexeybond.gdx_commons.drawing.DrawingState;
+import com.github.alexeybond.gdx_commons.drawing.modules.GlobalDrawingState;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.ioc.IoCContext;
+import com.github.alexeybond.gdx_commons.ioc.Module;
+import com.github.alexeybond.gdx_commons.resource_management.modules.ResourceManagement;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  *
@@ -12,25 +19,28 @@ import com.github.alexeybond.gdx_commons.ioc.IoCContext;
 public abstract class Application implements ApplicationListener {
     private AScreen currentScreen;
     private IoCContext ioCContext;
+    private final ArrayList<Module> modules = new ArrayList<Module>();
 
-    private DrawingState drawingState;
-
-    protected abstract AScreen initialScreen();
-
-    protected DrawingState drawingState() {
-        return drawingState;
+    private static Collection<Module> getDefaultModules() {
+        return Arrays.asList(
+                new ResourceManagement(),
+                new GlobalDrawingState()
+        );
     }
+
+    protected abstract Collection<Module> getModules();
 
     @Override
     public void create() {
         ioCContext = new IoCContext();
         useContext();
 
-        drawingState = new DrawingState();
+        modules.addAll(getDefaultModules());
+        modules.addAll(getModules());
 
-        currentScreen = initialScreen();
-        currentScreen.enter(null);
-        currentScreen.resume();
+        for (Module module : modules) module.init();
+
+        enterScreen(IoC.<AScreen>resolve("initial screen"));
     }
 
     @Override
@@ -63,6 +73,12 @@ public abstract class Application implements ApplicationListener {
         useContext();
         currentScreen.leave(null);
         currentScreen.forget();
+
+        for (int i = modules.size() - 1; i >= 0; i--) {
+            modules.get(i).shutdown();
+        }
+
+        IoC.use(null);
     }
 
     private void nextScreen() {
@@ -71,10 +87,15 @@ public abstract class Application implements ApplicationListener {
         while ((next = currentScreen.next()) != null) {
             currentScreen.pause();
             currentScreen.leave(next);
-            next.enter(currentScreen);
-            next.resume();
-            next.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            enterScreen(next);
         }
+    }
+
+    private void enterScreen(AScreen screen) {
+        screen.enter(currentScreen);
+        currentScreen = screen;
+        screen.resume();
+        screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     private void useContext() {

@@ -9,13 +9,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.github.alexeybond.gdx_commons.ioc.Module;
 import com.github.alexeybond.gdx_commons.screen.AScreen;
 import com.github.alexeybond.gdx_commons.screen.Application;
+import com.github.alexeybond.gdx_gm2.test_game.InitialScreenModule;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 public class MyGdxGame extends Application {
     @Override
-    protected AScreen initialScreen() {
-        return new StartScreen(drawingState());
+    protected Collection<Module> getModules() {
+        return Arrays.<Module>asList(
+                new InitialScreenModule()
+        );
     }
 //    SpriteBatch batch;
 //    Texture img;

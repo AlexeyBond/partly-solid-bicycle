@@ -10,6 +10,7 @@ public class DesktopLauncher {
     public static void main(String[] arg) {
         IoC.init(new SingleContextHolder());
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.forceExit = false;
         new LwjglApplication(new MyGdxGame(), config);
     }
 }

@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.alexeybond.gdx_commons.drawing.*;
 import com.github.alexeybond.gdx_commons.drawing.rt.ScreenTarget;
 import com.github.alexeybond.gdx_commons.drawing.rt.ViewportTarget;
+import com.github.alexeybond.gdx_commons.ioc.IoC;
 
 /**
  *
@@ -24,7 +25,9 @@ public class AScreen {
     private Viewport mainViewport;
     private RenderTarget mainTarget;
 
-    public AScreen(DrawingState drawingState, Technique technique) {
+    public AScreen(Technique technique) {
+        DrawingState drawingState = IoC.resolve("drawing state");
+
         mainViewport = initViewport();
 
         mainTarget = new ViewportTarget(ScreenTarget.INSTANCE, mainViewport);
