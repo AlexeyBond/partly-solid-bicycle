@@ -70,6 +70,8 @@ public class Event<TInitiator> {
     }
 
     public boolean trigger(TInitiator initiator) {
+        if (null == listeners) return false;
+
         boolean processed = false;
 
         for (int i = 0; i < listeners.length; i++) {
