@@ -36,4 +36,9 @@ public class GameLayer extends ALayer {
     public InputProcessor getInputProcessor() {
         return game.systems().<InputSystem>get("input").inputProcessor();
     }
+
+    @Override
+    public void update(float dt) {
+        game.update(dt);
+    }
 }

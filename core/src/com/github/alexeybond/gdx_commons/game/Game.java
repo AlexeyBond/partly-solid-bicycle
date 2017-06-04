@@ -27,7 +27,7 @@ public class Game {
 
         try {
             for (int i = 0; i < systemsArray.size; i++) {
-                systemsArray.items[i].update(deltaTime);
+                systemsArray.get(i).update(deltaTime);
             }
         } finally {
             systems.endIterations();

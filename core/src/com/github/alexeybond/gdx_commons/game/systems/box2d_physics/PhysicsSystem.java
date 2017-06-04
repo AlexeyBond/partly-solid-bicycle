@@ -54,6 +54,8 @@ public class PhysicsSystem implements GameSystem, ContactListener {
 
     @Override
     public void update(float deltaTime) {
+        deltaTime = Math.min(deltaTime, 0.25f);
+
         float acc = timeAccumulator.get() + autoTimeScale.get() * deltaTime;
         float step = simulationStep.get();
         int pi = positionIterations.get(), vi = velocityIterations.get();

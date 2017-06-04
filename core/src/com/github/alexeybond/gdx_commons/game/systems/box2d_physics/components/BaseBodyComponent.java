@@ -1,8 +1,10 @@
 package com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Transform;
+import com.badlogic.gdx.physics.box2d.World;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.event.Event;
@@ -37,7 +39,8 @@ public abstract class BaseBodyComponent
     public void update() {
         Transform transform = body.getTransform();
         positionProp.set(this, transform.getPosition());
-        rotationProp.set(this, transform.getRotation()); // TODO:: Use body.getAngle()?, seems to be more efficient
+        rotationProp.set(this, MathUtils.radiansToDegrees * transform.getRotation());
+            // TODO:: Use body.getAngle()?, seems to be more efficient
     }
 
     @Override
@@ -79,6 +82,8 @@ public abstract class BaseBodyComponent
 
         positionSubIdx = positionProp.subscribe(this);
         rotationSubIdx = rotationProp.subscribe(this);
+
+        system.registerComponent(this);
     }
 
     @Override
@@ -96,7 +101,7 @@ public abstract class BaseBodyComponent
     public boolean onTriggered(Component o, Event<Component> event) {
         if (o == this) return false; // Avoid loop
 
-        body.setTransform(positionProp.ref(), rotationProp.get());
+        body.setTransform(positionProp.ref(), MathUtils.degreesToRadians * rotationProp.get());
 
         return true;
     }
@@ -109,5 +114,9 @@ public abstract class BaseBodyComponent
 
     public Body body() {
         return body;
+    }
+
+    protected World world() {
+        return system.world();
     }
 }
