@@ -2,8 +2,11 @@ package com.github.alexeybond.gdx_commons.resource_management.modules;
 
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Logger;
@@ -62,6 +65,22 @@ public class ResourceManagement implements Module {
         registerAssetTypeStrategies("skin", Skin.class, null);
         registerAssetTypeStrategies("sound", Sound.class, null);
         registerAssetTypeStrategies("particles", ParticleEffect.class, null);
+        registerAssetTypeStrategies("texture", Texture.class, null);
+
+        TextureLoader.TextureParameter loopTextureParameter = new TextureLoader.TextureParameter();
+        loopTextureParameter.wrapU = Texture.TextureWrap.Repeat;
+        loopTextureParameter.wrapV = Texture.TextureWrap.Repeat;
+        loopTextureParameter.minFilter = Texture.TextureFilter.Linear;
+        loopTextureParameter.magFilter = Texture.TextureFilter.Linear;
+        registerAssetTypeStrategies("texture loop", Texture.class, loopTextureParameter);
+
+        IoC.register("get texture region", new IoCStrategy() {
+            @Override
+            public Object resolve(Object... args) {
+                // TODO:: Implement texture/texture atlas management
+                return new TextureRegion(new Texture(args[0] + ".png"));
+            }
+        });
     }
 
     @Override

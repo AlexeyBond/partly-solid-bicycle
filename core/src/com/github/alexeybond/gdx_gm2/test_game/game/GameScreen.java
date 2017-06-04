@@ -1,6 +1,7 @@
 package com.github.alexeybond.gdx_gm2.test_game.game;
 
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,6 +20,7 @@ import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.D
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.StaticBoxBodyComponent;
 import com.github.alexeybond.gdx_commons.game.systems.input.InputSystem;
 import com.github.alexeybond.gdx_commons.game.systems.render.RenderSystem;
+import com.github.alexeybond.gdx_commons.game.systems.render.components.BackgroundLoopComponent;
 import com.github.alexeybond.gdx_commons.game.systems.render.components.OrthographicCameraComponent;
 import com.github.alexeybond.gdx_commons.game.systems.timing.TimingSystem;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
@@ -44,8 +46,14 @@ public class GameScreen extends AScreen {
         TimingSystem timingSystem = game.systems().get("timing");
 
         final Entity player = new Entity(game);
-        player.components().add("camera", new OrthographicCameraComponent("setup-main-camera"));
+        OrthographicCameraComponent cameraComponent = new OrthographicCameraComponent("setup-main-camera");
+        player.components().add("camera", cameraComponent);
         player.components().add("box", new DynamicBoxComponent());
+        player.components().add("background", BackgroundLoopComponent.withCamera(
+                "game-background",
+                IoC.<Texture>resolve("load texture loop", "old/space-gc/kosmosbg.png"),
+                cameraComponent.camera()
+        ));
 
         Entity thing = new Entity(game);
         thing.components().add("box", new DynamicBoxComponent());
