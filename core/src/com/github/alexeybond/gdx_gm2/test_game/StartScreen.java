@@ -5,13 +5,16 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.github.alexeybond.gdx_commons.drawing.Drawable;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
+import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.screen.AScreen;
 import com.github.alexeybond.gdx_commons.screen.layers.StageLayer;
+import com.github.alexeybond.gdx_gm2.test_game.game.GameScreen;
 
 /**
  *
@@ -20,21 +23,19 @@ public class StartScreen extends AScreen {
     public StartScreen() {
         super(new UIScreenTechnique());
 
+        Skin skin = IoC.resolve("load skin", "ui/uiskin.json");
+
         final Stage stage = addLayerFront(new StageLayer(this, "ui")).stage();
 
-        TextButton textButton1 = new TextButton("Button 1", new TextButton.TextButtonStyle(
-                null, null, null, new BitmapFont()
-        ));
+        TextButton textButton1 = new TextButton("NEW GAME", skin);
         textButton1.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("Pressed 1 !!!1!!");
+                goToGame();
             }
         });
 
-        TextButton textButton2 = new TextButton("Button 2", new TextButton.TextButtonStyle(
-                null, null, null, new BitmapFont()
-        ));
+        TextButton textButton2 = new TextButton("Button 2", skin);
         textButton2.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -42,9 +43,7 @@ public class StartScreen extends AScreen {
             }
         });
 
-        TextButton textButton3 = new TextButton("EXIT", new TextButton.TextButtonStyle(
-                null, null, null, new BitmapFont()
-        ));
+        TextButton textButton3 = new TextButton("EXIT", skin);
         textButton3.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -79,11 +78,17 @@ public class StartScreen extends AScreen {
                         context.getCurrentRenderTarget().height() - 20);
             }
         });
+
+        goToGame();
     }
 
     @Override
     public void draw() {
         super.draw();
-        Gdx.graphics.setTitle("Fps: " + Gdx.graphics.getFramesPerSecond());
+//        Gdx.graphics.setTitle("Fps: " + Gdx.graphics.getFramesPerSecond());
+    }
+
+    private void goToGame() {
+        next(new GameScreen());
     }
 }

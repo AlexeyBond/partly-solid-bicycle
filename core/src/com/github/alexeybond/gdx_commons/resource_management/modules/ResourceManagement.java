@@ -28,9 +28,7 @@ public class ResourceManagement implements Module {
                 try {
                     return assetManager.get(name, type);
                 } catch (GdxRuntimeException e) {
-                    log.info(
-                            "Loading asset synchronously (please preload it in release version): " + name,
-                            e);
+                    log.info("Loading asset synchronously (please preload it in release version): " + name);
                     assetManager.load(name, type, params);
                     assetManager.finishLoadingAsset(name);
                     return assetManager.get(name, type);

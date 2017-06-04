@@ -4,6 +4,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.systems.input.InputSystem;
 import com.github.alexeybond.gdx_commons.game.systems.render.RenderSystem;
+import com.github.alexeybond.gdx_commons.game.systems.timing.TimingSystem;
 import com.github.alexeybond.gdx_commons.screen.ALayer;
 import com.github.alexeybond.gdx_commons.screen.AScreen;
 
@@ -21,7 +22,12 @@ public class GameLayer extends ALayer {
         setupGameSubsystems(game);
     }
 
+    public Game game() {
+        return game;
+    }
+
     protected void setupGameSubsystems(Game game) {
+        game.systems().add("timing", new TimingSystem());
         game.systems().add("render", new RenderSystem(screen().scene()));
         game.systems().add("input", new InputSystem(screen().viewport()));
     }

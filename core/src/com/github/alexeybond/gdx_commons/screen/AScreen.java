@@ -97,6 +97,9 @@ public class AScreen {
     }
 
     public void leave(AScreen next) {
+        if (next == this.next) {
+            this.next = null;
+        }
     }
 
     public void forget() {
