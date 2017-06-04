@@ -34,4 +34,14 @@ public class IntProperty<TInitiator> extends Property<TInitiator> {
     public static <T> IntProperty<T> make() {
         return make(0);
     }
+
+    @Override
+    public String[] dump() {
+        return new String[] {String.valueOf(value)};
+    }
+
+    @Override
+    public void load(TInitiator initiator, String[] value) {
+        set(initiator, Integer.valueOf(value[0]));
+    }
 }

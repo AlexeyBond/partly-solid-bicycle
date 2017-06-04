@@ -32,4 +32,14 @@ public class FloatProperty<TInitiator> extends Property<TInitiator> {
     public static <T> FloatProperty<T> make() {
         return make(0);
     }
+
+    @Override
+    public String[] dump() {
+        return new String[] {String.valueOf(value)};
+    }
+
+    @Override
+    public void load(TInitiator initiator, String[] value) {
+        set(initiator, Float.valueOf(value[0]));
+    }
 }

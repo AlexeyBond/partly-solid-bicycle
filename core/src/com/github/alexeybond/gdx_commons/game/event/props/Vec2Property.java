@@ -20,6 +20,16 @@ public class Vec2Property <TInitiator> extends Property<TInitiator> {
         this(0,0);
     }
 
+    @Override
+    public String[] dump() {
+        return new String[] {String.valueOf(vector.x), String.valueOf(vector.y)};
+    }
+
+    @Override
+    public void load(TInitiator initiator, String[] value) {
+        set(initiator, Float.valueOf(value[0]), Float.valueOf(value[1]));
+    }
+
     public boolean set(TInitiator initiator, float x, float y) {
         this.vector.set(x, y);
         return trigger(initiator);
