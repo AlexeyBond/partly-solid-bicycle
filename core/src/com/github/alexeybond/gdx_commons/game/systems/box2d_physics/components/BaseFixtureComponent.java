@@ -5,6 +5,7 @@ import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.CollidablePhysicsComponent;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.CollisionData;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
 import com.github.alexeybond.gdx_commons.util.event.props.ObjectProperty;
 
 /**
@@ -48,7 +49,13 @@ public abstract class BaseFixtureComponent implements CollidablePhysicsComponent
 
     @Override
     public void onDisconnect(Entity entity) {
-        if (isAlive()) {
+        entity.game().systems().<PhysicsSystem>get("physics").disposeComponent(this);
+    }
+
+    @Override
+    public void dispose() {
+        // If parent is (going to be) destroyed then do nothing
+        if (parent().isAlive()) {
             bodyComponent.body().destroyFixture(fixture);
             fixture = null;
         }

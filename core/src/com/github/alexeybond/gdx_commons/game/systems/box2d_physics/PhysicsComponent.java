@@ -7,4 +7,5 @@ import com.github.alexeybond.gdx_commons.util.updatable.Updatable;
  *
  */
 public interface PhysicsComponent extends Component, Updatable {
+    void dispose();
 }

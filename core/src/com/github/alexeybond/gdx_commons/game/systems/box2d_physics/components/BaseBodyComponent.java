@@ -95,6 +95,14 @@ public abstract class BaseBodyComponent
 
         positionSubIdx = positionProp.unsubscribe(positionSubIdx);
         rotationSubIdx = rotationProp.unsubscribe(rotationSubIdx);
+
+        system.disposeComponent(this);
+    }
+
+    @Override
+    public void dispose() {
+        world().destroyBody(body);
+        body = null;
     }
 
     /**

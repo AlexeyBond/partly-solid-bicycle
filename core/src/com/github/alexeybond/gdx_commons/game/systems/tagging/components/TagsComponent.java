@@ -1,8 +1,10 @@
-package com.github.alexeybond.gdx_commons.game.systems.tagging;
+package com.github.alexeybond.gdx_commons.game.systems.tagging.components;
 
 import com.badlogic.gdx.utils.Array;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
+import com.github.alexeybond.gdx_commons.game.systems.tagging.TagGroup;
+import com.github.alexeybond.gdx_commons.game.systems.tagging.TaggingSystem;
 
 /**
  *

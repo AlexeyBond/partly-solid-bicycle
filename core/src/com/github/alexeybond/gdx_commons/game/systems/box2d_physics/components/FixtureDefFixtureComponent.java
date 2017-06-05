@@ -9,7 +9,10 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 public class FixtureDefFixtureComponent extends BaseFixtureComponent {
     private final FixtureDef fixtureDef;
 
-    protected FixtureDefFixtureComponent(String collisionBeginEventName, String collisionEndEventName, FixtureDef fixtureDef) {
+    public FixtureDefFixtureComponent(
+            String collisionBeginEventName,
+            String collisionEndEventName,
+            FixtureDef fixtureDef) {
         super(collisionBeginEventName, collisionEndEventName);
         this.fixtureDef = fixtureDef;
     }

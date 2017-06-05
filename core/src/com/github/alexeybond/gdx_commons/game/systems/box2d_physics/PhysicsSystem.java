@@ -10,6 +10,8 @@ import com.github.alexeybond.gdx_commons.util.event.props.IntProperty;
 import com.github.alexeybond.gdx_commons.util.updatable.UnorederedUpdateGroup;
 import com.github.alexeybond.gdx_commons.util.updatable.UpdateGroup;
 
+import java.util.ArrayList;
+
 /**
  *
  */
@@ -36,6 +38,17 @@ public class PhysicsSystem implements GameSystem, ContactListener {
     private UpdateGroup<PhysicsComponent> components
             = new UnorederedUpdateGroup<PhysicsComponent>(RESERVE_COMPONENTS_CAPACITY);
 
+    private boolean isUpdating = false;
+    private ArrayList<PhysicsComponent> disposeQueue = new ArrayList<PhysicsComponent>(16);
+
+    private void disposeEnqueued() {
+        for (int i = 0; i < disposeQueue.size(); i++) {
+            disposeQueue.get(i).dispose();
+        }
+
+        disposeQueue.clear();
+    }
+
     public Events<PhysicsSystem> events() {
         return events;
     }
@@ -58,17 +71,23 @@ public class PhysicsSystem implements GameSystem, ContactListener {
 
     @Override
     public void update(float deltaTime) {
+        disposeEnqueued();
+
         deltaTime = Math.min(deltaTime, 0.25f);
 
         float acc = timeAccumulator.get() + autoTimeScale.get() * deltaTime;
         float step = simulationStep.get();
         int pi = positionIterations.get(), vi = velocityIterations.get();
 
+        isUpdating = true;
+
         while (acc >= step) {
             world.step(step, vi, pi);
 
             acc -= step;
         }
+
+        isUpdating = false;
 
         timeAccumulator.set(this, acc);
 
@@ -133,5 +152,16 @@ public class PhysicsSystem implements GameSystem, ContactListener {
 
     public void registerComponent(PhysicsComponent component) {
         components.addItem(component);
+    }
+
+    /**
+     * Calls {@link PhysicsComponent#dispose()} immediately or later if world update is in progress.
+     */
+    public void disposeComponent(PhysicsComponent component) {
+        if (isUpdating) {
+            disposeQueue.add(component);
+        } else {
+            component.dispose();
+        }
     }
 }
