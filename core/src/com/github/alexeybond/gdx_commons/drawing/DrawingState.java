@@ -1,6 +1,6 @@
 package com.github.alexeybond.gdx_commons.drawing;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 
@@ -8,11 +8,16 @@ import com.badlogic.gdx.math.Matrix4;
  *
  */
 public class DrawingState {
-    final SpriteBatch batch = new SpriteBatch();
-    final ShapeRenderer shaper = new ShapeRenderer();
+    final Batch batch;
+    final ShapeRenderer shaper;
     InternalDrawingState state = InternalDrawingState.NONE;
 
-    public SpriteBatch beginBatch() {
+    public DrawingState(Batch batch, ShapeRenderer shaper) {
+        this.batch = batch;
+        this.shaper = shaper;
+    }
+
+    public Batch beginBatch() {
         return state.beginBatch(this);
     }
 

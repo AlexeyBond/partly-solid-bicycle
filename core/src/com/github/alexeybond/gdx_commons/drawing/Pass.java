@@ -12,6 +12,8 @@ public class Pass implements Runnable, Drawable {
     private final DrawingContext defaultContext;
     private final PassController controller;
 
+    private boolean enabled = true;
+
     public Pass(DrawingContext defaultContext, PassController controller) {
         this.defaultContext = defaultContext;
         this.controller = controller;
@@ -21,6 +23,8 @@ public class Pass implements Runnable, Drawable {
 
     @Override
     public void draw(DrawingContext context) {
+        if (!enabled) return;
+
         controller.beforePass(context);
         for (int i = 0; i < drawables.size; i++) {
             controller.beforeItem(context);
@@ -41,5 +45,13 @@ public class Pass implements Runnable, Drawable {
 
     public void removeDrawable(Drawable drawable) {
         drawables.removeValue(drawable, true);
+    }
+
+    public boolean enabled() {
+        return enabled;
+    }
+
+    public void enable(boolean enable) {
+        this.enabled = enable;
     }
 }

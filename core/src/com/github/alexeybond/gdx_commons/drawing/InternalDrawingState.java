@@ -1,5 +1,6 @@
 package com.github.alexeybond.gdx_commons.drawing;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -35,7 +36,7 @@ enum InternalDrawingState {
         }
 
         @Override
-        SpriteBatch beginBatch(DrawingState state) {
+        Batch beginBatch(DrawingState state) {
             return state.batch;
         }
 
@@ -90,7 +91,7 @@ enum InternalDrawingState {
         return state;
     }
 
-    SpriteBatch beginBatch(DrawingState state) {
+    Batch beginBatch(DrawingState state) {
         return changeState(state, BATCH).batch;
     }
 

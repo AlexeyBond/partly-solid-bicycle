@@ -2,6 +2,7 @@ package com.github.alexeybond.gdx_commons.drawing;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -41,5 +42,16 @@ public class Scene {
         drawRunnable.run();
         context().state().flush();
         context().renderTo((RenderTarget) null);
+    }
+
+    /**
+     * Enable/disable passes with names matching given pattern.
+     *
+     * Method uses regular expressions so do not call it very frequently.
+     */
+    public void enableMatching(Pattern pattern, boolean enable) {
+        for (Map.Entry<String, Pass> entry : passes.entrySet())
+            if (pattern.matcher(entry.getKey()).matches())
+                entry.getValue().enable(enable);
     }
 }
