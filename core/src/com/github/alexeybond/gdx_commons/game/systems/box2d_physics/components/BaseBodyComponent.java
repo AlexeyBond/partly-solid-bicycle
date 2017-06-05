@@ -7,11 +7,11 @@ import com.badlogic.gdx.physics.box2d.Transform;
 import com.badlogic.gdx.physics.box2d.World;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
-import com.github.alexeybond.gdx_commons.game.event.Event;
-import com.github.alexeybond.gdx_commons.game.event.EventListener;
-import com.github.alexeybond.gdx_commons.game.event.props.FloatProperty;
-import com.github.alexeybond.gdx_commons.game.event.props.ObjectProperty;
-import com.github.alexeybond.gdx_commons.game.event.props.Vec2Property;
+import com.github.alexeybond.gdx_commons.util.event.Event;
+import com.github.alexeybond.gdx_commons.util.event.EventListener;
+import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
+import com.github.alexeybond.gdx_commons.util.event.props.ObjectProperty;
+import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.CollidablePhysicsComponent;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
 

@@ -2,10 +2,11 @@ package com.github.alexeybond.gdx_commons.game.systems.input.components;
 
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
-import com.github.alexeybond.gdx_commons.game.event.Event;
-import com.github.alexeybond.gdx_commons.game.event.EventListener;
-import com.github.alexeybond.gdx_commons.game.event.props.BooleanProperty;
-import com.github.alexeybond.gdx_commons.game.event.props.ObjectProperty;
+import com.github.alexeybond.gdx_commons.input.InputEvents;
+import com.github.alexeybond.gdx_commons.util.event.Event;
+import com.github.alexeybond.gdx_commons.util.event.EventListener;
+import com.github.alexeybond.gdx_commons.util.event.props.BooleanProperty;
+import com.github.alexeybond.gdx_commons.util.event.props.ObjectProperty;
 import com.github.alexeybond.gdx_commons.game.systems.input.InputSystem;
 
 import java.util.Map;
@@ -26,7 +27,7 @@ import java.util.Map;
 public class KeyBindingsComponent implements Component {
     private class Binding implements EventListener {
         private String keyName, propertyName;
-        private BooleanProperty<InputSystem> keyEvent;
+        private BooleanProperty<InputEvents> keyEvent;
         private BooleanProperty<Component> entityEvent;
         private ObjectProperty<String, Component> bindingProperty;
         private int keySubIdx, bindSubIdx;
@@ -45,7 +46,7 @@ public class KeyBindingsComponent implements Component {
             bindSubIdx = bindingProperty.subscribe(this);
 
             // If there already was a binding property - use it's original value
-            bind0(inputSystem.keyEvent(bindingProperty.get()));
+            bind0(inputSystem.input().keyEvent(bindingProperty.get()));
         }
 
         /** Destroy the binding completely */
@@ -60,13 +61,13 @@ public class KeyBindingsComponent implements Component {
         }
 
         /** Subscribe to key event */
-        private void bind0(BooleanProperty<InputSystem> newKeyEvent) {
+        private void bind0(BooleanProperty<InputEvents> newKeyEvent) {
             keyEvent = newKeyEvent;
             keySubIdx = keyEvent.subscribe(this);
         }
 
         private void rebind(String keyName) {
-            BooleanProperty<InputSystem> newKeyEvent = inputSystem.keyEvent(keyName);
+            BooleanProperty<InputEvents> newKeyEvent = inputSystem.input().keyEvent(keyName);
             unbind0();
             bind0(newKeyEvent);
             this.keyName = keyName;

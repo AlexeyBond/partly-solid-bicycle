@@ -1,6 +1,6 @@
-package com.github.alexeybond.gdx_commons.game.event.props;
+package com.github.alexeybond.gdx_commons.util.event.props;
 
-import com.github.alexeybond.gdx_commons.game.event.Event;
+import com.github.alexeybond.gdx_commons.util.event.Event;
 
 /**
  * Property is an event source holding a value. The event happens when the value is changed.

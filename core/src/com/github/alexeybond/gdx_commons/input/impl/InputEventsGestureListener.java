@@ -1,19 +1,20 @@
-package com.github.alexeybond.gdx_commons.game.systems.input;
+package com.github.alexeybond.gdx_commons.input.impl;
 
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
-import com.github.alexeybond.gdx_commons.game.event.Events;
+import com.github.alexeybond.gdx_commons.input.InputEvents;
+import com.github.alexeybond.gdx_commons.util.event.Events;
 
 /**
  *
  */
-public class InputSystemGestureListener implements GestureDetector.GestureListener {
-    private final Events<InputSystem> events;
-    private final InputSystem system;
+class InputEventsGestureListener implements GestureDetector.GestureListener {
+    private final Events<InputEvents> events;
+    private final InputEvents owner;
 
-    public InputSystemGestureListener(Events<InputSystem> events, InputSystem system) {
+    public InputEventsGestureListener(Events<InputEvents> events, InputEvents owner) {
         this.events = events;
-        this.system = system;
+        this.owner = owner;
     }
 
     // TODO:: Add gesture input events

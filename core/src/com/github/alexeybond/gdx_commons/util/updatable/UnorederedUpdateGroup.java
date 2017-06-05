@@ -1,4 +1,4 @@
-package com.github.alexeybond.gdx_commons.game.updatable;
+package com.github.alexeybond.gdx_commons.util.updatable;
 
 import com.badlogic.gdx.utils.Array;
 

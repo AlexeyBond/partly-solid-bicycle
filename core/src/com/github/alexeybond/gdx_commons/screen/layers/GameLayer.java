@@ -29,12 +29,7 @@ public class GameLayer extends ALayer {
     protected void setupGameSubsystems(Game game) {
         game.systems().add("timing", new TimingSystem());
         game.systems().add("render", new RenderSystem(screen().scene()));
-        game.systems().add("input", new InputSystem(screen().viewport()));
-    }
-
-    @Override
-    public InputProcessor getInputProcessor() {
-        return game.systems().<InputSystem>get("input").inputProcessor();
+        game.systems().add("input", new InputSystem(screen().input().makeChild()));
     }
 
     @Override

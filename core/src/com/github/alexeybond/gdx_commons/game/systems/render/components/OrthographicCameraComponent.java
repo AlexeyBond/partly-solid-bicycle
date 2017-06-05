@@ -6,8 +6,8 @@ import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
 import com.github.alexeybond.gdx_commons.drawing.RenderTarget;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
-import com.github.alexeybond.gdx_commons.game.event.props.FloatProperty;
-import com.github.alexeybond.gdx_commons.game.event.props.Vec2Property;
+import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
+import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
 
 /**
  *

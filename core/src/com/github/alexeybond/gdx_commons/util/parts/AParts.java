@@ -1,4 +1,4 @@
-package com.github.alexeybond.gdx_commons.game.parts;
+package com.github.alexeybond.gdx_commons.util.parts;
 
 /**
  * Abstract collection of named parts of some composite object.

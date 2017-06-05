@@ -2,10 +2,10 @@ package com.github.alexeybond.gdx_commons.game.systems.timing;
 
 import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.GameSystem;
-import com.github.alexeybond.gdx_commons.game.event.Event;
-import com.github.alexeybond.gdx_commons.game.event.EventListener;
-import com.github.alexeybond.gdx_commons.game.event.Events;
-import com.github.alexeybond.gdx_commons.game.event.props.FloatProperty;
+import com.github.alexeybond.gdx_commons.util.event.Event;
+import com.github.alexeybond.gdx_commons.util.event.EventListener;
+import com.github.alexeybond.gdx_commons.util.event.Events;
+import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
 
 /**
  *

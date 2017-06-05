@@ -1,4 +1,4 @@
-package com.github.alexeybond.gdx_commons.game.event.props;
+package com.github.alexeybond.gdx_commons.util.event.props;
 
 import com.badlogic.gdx.math.Vector2;
 

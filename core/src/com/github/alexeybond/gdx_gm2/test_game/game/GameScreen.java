@@ -1,5 +1,6 @@
 package com.github.alexeybond.gdx_gm2.test_game.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -14,7 +15,10 @@ import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.Game;
-import com.github.alexeybond.gdx_commons.game.event.props.Vec2Property;
+import com.github.alexeybond.gdx_commons.input.InputEvents;
+import com.github.alexeybond.gdx_commons.util.event.Event;
+import com.github.alexeybond.gdx_commons.util.event.EventListener;
+import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.DynamicBoxComponent;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.StaticBoxBodyComponent;

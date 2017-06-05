@@ -1,4 +1,4 @@
-package com.github.alexeybond.gdx_commons.game.updatable;
+package com.github.alexeybond.gdx_commons.util.updatable;
 
 /**
  * Interface for things that have a method ({@link #update()}) that should be called periodically (probably

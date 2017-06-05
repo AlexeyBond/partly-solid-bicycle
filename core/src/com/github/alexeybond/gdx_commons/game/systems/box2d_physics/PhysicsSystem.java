@@ -4,11 +4,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.GameSystem;
-import com.github.alexeybond.gdx_commons.game.event.Events;
-import com.github.alexeybond.gdx_commons.game.event.props.FloatProperty;
-import com.github.alexeybond.gdx_commons.game.event.props.IntProperty;
-import com.github.alexeybond.gdx_commons.game.updatable.UnorederedUpdateGroup;
-import com.github.alexeybond.gdx_commons.game.updatable.UpdateGroup;
+import com.github.alexeybond.gdx_commons.util.event.Events;
+import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
+import com.github.alexeybond.gdx_commons.util.event.props.IntProperty;
+import com.github.alexeybond.gdx_commons.util.updatable.UnorederedUpdateGroup;
+import com.github.alexeybond.gdx_commons.util.updatable.UpdateGroup;
 
 /**
  *

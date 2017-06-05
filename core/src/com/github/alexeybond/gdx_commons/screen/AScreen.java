@@ -9,6 +9,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.alexeybond.gdx_commons.drawing.*;
 import com.github.alexeybond.gdx_commons.drawing.rt.ScreenTarget;
 import com.github.alexeybond.gdx_commons.drawing.rt.ViewportTarget;
+import com.github.alexeybond.gdx_commons.input.InputEvents;
+import com.github.alexeybond.gdx_commons.input.impl.InputEventsImpl;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 
 /**
@@ -21,6 +23,7 @@ public class AScreen {
     private final Array<ALayer> layers = new Array<ALayer>(false, 4);
     private final Scene scene;
     private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
+    private final InputEvents inputEvents;
 
     private Viewport mainViewport;
     private RenderTarget mainTarget;
@@ -31,6 +34,10 @@ public class AScreen {
         mainViewport = initViewport();
 
         mainTarget = new ViewportTarget(ScreenTarget.INSTANCE, mainViewport);
+
+        inputEvents = new InputEventsImpl(mainViewport);
+        inputMultiplexer.addProcessor(inputEvents.inputProcessor());
+        inputEvents.enable();
 
         this.scene = new Scene(new DrawingContext(drawingState, mainTarget), technique);
     }
@@ -49,6 +56,10 @@ public class AScreen {
 
     public final Viewport viewport() {
         return mainViewport;
+    }
+
+    public final InputEvents input() {
+        return inputEvents;
     }
 
     public void next(AScreen next) {

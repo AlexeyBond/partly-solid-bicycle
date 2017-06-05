@@ -1,4 +1,4 @@
-package com.github.alexeybond.gdx_commons.game.event;
+package com.github.alexeybond.gdx_commons.util.event;
 
 /**
  *
