@@ -32,6 +32,8 @@ public class ControlledAttractor implements Component {
         attractorControl = entity.events().event("attractorControl", BooleanProperty.<Component>make());
         attractorEnabled = entity.events().event("attractorEnabled", BooleanProperty.<Component>make(false));
 
+        entity.events().event("attractorEnabled", BooleanProperty.<Component>make(false));
+
         fuelProperty = entity.events().event("fuel", FloatProperty.<Component>make());
         fuelConsumptionProperty = entity.events().event("attractorFuelConsumption", FloatProperty.<Component>make(2));
 

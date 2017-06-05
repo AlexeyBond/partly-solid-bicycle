@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.github.alexeybond.gdx_commons.drawing.DrawingState;
 import com.github.alexeybond.gdx_commons.drawing.modules.GlobalDrawingState;
+import com.github.alexeybond.gdx_commons.drawing.modules.GlobalParticlePool;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.ioc.IoCContext;
 import com.github.alexeybond.gdx_commons.ioc.Module;
@@ -24,7 +25,8 @@ public abstract class Application implements ApplicationListener {
     private static Collection<Module> getDefaultModules() {
         return Arrays.asList(
                 new ResourceManagement(),
-                new GlobalDrawingState()
+                new GlobalDrawingState(),
+                new GlobalParticlePool()
         );
     }
 

@@ -2,6 +2,7 @@ package com.github.alexeybond.gdx_gm2.test_game.game;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -21,17 +22,21 @@ import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.S
 import com.github.alexeybond.gdx_commons.game.systems.input.InputSystem;
 import com.github.alexeybond.gdx_commons.game.systems.input.components.KeyBindingsComponent;
 import com.github.alexeybond.gdx_commons.game.systems.render.RenderSystem;
+import com.github.alexeybond.gdx_commons.game.systems.render.components.AttachedContinuousParticleEffect;
 import com.github.alexeybond.gdx_commons.game.systems.render.components.BackgroundLoopComponent;
 import com.github.alexeybond.gdx_commons.game.systems.render.components.OrthographicCameraComponent;
 import com.github.alexeybond.gdx_commons.game.systems.render.components.StaticSpriteComponent;
 import com.github.alexeybond.gdx_commons.game.systems.tagging.TaggingSystem;
 import com.github.alexeybond.gdx_commons.game.systems.tagging.components.SingleTagComponent;
 import com.github.alexeybond.gdx_commons.game.systems.timing.TimingSystem;
+import com.github.alexeybond.gdx_commons.input.InputEvents;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.screen.AScreen;
 import com.github.alexeybond.gdx_commons.screen.layers.GameLayer;
 import com.github.alexeybond.gdx_commons.screen.layers.StageLayer;
+import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
+import com.github.alexeybond.gdx_commons.util.event.props.BooleanProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
 import com.github.alexeybond.gdx_gm2.test_game.game.components.ControlledAttractor;
@@ -40,6 +45,7 @@ import com.github.alexeybond.gdx_gm2.test_game.game.components.SpaceshipCollecto
 import com.github.alexeybond.gdx_gm2.test_game.game.components.SpaceshipEngines;
 
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -81,11 +87,29 @@ public class GameScreen extends AScreen {
                 cameraComponent.camera()
         ));
         player.components().add("tag:player", new SingleTagComponent("player"));
+        player.components().add("engines", new SpaceshipEngines());
         player.components().add("sprite", new StaticSpriteComponent(
                 "game-objects",
                 "old/space-gc/256x256spaceship_1"
         ));
-        player.components().add("engines", new SpaceshipEngines());
+        player.components().add("leftEngineParticles", new AttachedContinuousParticleEffect(
+                "game-particles",
+                "particles/spaceship-engine.p",
+                new Vector2(-100,-70), -90f,
+                "leftEngineEnabled"
+        ));
+        player.components().add("rightEngineParticles", new AttachedContinuousParticleEffect(
+                "game-particles",
+                "particles/spaceship-engine.p",
+                new Vector2(95,-70), -90f,
+                "rightEngineEnabled"
+        ));
+        player.components().add("attractorParticles", new AttachedContinuousParticleEffect(
+                "game-particles",
+                "particles/spaceship-attractor.p",
+                new Vector2(0, 440), -90f,
+                "attractorEnabled"
+        ));
         player.components().add("keyboardInput", new KeyBindingsComponent(new HashMap<String, String>() {{
             put("rightEngineControl", "X");
             put("leftEngineControl", "Z");
@@ -118,7 +142,7 @@ public class GameScreen extends AScreen {
         });
 
         // --------------------  UI SETUP  --------------------
-        Stage uiStage = addLayerFront(new StageLayer(this, "ui")).stage();
+        final Stage uiStage = addLayerFront(new StageLayer(this, "ui")).stage();
         uiStage.setDebugAll(true);
         Skin skin = IoC.resolve("load skin", "ui/uiskin.json");
 
@@ -140,6 +164,25 @@ public class GameScreen extends AScreen {
             @Override
             public boolean onTriggered(Component component, FloatProperty<Component> event) {
                 progressBar.setValue(event.get());
+                return true;
+            }
+        });
+
+        input().keyEvent("`").subscribe(new EventListener<InputEvents, BooleanProperty<InputEvents>>() {
+            boolean debug = false;
+
+            private void set() {
+                scene().enableMatching(Pattern.compile(".*debug.*"), debug);
+                uiStage.setDebugAll(debug);
+            }
+
+            {set();}
+
+            @Override
+            public boolean onTriggered(InputEvents inputEvents, BooleanProperty<InputEvents> event) {
+                if (event.get()) return false;
+                debug = !debug;
+                set();
                 return true;
             }
         });

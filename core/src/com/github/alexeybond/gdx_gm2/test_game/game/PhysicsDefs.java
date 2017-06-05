@@ -35,8 +35,8 @@ public class PhysicsDefs {
         PolygonShape shape = new PolygonShape();
         shape.set(new float[] {
                 -64, 0,
-                -256, 348,
-                256, 348,
+                -256, 512,
+                256, 512,
                 64, 0
         });
 

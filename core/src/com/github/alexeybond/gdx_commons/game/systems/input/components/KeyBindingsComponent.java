@@ -64,6 +64,7 @@ public class KeyBindingsComponent implements Component {
         private void bind0(BooleanProperty<InputEvents> newKeyEvent) {
             keyEvent = newKeyEvent;
             keySubIdx = keyEvent.subscribe(this);
+            entityEvent.set(KeyBindingsComponent.this, keyEvent.get());
         }
 
         private void rebind(String keyName) {

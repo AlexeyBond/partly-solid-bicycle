@@ -58,6 +58,8 @@ public class Event<TInitiator> {
             }
         } while (null != listeners[freeSlotPointer]);
 
+        --freeSlotCount;
+
         listeners[freeSlotPointer] = listener;
 
         return freeSlotPointer++;

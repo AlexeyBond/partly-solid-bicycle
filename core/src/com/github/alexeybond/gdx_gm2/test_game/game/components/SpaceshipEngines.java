@@ -89,7 +89,7 @@ public class SpaceshipEngines
             return false;
         } else {
             rightEngineEnabled.set(this, rightEngineControl.get());
-            leftEngineEnabled.set(this, leftEngineEnabled.get());
+            leftEngineEnabled.set(this, leftEngineControl.get());
         }
 
         Body body = bodyComponent.body();

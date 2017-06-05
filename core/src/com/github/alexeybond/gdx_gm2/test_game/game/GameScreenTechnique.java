@@ -16,6 +16,7 @@ public class GameScreenTechnique extends Technique {
                 pushingProjection(seq(
                         pass("setup-main-camera"),
                         pass("game-objects"),
+                        pass("game-particles"),
                         pass("game-debug")
                 )),
                 pass("ui")
