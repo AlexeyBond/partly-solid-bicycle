@@ -1,6 +1,5 @@
 package com.github.alexeybond.gdx_commons.game.systems.box2d_physics;
 
-import com.badlogic.gdx.physics.box2d.Contact;
 import com.github.alexeybond.gdx_commons.game.Entity;
 
 /**
@@ -14,7 +13,7 @@ public interface CollidablePhysicsComponent extends PhysicsComponent {
      */
     Entity entity();
 
-    void onBeginCollision(CollidablePhysicsComponent with, Contact contact, boolean isB);
+    void onBeginCollision(CollisionData collision);
 
-    void onEndCollision(CollidablePhysicsComponent with, Contact contact, boolean isB);
+    void onEndCollision(CollisionData collision);
 }

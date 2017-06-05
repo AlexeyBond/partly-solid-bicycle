@@ -14,6 +14,10 @@ import com.github.alexeybond.gdx_commons.util.updatable.UpdateGroup;
  *
  */
 public class PhysicsSystem implements GameSystem, ContactListener {
+    static {
+        Box2D.init();
+    }
+
     public static int RESERVE_COMPONENTS_CAPACITY = 32;
 
     private final Events<PhysicsSystem> events = new Events<PhysicsSystem>();
@@ -85,20 +89,35 @@ public class PhysicsSystem implements GameSystem, ContactListener {
     }
 
     private CollidablePhysicsComponent[] tmpComponents = new CollidablePhysicsComponent[2];
+    private final CollisionData collisionData = new CollisionData();
 
     @Override
     public void beginContact(Contact contact) {
         if (getContactingComponents(tmpComponents, contact)) {
-            tmpComponents[0].onBeginCollision(tmpComponents[1], contact, false);
-            tmpComponents[1].onBeginCollision(tmpComponents[0], contact, true);
+            collisionData.contact = contact;
+
+            collisionData.isContactB = false;
+            collisionData.that = tmpComponents[1];
+            tmpComponents[0].onBeginCollision(collisionData);
+
+            collisionData.isContactB = true;
+            collisionData.that = tmpComponents[0];
+            tmpComponents[1].onBeginCollision(collisionData);
         }
     }
 
     @Override
     public void endContact(Contact contact) {
         if (getContactingComponents(tmpComponents, contact)) {
-            tmpComponents[0].onEndCollision(tmpComponents[1], contact, false);
-            tmpComponents[1].onEndCollision(tmpComponents[0], contact, true);
+            collisionData.contact = contact;
+
+            collisionData.isContactB = false;
+            collisionData.that = tmpComponents[1];
+            tmpComponents[0].onEndCollision(collisionData);
+
+            collisionData.isContactB = true;
+            collisionData.that = tmpComponents[0];
+            tmpComponents[1].onEndCollision(collisionData);
         }
     }
 

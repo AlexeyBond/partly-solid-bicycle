@@ -2,11 +2,11 @@ package com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Transform;
 import com.badlogic.gdx.physics.box2d.World;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.CollisionData;
 import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
@@ -28,8 +28,8 @@ public abstract class BaseBodyComponent
 
     private int positionSubIdx, rotationSubIdx;
 
-    private ObjectProperty<Entity, Component> collisionStartEntityProp;
-    private ObjectProperty<Entity, Component> collisionEndEntityProp;
+    private ObjectProperty<CollisionData, Component> collisionBeginProp;
+    private ObjectProperty<CollisionData, Component> collisionEndProp;
 
     private Body body;
 
@@ -54,15 +54,15 @@ public abstract class BaseBodyComponent
     }
 
     @Override
-    public void onBeginCollision(CollidablePhysicsComponent with, Contact contact, boolean isB) {
-        collisionStartEntityProp.setSilently(with.entity());
-        collisionStartEntityProp.trigger(this);
+    public void onBeginCollision(CollisionData collision) {
+        collisionBeginProp.setSilently(collision);
+        collisionBeginProp.trigger(this);
     }
 
     @Override
-    public void onEndCollision(CollidablePhysicsComponent with, Contact contact, boolean isB) {
-        collisionEndEntityProp.setSilently(with.entity());
-        collisionEndEntityProp.trigger(this);
+    public void onEndCollision(CollisionData collision) {
+        collisionEndProp.setSilently(collision);
+        collisionEndProp.trigger(this);
     }
 
     @Override
@@ -70,6 +70,7 @@ public abstract class BaseBodyComponent
         system = entity.game().systems().get("physics");
 
         body = createBody();
+        body.setUserData(this);
 
         this.entity = entity;
         this.alive = true;
@@ -77,8 +78,10 @@ public abstract class BaseBodyComponent
         positionProp = entity.events().event("position", Vec2Property.<Component>make());
         rotationProp = entity.events().event("rotation", FloatProperty.<Component>make());
 
-        collisionStartEntityProp = entity.events().event("collisionStart", ObjectProperty.<Entity, Component>make());
-        collisionEndEntityProp = entity.events().event("collisionEnd", ObjectProperty.<Entity, Component>make());
+        collisionBeginProp = entity.events()
+                .event("collisionBegin", ObjectProperty.<CollisionData, Component>make());
+        collisionEndProp = entity.events()
+                .event("collisionEnd", ObjectProperty.<CollisionData, Component>make());
 
         positionSubIdx = positionProp.subscribe(this);
         rotationSubIdx = rotationProp.subscribe(this);
