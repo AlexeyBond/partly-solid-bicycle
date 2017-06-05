@@ -48,13 +48,15 @@ public class Event<TInitiator> {
             }
         }
 
-        while (listeners[freeSlotPointer] != null) {
+        --freeSlotPointer;
+
+        do {
+            ++freeSlotPointer;
+
             if (freeSlotPointer >= listeners.length) {
                 freeSlotPointer = 0;
             }
-
-            freeSlotPointer++;
-        }
+        } while (null != listeners[freeSlotPointer]);
 
         listeners[freeSlotPointer] = listener;
 
@@ -78,7 +80,8 @@ public class Event<TInitiator> {
             EventListener listener = listeners[i];
 
             if (null != listener) {
-                processed = processed || listener.onTriggered(initiator, this);
+                boolean processedInt = listener.onTriggered(initiator, this);
+                processed = processed || processedInt;
             }
         }
 

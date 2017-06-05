@@ -28,4 +28,20 @@ public class PhysicsDefs {
         spaceshipTriggerFixture.density = 0;
         spaceshipTriggerFixture.isSensor = true;
     }
+
+    public FixtureDef spaceshipAttractorTrigger = new FixtureDef();
+
+    {
+        PolygonShape shape = new PolygonShape();
+        shape.set(new float[] {
+                -64, 0,
+                -256, 348,
+                256, 348,
+                64, 0
+        });
+
+        spaceshipAttractorTrigger.shape = shape;
+        spaceshipAttractorTrigger.density = 0;
+        spaceshipAttractorTrigger.isSensor = true;
+    }
 }

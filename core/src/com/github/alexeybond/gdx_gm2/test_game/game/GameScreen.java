@@ -34,6 +34,7 @@ import com.github.alexeybond.gdx_commons.screen.layers.StageLayer;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
+import com.github.alexeybond.gdx_gm2.test_game.game.components.ControlledAttractor;
 import com.github.alexeybond.gdx_gm2.test_game.game.components.FuelItem;
 import com.github.alexeybond.gdx_gm2.test_game.game.components.SpaceshipCollector;
 import com.github.alexeybond.gdx_gm2.test_game.game.components.SpaceshipEngines;
@@ -70,6 +71,10 @@ public class GameScreen extends AScreen {
                 new FixtureDefFixtureComponent(
                         "collectorHitStart", "collectorHitEnd", physicsDefs.spaceshipTriggerFixture));
         player.components().add("collector", new SpaceshipCollector());
+        player.components().add("attractorTrigger",
+                new FixtureDefFixtureComponent(
+                        "attractorHitBegin", "attractorHitEnd", physicsDefs.spaceshipAttractorTrigger));
+        player.components().add("attractorController", new ControlledAttractor());
         player.components().add("background", BackgroundLoopComponent.withCamera(
                 "game-background",
                 IoC.<Texture>resolve("load texture loop", "old/space-gc/kosmosbg.png"),
@@ -84,17 +89,19 @@ public class GameScreen extends AScreen {
         player.components().add("keyboardInput", new KeyBindingsComponent(new HashMap<String, String>() {{
             put("rightEngineControl", "X");
             put("leftEngineControl", "Z");
+            put("attractorControl", "S");
         }}));
 
         player.events().<FloatProperty<Component>>event("fuel").set(null, 100);
+        player.events().<FloatProperty<Component>>event("zoom").set(null, .5f);
 
         Entity thing = new Entity(game);
-        thing.components().add("box", new DynamicBoxComponent());
+        thing.components().add("body", new DynamicBoxComponent());
         thing.components().add("fuel", new FuelItem(10));
         thing.events().<Vec2Property<Component>>event("position").set(null, 230, 400);
 
         Entity thing2 = new Entity(game);
-        thing2.components().add("box", new StaticBoxBodyComponent());
+        thing2.components().add("body", new StaticBoxBodyComponent());
         thing2.components().add("fuel", new FuelItem(10));
         thing2.events().<Vec2Property<Component>>event("position").set(null, 180, -256);
 

@@ -21,7 +21,7 @@ public class DynamicBoxComponent extends BaseBodyComponent {
 
         FixtureDef fixtureDef = new FixtureDef();
 
-        fixtureDef.density = 0.01f;
+        fixtureDef.density = 0.001f;
 
         PolygonShape shape = new PolygonShape();
 
