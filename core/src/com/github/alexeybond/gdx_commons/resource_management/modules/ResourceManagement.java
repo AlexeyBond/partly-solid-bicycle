@@ -78,7 +78,7 @@ public class ResourceManagement implements Module {
             @Override
             public Object resolve(Object... args) {
                 // TODO:: Implement texture/texture atlas management
-                return new TextureRegion(new Texture(args[0] + ".png"));
+                return new TextureRegion(IoC.<Texture>resolve("load texture", args[0] + ".png"));
             }
         });
     }

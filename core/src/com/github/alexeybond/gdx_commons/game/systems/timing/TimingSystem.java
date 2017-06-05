@@ -5,12 +5,13 @@ import com.github.alexeybond.gdx_commons.game.GameSystem;
 import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
 import com.github.alexeybond.gdx_commons.util.event.Events;
+import com.github.alexeybond.gdx_commons.util.event.EventsOwner;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
 
 /**
  *
  */
-public class TimingSystem implements GameSystem {
+public class TimingSystem implements GameSystem, EventsOwner<TimingSystem> {
     private Events<TimingSystem> events = new Events<TimingSystem>();
     private FloatProperty<TimingSystem> timeProp
             = events.event("time", FloatProperty.<TimingSystem>make(0));
@@ -32,6 +33,11 @@ public class TimingSystem implements GameSystem {
         float virtualDelta = deltaTime * timeScaleProp.get();
         deltaTimeProp.set(this, virtualDelta);
         timeProp.set(this, timeProp.get() + virtualDelta);
+    }
+
+    @Override
+    public Events<TimingSystem> events() {
+        return events;
     }
 
     private static class ScheduleListener<T extends Event<TimingSystem>>
