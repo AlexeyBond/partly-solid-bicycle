@@ -26,4 +26,5 @@ public class FixtureDefFixtureComponent extends BaseFixtureComponent {
     protected Fixture createFixture() {
         return parent().body().createFixture(fixtureDef);
     }
+
 }

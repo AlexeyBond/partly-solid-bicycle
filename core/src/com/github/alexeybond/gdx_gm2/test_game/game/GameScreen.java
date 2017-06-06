@@ -1,5 +1,6 @@
 package com.github.alexeybond.gdx_gm2.test_game.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -9,11 +10,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Json;
 import com.github.alexeybond.gdx_commons.drawing.Drawable;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.Game;
+import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.DynamicBoxComponent;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.EmptyBodyComponent;
@@ -128,6 +131,12 @@ public class GameScreen extends AScreen {
         thing2.components().add("body", new StaticBoxBodyComponent());
         thing2.components().add("fuel", new FuelItem(10));
         thing2.events().<Vec2Property<Component>>event("position").set(null, 180, -256);
+
+        Json json = new Json();
+        GameDeclaration gameDeclaration = json.fromJson(
+                GameDeclaration.class,
+                Gdx.files.internal("old/space-gc/game.json"));
+        gameDeclaration.apply(game);
 
 //        physicsSystem.world().setGravity(new Vector2(0, -10));
 

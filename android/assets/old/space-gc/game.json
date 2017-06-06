@@ -1,0 +1,19 @@
+{
+  "classes": {},
+  "entities": [
+    {
+      "components": {
+        "body": {
+          "class": "com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.decl.BodyDecl",
+          "bodyType": "DynamicBody"
+        },
+        "fixture": {
+          "class": "com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.decl.BoxFixtureDecl"
+        }
+      },
+      "properties": {
+        "position": ["-600", "200"]
+      }
+    }
+  ]
+}
