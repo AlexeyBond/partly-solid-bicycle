@@ -4,11 +4,11 @@
     {
       "components": {
         "body": {
-          "class": "com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.decl.BodyDecl",
+          "type": "body",
           "bodyType": "DynamicBody"
         },
         "fixture": {
-          "class": "com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.decl.BoxFixtureDecl"
+          "type": "box fixture"
         }
       },
       "properties": {

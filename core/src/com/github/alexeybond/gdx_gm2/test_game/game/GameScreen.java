@@ -132,7 +132,7 @@ public class GameScreen extends AScreen {
         thing2.components().add("fuel", new FuelItem(10));
         thing2.events().<Vec2Property<Component>>event("position").set(null, 180, -256);
 
-        Json json = new Json();
+        Json json = IoC.resolve("json for game serialization");
         GameDeclaration gameDeclaration = json.fromJson(
                 GameDeclaration.class,
                 Gdx.files.internal("old/space-gc/game.json"));
