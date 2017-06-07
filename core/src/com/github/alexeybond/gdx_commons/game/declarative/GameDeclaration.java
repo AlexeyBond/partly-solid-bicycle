@@ -8,6 +8,7 @@ import com.github.alexeybond.gdx_commons.util.event.props.Property;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * Data object describing a game world as a set of entities.
@@ -34,12 +35,21 @@ public class GameDeclaration {
     public LinkedHashMap<String, String[]> properties
             = new LinkedHashMap<String, String[]>();
 
+    public EntityDeclaration getEntityClass(String className) {
+        EntityDeclaration declaration = classes.get(className);
+
+        if (null == declaration)
+            throw new NoSuchElementException("No such entity class: \"" + className + "\"");
+
+        return declaration;
+    }
+
     /**
      * Fill a game world with entities described by this declaration.
      */
     public Game apply(Game game) {
         for (EntityDeclaration entityDeclaration : entities)
-            entityDeclaration.apply(new Entity(game), classes);
+            entityDeclaration.apply(new Entity(game), this);
 
         for (Map.Entry<String, String[]> entry : properties.entrySet())
             game.events().<Property<GameSystem>>event(entry.getKey())

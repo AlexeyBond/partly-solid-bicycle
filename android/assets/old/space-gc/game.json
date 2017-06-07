@@ -1,25 +1,172 @@
 {
-  "classes": {},
-  "entities": [
-    { /* LibGDX parser supports comments! */ // O.o
+  "classes": {
+    "trash-base": {
       "components": {
-        "body": {
-          "type": "body",
-          "bodyType": "DynamicBody"
-        },
-        "fixture": {
-          "type": "box fixture",
-          "height": 100,
-          "width": 120
-        },
-        "sprite": {
-          "type": "sprite",
-          "sprite": "old/space-gc/trash1"
-        }
+        "body": { "bodyType": "DynamicBody" },
+        "com.github.alexeybond.gdx_gm2.test_game.game.components.decl.FuelItemDecl": {},
+      }
+    },
+    "trash-1": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [100, 120] },
+        "sprite": { "sprite": "old/space-gc/trash1" }
+      }
+    },
+    "trash-2": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "width": 120, "height": 150 },
+        "sprite": { "sprite": "old/space-gc/trash2" }
+      }
+    },
+    "trash-3": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [130, 180] },
+        "sprite": { "sprite": "old/space-gc/trash3" }
+      }
+    },
+    "trash-6": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [60, 240], "angle": 45 },
+        "sprite": { "sprite": "old/space-gc/trash6" }
+      }
+    },
+    "trash-7": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [60, 220], "angle": -40 },
+        "sprite": { "sprite": "old/space-gc/trash7" }
+      },
+    },
+    "trash-8": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [60, 220], "angle": 45 },
+        "sprite": { "sprite": "old/space-gc/trash8" }
+      },
+    },
+    "trash-9": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [60, 220], "angle": 45 },
+        "sprite": { "sprite": "old/space-gc/trash9" }
+      },
+    },
+    "trash-10": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [180, 180] },
+        "sprite": { "sprite": "old/space-gc/trash10" }
+      },
+    },
+    "trash-11": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [180, 180] },
+        "sprite": { "sprite": "old/space-gc/trash11" }
+      },
+    },
+    "trash-12": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [280, 280] },
+        "sprite": { "sprite": "old/space-gc/trash12" }
       },
       "properties": {
-        "position": ["-600", "200"],
-        "scale": ["1"]
+        "scale": ["0.2"]
+      }
+    },
+
+    "player": {
+      "components": {
+        "body": { "bodyType": "DynamicBody" },
+        "camera": { "pass": "setup-main-camera", "globalAlias": "mainCamera" },
+        "bodyFixture": {
+          "type": "box fixture",
+          "size": [256, 192],
+          "density": 0.01,
+        },
+        "collectorTriggerFixture": {
+          "type": "box fixture",
+          "size": [256, 128],
+          "center": [0, 128],
+          "collisionBeginEvent": "collectorHitStart",
+          "collisionEndEvent": "collectorHitEnd",
+          "sensor": true,
+        },
+        "collectorTrigger": {
+          "type": "generic trigger",
+          "ownerEvent": "collectorHitStart",
+          "targetEvent": "playerCollect"
+        },
+        "attractorTriggerFixture": {
+          "type": "polygon fixture",
+          "collisionBeginEvent": "attractorHitBegin",
+          "collisionEndEvent": "attractorHitEnd",
+          "vertices": [
+            -64, 0,
+            -256, 512,
+            256, 512,
+            64, 0
+          ],
+          "density": 0,
+          "sensor": true,
+        },
+        "com.github.alexeybond.gdx_gm2.test_game.game.components.decl.ControlledAttractorDecl": {},
+        "background loop": {
+          "pass": "game-background",
+          "texture": "old/space-gc/kosmosbg.png",
+          "camera": "mainCamera"
+        },
+        "tag:player": { "type": "tag", "tag": "player" },
+        "com.github.alexeybond.gdx_gm2.test_game.game.components.decl.FuelTankDecl": {},
+        "com.github.alexeybond.gdx_gm2.test_game.game.components.decl.SpaceshipEnginesDecl": {},
+        "sprite": { "sprite": "old/space-gc/256x256spaceship_1" },
+        "leftEngineParticles": {
+          "type": "particles",
+          "effect": "particles/spaceship-engine.p",
+          "offset": [-100, -70],
+          "rotate": -90,
+          "masterProperty": "leftEngineEnabled"
+        },
+        "rightEngineParticles": {
+          "type": "particles",
+          "effect": "particles/spaceship-engine.p",
+          "offset": [95, -70],
+          "rotate": -90,
+          "masterProperty": "rightEngineEnabled"
+        },
+        "attractorParticles": {
+          "type": "particles",
+          "effect": "particles/spaceship-attractor.p",
+          "offset": [0, 440],
+          "rotate": -90,
+          "masterProperty": "attractorEnabled"
+        },
+        "key bindings": {"bind": {
+          "rightEngineControl": "D",
+          "leftEngineControl": "A",
+          "attractorControl": "W"
+        }}
+      },
+      "properties": {
+        "fuelCapacity": ["100"],
+        "zoom": ["0.5"],
+        "fuel": ["100"]
+      }
+    }
+  },
+  "entities": [
+    {
+      "inherit": ["player"]
+    },
+    {
+      "inherit": ["trash-12"],
+      "properties": {
+        "position": ["-600", "200"]
       }
     }
   ]

@@ -3,6 +3,7 @@ package com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
+import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.EmptyBodyComponent;
 
 /**
@@ -15,7 +16,7 @@ public class BodyDecl implements ComponentDeclaration {
     public boolean isBullet = true;
 
     @Override
-    public Component create() {
+    public Component create(GameDeclaration gameDeclaration) {
         initDef();
         return new EmptyBodyComponent(bodyDef);
     }

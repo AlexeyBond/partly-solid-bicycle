@@ -13,6 +13,22 @@ import java.util.Map;
 
 /**
  *
+ * <p>
+ *      Valid component declarations:
+ * </p>
+ *
+ * <pre>{@code
+ *  {
+ *      "component type alias": { ..parameters or nothing.. },
+ *      "org.my.component.Class": { .. },
+ *      "component instance name": { "type": "type alias", .. },
+ *      "component instance name": { "type": "org.my.component.Class", .. },
+ *      "component instance name": { "class": "org.my.component.Class" }
+ *  }
+ * }</pre>
+ * <p>
+ *      The last one uses LibGDX deserializer, not the one registered here.
+ * </p>
  */
 public class GameSerialization implements Module {
     @Override
@@ -32,9 +48,16 @@ public class GameSerialization implements Module {
 
             @Override
             public ComponentDeclaration read(Json json, JsonValue jsonData, Class type) {
-                String className = jsonData.getString("type");
+                String className;
+                JsonValue typeValue = jsonData.get("type");
+                if (null == typeValue) {
+                    className = jsonData.name();
+                } else {
+                    className = typeValue.asString();
+                    jsonData.remove("type");
+                }
+
                 Class<? extends ComponentDeclaration> resultType = map.get(className);
-                jsonData.remove("type");
 
                 if (null == resultType) {
                     try {

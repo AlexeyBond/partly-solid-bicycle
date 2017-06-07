@@ -11,37 +11,38 @@ import com.github.alexeybond.gdx_commons.util.event.props.ObjectProperty;
  */
 public class FuelItem
         implements Component, EventListener<Component, ObjectProperty<Entity, Component>> {
-    private final float amount;
+    private final float defaultAmount;
     private int hitSubIdx = -1;
     private Entity entity;
+    private ObjectProperty<Entity, Component> hitEvent;
+    private FloatProperty<Component> amountProp;
 
-    public FuelItem(float amount) {
-        this.amount = amount;
+    public FuelItem(float defaultAmount) {
+        this.defaultAmount = defaultAmount;
     }
 
     @Override
     public void onConnect(Entity entity) {
         this.entity = entity;
-        hitSubIdx = entity
-                .events()
-                .event("playerCollect", ObjectProperty.<Entity, Component>make())
-                .subscribe(this);
+        hitEvent = entity.events()
+                .event("playerCollect", ObjectProperty.<Entity, Component>make());
+        amountProp = entity.events()
+                .event("amount", FloatProperty.<Component>make(defaultAmount));
+        hitSubIdx = hitEvent.subscribe(this);
     }
 
     @Override
     public void onDisconnect(Entity entity) {
-        hitSubIdx = entity
-                .events()
-                .event("playerCollect", ObjectProperty.<Entity, Component>make())
-                .unsubscribe(hitSubIdx);
+        hitSubIdx = hitEvent.unsubscribe(hitSubIdx);
     }
 
     @Override
     public boolean onTriggered(Component component, ObjectProperty<Entity, Component> event) {
-        FloatProperty<Component> fuel = event.get().events().event("fuel");
-        FloatProperty<Component> fuelCapacity = event.get().events().event("fuelCapacity");
+        FloatProperty<Component> pickEvent = event.get().events().event("fuelPicked");
 
-        fuel.set(this, Math.min(fuel.get() + amount, fuelCapacity.get()));
+        pickEvent.setSilently(amountProp.get());
+        pickEvent.trigger(this);
+        amountProp.set(this, 0);
 
         entity.components().removeAll();
 

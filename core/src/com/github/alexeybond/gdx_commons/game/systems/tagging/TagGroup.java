@@ -37,4 +37,15 @@ public class TagGroup {
     public int getModCount() {
         return modCount;
     }
+
+    public Array<Entity> getAll() {
+        return entities;
+    }
+
+    public Entity getOnly() {
+        if (entities.size != 1)
+            throw new IllegalStateException(
+                    "Expected exactly one entity with tag \"" + tag() + "\" but found " + entities.size);
+        return entities.first();
+    }
 }

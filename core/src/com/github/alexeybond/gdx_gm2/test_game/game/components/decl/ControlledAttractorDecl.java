@@ -1,18 +1,16 @@
-package com.github.alexeybond.gdx_commons.game.systems.tagging.components.decl;
+package com.github.alexeybond.gdx_gm2.test_game.game.components.decl;
 
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
-import com.github.alexeybond.gdx_commons.game.systems.tagging.components.SingleTagComponent;
+import com.github.alexeybond.gdx_gm2.test_game.game.components.ControlledAttractor;
 
 /**
  *
  */
-public class SingleTag implements ComponentDeclaration {
-    public String tag;
-
+public class ControlledAttractorDecl implements ComponentDeclaration {
     @Override
     public Component create(GameDeclaration gameDeclaration) {
-        return new SingleTagComponent(tag);
+        return new ControlledAttractor();
     }
 }

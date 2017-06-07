@@ -42,12 +42,12 @@ public class EntityDeclaration {
      * @throws java.util.NoSuchElementException if one of property names in {@link #properties} is invalid
      *          (no one of created components created property with that name)
      */
-    public Entity apply(Entity entity, Map<String, EntityDeclaration> classes) {
+    public Entity apply(Entity entity, GameDeclaration gameDeclaration) {
         for (String anInherit : inherit)
-            entity = classes.get(anInherit).apply(entity, classes);
+            entity = gameDeclaration.classes.get(anInherit).apply(entity, gameDeclaration);
 
         for (Map.Entry<String, ComponentDeclaration> entry : components.entrySet())
-            entity.components().add(entry.getKey(), entry.getValue().create());
+            entity.components().add(entry.getKey(), entry.getValue().create(gameDeclaration));
 
         for (Map.Entry<String, String[]> entry : properties.entrySet())
             entity.events().<Property<Component>>event(entry.getKey()).load(null, entry.getValue());

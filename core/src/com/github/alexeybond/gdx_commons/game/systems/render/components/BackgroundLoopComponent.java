@@ -101,6 +101,7 @@ public abstract class BackgroundLoopComponent implements RenderComponent {
 
     protected abstract Camera getCamera();
 
+    @Deprecated
     public static BackgroundLoopComponent withCamera(String passName, Texture texture, final Camera camera) {
         return new BackgroundLoopComponent(passName, texture) {
             @Override
