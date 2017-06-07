@@ -1,6 +1,9 @@
 package com.github.alexeybond.gdx_gm2;
 
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.modules.PhysicsComponentDeclarations;
+import com.github.alexeybond.gdx_commons.game.systems.input.modules.InputComponentsDeclarations;
+import com.github.alexeybond.gdx_commons.game.systems.render.modules.RenderComponentsDeclarations;
+import com.github.alexeybond.gdx_commons.game.systems.tagging.modules.TaggingComponentsDeclarations;
 import com.github.alexeybond.gdx_commons.ioc.Module;
 import com.github.alexeybond.gdx_commons.screen.Application;
 import com.github.alexeybond.gdx_gm2.test_game.InitialScreenModule;
@@ -14,6 +17,9 @@ public class MyGdxGame extends Application {
         return Arrays.<Module>asList(
                 new InitialScreenModule()
                 , new PhysicsComponentDeclarations()
+                , new InputComponentsDeclarations()
+                , new RenderComponentsDeclarations()
+                , new TaggingComponentsDeclarations()
         );
     }
 //    SpriteBatch batch;

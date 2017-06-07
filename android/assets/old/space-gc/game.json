@@ -1,18 +1,25 @@
 {
   "classes": {},
   "entities": [
-    {
+    { /* LibGDX parser supports comments! */ // O.o
       "components": {
         "body": {
           "type": "body",
           "bodyType": "DynamicBody"
         },
         "fixture": {
-          "type": "box fixture"
+          "type": "box fixture",
+          "height": 100,
+          "width": 120
+        },
+        "sprite": {
+          "type": "sprite",
+          "sprite": "old/space-gc/trash1"
         }
       },
       "properties": {
-        "position": ["-600", "200"]
+        "position": ["-600", "200"],
+        "scale": ["1"]
       }
     }
   ]

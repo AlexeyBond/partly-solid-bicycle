@@ -9,8 +9,8 @@ import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.d
  *
  */
 public class BoxFixtureDecl extends FixtureDeclBase {
-    public float halfHeight = 10f;
-    public float halfWidth = 10f;
+    public float height = 20f;
+    public float width = 20f;
     public float angle = 0f;
     public float centerX = 0;
     public float centerY = 0;
@@ -19,7 +19,7 @@ public class BoxFixtureDecl extends FixtureDeclBase {
     protected Shape initShape() {
         PolygonShape shape = new PolygonShape();
 
-        shape.setAsBox(halfHeight, halfWidth, new Vector2(centerX, centerY), angle);
+        shape.setAsBox(.5f * width, .5f * height, new Vector2(centerX, centerY), angle);
 
         return shape;
     }
