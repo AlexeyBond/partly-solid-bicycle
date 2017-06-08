@@ -8,8 +8,36 @@ import java.util.Arrays;
  *
  */
 public class ObjectProperty<T, TInitiator> extends Property<TInitiator> {
+    /**
+     * Interface for a strategy converting serialized property value to object.
+     */
+    public interface Loader<T> {
+        T load(String[] value);
+    }
+
+    public static final Loader IOC_LOADER = new Loader() {
+        @Override
+        public Object load(String[] value) {
+            return IoC
+                    .resolveS(value[0])
+                    .resolve(Arrays.copyOfRange(value, 1, value.length, Object[].class));
+        }
+    };
+
+    public static <T> Loader<T> iocLoader() {
+        return IOC_LOADER;
+    }
+
+    public static final Loader<String> STRING_LOADER = new Loader<String>() {
+        @Override
+        public String load(String[] value) {
+            return value[0];
+        }
+    };
+
     private T value;
     private String[] serialValue;
+    private Loader<T> loader = iocLoader();
 
     public ObjectProperty(T value) {
         this.value = value;
@@ -43,6 +71,11 @@ public class ObjectProperty<T, TInitiator> extends Property<TInitiator> {
         return make(null);
     }
 
+    public ObjectProperty<T, TInitiator> use(Loader<T> loader) {
+        this.loader = loader;
+        return this;
+    }
+
     @Override
     public String[] dump() {
         // Assume object is not serializable unless it was set on deserialization
@@ -51,10 +84,7 @@ public class ObjectProperty<T, TInitiator> extends Property<TInitiator> {
 
     @Override
     public void load(TInitiator initiator, String[] value) {
-        Object val = IoC
-                .resolveS(value[0])
-                .resolve(Arrays.copyOfRange(value, 1, value.length, Object[].class));
-        set(initiator, (T) val);
+        set(initiator, loader.load(value));
         serialValue = value;
     }
 }
