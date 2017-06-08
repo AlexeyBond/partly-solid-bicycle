@@ -1,5 +1,6 @@
 package com.github.alexeybond.gdx_gm2;
 
+import com.github.alexeybond.gdx_commons.game.modules.CommonComponents;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.modules.PhysicsComponentDeclarations;
 import com.github.alexeybond.gdx_commons.game.systems.input.modules.InputComponentsDeclarations;
 import com.github.alexeybond.gdx_commons.game.systems.render.modules.RenderComponentsDeclarations;
@@ -20,6 +21,7 @@ public class MyGdxGame extends Application {
                 , new InputComponentsDeclarations()
                 , new RenderComponentsDeclarations()
                 , new TaggingComponentsDeclarations()
+                , new CommonComponents()
         );
     }
 //    SpriteBatch batch;

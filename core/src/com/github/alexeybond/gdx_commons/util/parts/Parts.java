@@ -1,8 +1,6 @@
 package com.github.alexeybond.gdx_commons.util.parts;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  *
@@ -50,10 +48,20 @@ public class Parts<TOwner, T extends Part<TOwner>> implements AParts<TOwner, T> 
 
     @Override
     public void removeAll() {
-        for (T part : parts.values()) {
-            part.onDisconnect(owner);
-        }
+        Iterator<Map.Entry<String, T>> iterator = parts.entrySet().iterator();
 
-        parts.clear();
+        while (iterator.hasNext()) {
+            Map.Entry<String, T> entry = iterator.next();
+            entry.getValue().onDisconnect(owner);
+
+            try {
+                // Sometimes removal of some components causes recursive removal of others
+                // and ConcurrentModificationException then.
+                iterator.remove();
+            } catch (ConcurrentModificationException e) {
+                parts.remove(entry.getKey());
+                iterator = parts.entrySet().iterator();
+            }
+        }
     }
 }

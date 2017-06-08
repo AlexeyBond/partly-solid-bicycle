@@ -80,6 +80,85 @@
       }
     },
 
+    "supermassive-trash-base": {
+      "components": {
+        "body": { "bodyType": "StaticBody" },
+        "gravityTriggerFixture": {
+          "type": "circle fixture",
+          "radius": 1500,
+          "collisionBeginEvent": "gravityTriggerHitStart",
+          "collisionEndEvent": "gravityTriggerHitEnd",
+          "sensor": true,
+        },
+        "gravityTrigger": {
+          "type": "com.github.alexeybond.gdx_gm2.test_game.game.components.decl.GravityTriggerDecl",
+          "hitBeginEvent": "gravityTriggerHitStart",
+          "hitEndEvent": "gravityTriggerHitEnd",
+          "attractorName": "trashAttractor"
+        }
+      }
+    },
+    "supermassive-trash-1": {
+      "inherit": ["supermassive-trash-base"],
+      "components": {
+        "sprite": { "sprite": "old/space-gc/supermassive-trash1" },
+        "circle fixture": { "radius": 350 },
+      },
+      "properties": {
+        "scale": ["0.5"]
+      }
+    },
+    "supermassive-trash-2": {
+      "inherit": ["supermassive-trash-base"],
+      "components": {
+        "sprite": { "sprite": "old/space-gc/supermassive-trash2" },
+        "circle fixture": { "radius": 350 },
+      },
+      "properties": {
+        "scale": ["0.5"]
+      }
+    },
+    "supermassive-trash-3": {
+      "inherit": ["supermassive-trash-base"],
+      "components": {
+        "sprite": { "sprite": "old/space-gc/supermassive-trash3" },
+        "circle fixture": { "radius": 350 },
+      },
+      "properties": {
+        "scale": ["0.5"]
+      }
+    },
+    "supermassive-trash-4": {
+      "inherit": ["supermassive-trash-base"],
+      "components": {
+        "sprite": { "sprite": "old/space-gc/supermassive-trash4" },
+        "circle fixture": { "radius": 350 },
+      },
+      "properties": {
+        "scale": ["0.5"]
+      }
+    },
+    "supermassive-trash-5": {
+      "inherit": ["supermassive-trash-base"],
+      "components": {
+        "sprite": { "sprite": "old/space-gc/supermassive-trash5" },
+        "circle fixture": { "radius": 350 },
+      },
+      "properties": {
+        "scale": ["0.5"]
+      }
+    },
+    "supermassive-trash-6": {
+      "inherit": ["supermassive-trash-base"],
+      "components": {
+        "sprite": { "sprite": "old/space-gc/supermassive-trash6" },
+        "circle fixture": { "radius": 350 },
+      },
+      "properties": {
+        "scale": ["0.5"]
+      }
+    },
+
     "player": {
       "components": {
         "body": { "bodyType": "DynamicBody" },
@@ -91,7 +170,7 @@
         },
         "collectorTriggerFixture": {
           "type": "box fixture",
-          "size": [256, 128],
+          "size": [192, 128],
           "center": [0, 128],
           "collisionBeginEvent": "collectorHitStart",
           "collisionEndEvent": "collectorHitEnd",
@@ -146,6 +225,21 @@
           "rotate": -90,
           "masterProperty": "attractorEnabled"
         },
+        "collectSound": {
+          "type": "one shot sound",
+          "event": "fuelPicked",
+          "sound": "old/space-gc/sound/collect.wav"
+        },
+        "rightEngineSound": {
+          "type": "continuous sound",
+          "event": "rightEngineEnabled",
+          "sound": "old/space-gc/sound/tourbin-right.wav"
+        },
+        "leftEngineSound": {
+          "type": "continuous sound",
+          "event": "leftEngineEnabled",
+          "sound": "old/space-gc/sound/tourbin-left.wav"
+        },
         "key bindings": {"bind": {
           "rightEngineControl": "D",
           "leftEngineControl": "A",
@@ -155,7 +249,10 @@
       "properties": {
         "fuelCapacity": ["100"],
         "zoom": ["0.5"],
-        "fuel": ["100"]
+        "fuel": ["100"],
+
+        "backgroundPositionScale": ["0.5"],
+        "backgroundImageScale": ["2.0"]
       }
     }
   },
@@ -167,6 +264,54 @@
       "inherit": ["trash-12"],
       "properties": {
         "position": ["-600", "200"]
+      }
+    },
+    {
+      "inherit": ["supermassive-trash-5"],
+      "properties": {
+        "position": ["-1200", "300"]
+      }
+    },
+    {
+      "components": {
+        "infinite world generator": {
+          "observerTag": "player",
+          "generateTag": "trash",
+          "generateClasses": [
+            "trash-1", "trash-2", "trash-3",
+            "trash-6", "trash-7", "trash-8",
+            "trash-9", "trash-10", "trash-11",
+            "trash-12",
+          ]
+        }
+      },
+      "properties": {
+        "leaveZone": ["1"],
+        "keepZone": ["4"],
+        "generateZone": ["5"],
+        "gridSize": ["1000"]
+      }
+    },
+    {
+      "components": {
+        "infinite world generator": {
+          "observerTag": "player",
+          "generateTag": "planet",
+          "generateClasses": [
+            "supermassive-trash-1",
+            "supermassive-trash-2",
+            "supermassive-trash-3",
+            "supermassive-trash-4",
+            "supermassive-trash-5",
+            "supermassive-trash-6",
+          ]
+        }
+      },
+      "properties": {
+        "leaveZone": ["1"],
+        "keepZone": ["4"],
+        "generateZone": ["5"],
+        "gridSize": ["5000"]
       }
     }
   ]
