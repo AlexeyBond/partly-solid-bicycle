@@ -1,5 +1,6 @@
 package com.github.alexeybond.gdx_commons.game.modules;
 
+import com.github.alexeybond.gdx_commons.game.common_components.decl.AttachToTaggedDecl;
 import com.github.alexeybond.gdx_commons.game.common_components.decl.ContinuousSoundDecl;
 import com.github.alexeybond.gdx_commons.game.common_components.decl.InfiniteWorldGenDecl;
 import com.github.alexeybond.gdx_commons.game.common_components.decl.OneShotSoundDecl;
@@ -18,6 +19,7 @@ public class CommonComponents implements Module {
         map.put("infinite world generator", InfiniteWorldGenDecl.class);
         map.put("one shot sound", OneShotSoundDecl.class);
         map.put("continuous sound", ContinuousSoundDecl.class);
+        map.put("attach to tagged", AttachToTaggedDecl.class);
     }
 
     @Override
