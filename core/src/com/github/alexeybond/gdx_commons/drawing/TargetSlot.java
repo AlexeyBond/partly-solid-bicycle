@@ -11,26 +11,26 @@ public class TargetSlot {
         this.name = name;
     }
 
-    RenderTarget get() {
+    public RenderTarget get() {
         if (null == target)
             throw new IllegalStateException("Render target slot \"" + name + "\" is empty.");
         return target;
     }
 
-    void set(RenderTarget target) {
+    public void set(RenderTarget target) {
         if (null != this.target)
             throw new IllegalStateException("Render target slot \"" + name + "\" is not empty.");
         this.target = target;
     }
 
-    void clear() {
+    public void clear() {
         if (null != this.target) {
             this.target.unuse();
             this.target = null;
         }
     }
 
-    void swap(TargetSlot that) {
+    public void swap(TargetSlot that) {
         RenderTarget thatTarget = that.target;
         that.target = this.target;
         this.target = thatTarget;

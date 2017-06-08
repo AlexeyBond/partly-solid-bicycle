@@ -19,7 +19,6 @@ import com.github.alexeybond.gdx_commons.game.systems.render.RenderSystem;
 public abstract class BaseRenderComponent implements RenderComponent {
     protected Vec2Property<Component> position;
     protected FloatProperty<Component> rotation;
-    protected FloatProperty<Component> scale;
     protected RenderSystem system;
     private final String passName;
 
@@ -34,7 +33,6 @@ public abstract class BaseRenderComponent implements RenderComponent {
 
         position = entity.events().event("position", Vec2Property.<Component>make());
         rotation = entity.events().event("rotation", FloatProperty.<Component>make());
-        scale = entity.events().event("scale", FloatProperty.<Component>make(1f));
     }
 
     @Override

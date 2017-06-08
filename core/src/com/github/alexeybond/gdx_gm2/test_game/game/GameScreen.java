@@ -2,6 +2,7 @@ package com.github.alexeybond.gdx_gm2.test_game.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -9,8 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.alexeybond.gdx_commons.drawing.Drawable;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
+import com.github.alexeybond.gdx_commons.drawing.rt.ScreenTarget;
+import com.github.alexeybond.gdx_commons.drawing.rt.ViewportTarget;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.GameSystem;
@@ -38,6 +42,23 @@ import java.util.regex.Pattern;
 public class GameScreen extends AScreen {
     public GameScreen() {
         super(new GameScreenTechnique());
+
+        scene().context().getSlot("minimapViewport").set(
+                new ViewportTarget(
+                        ScreenTarget.INSTANCE,
+                        new Viewport() {
+                            {
+                                setScreenBounds(32,32,256,256);
+                                setWorldSize(256, 256);
+                                setCamera(new OrthographicCamera());
+                            }
+
+                            @Override
+                            public void update(int screenWidth, int screenHeight, boolean centerCamera) {
+                                super.apply(centerCamera);
+                            }
+                        }
+                ));
 
         // -------------------- GAME SETUP --------------------
         final Game game = addLayerFront(new GameLayer(this)).game();

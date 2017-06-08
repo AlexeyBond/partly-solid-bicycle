@@ -10,15 +10,24 @@ public class GameScreenTechnique extends Technique {
     @Override
     protected Runnable build() {
         return seq(
+                toOutput(),
                 clearColor(),
-                withProjection(OrthoProjection.UNIT),
-                pass("game-background"),
                 pushingProjection(seq(
+                        withProjection(OrthoProjection.UNIT),
+                        pass("game-background"),
                         pass("setup-main-camera"),
                         pass("game-objects"),
                         pass("game-particles"),
                         pass("game-debug")
                 )),
+                pushingProjection(seq(
+                        toTarget("minimapViewport"),
+                        withProjection(OrthoProjection.UNIT),
+                        pass("minimap-background"),
+                        pass("setup-minimap-camera"),
+                        pass("minimap-objects")
+                )),
+                toOutput(),
                 pass("ui")
         );
     }

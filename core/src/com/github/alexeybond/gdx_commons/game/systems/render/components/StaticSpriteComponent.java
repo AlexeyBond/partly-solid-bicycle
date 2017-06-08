@@ -11,10 +11,12 @@ import com.github.alexeybond.gdx_commons.ioc.IoC;
  *
  */
 public class StaticSpriteComponent extends BaseRenderComponent {
-    private TextureRegion region;
+    private final TextureRegion region;
+    private final float scale;
 
-    public StaticSpriteComponent(String passName, String regionName) {
+    public StaticSpriteComponent(String passName, String regionName, float scale) {
         super(passName);
+        this.scale = scale;
 
         region = IoC.resolve("get texture region", regionName);
     }
@@ -23,7 +25,6 @@ public class StaticSpriteComponent extends BaseRenderComponent {
     public void draw(DrawingContext context) {
         Vector2 pos = position.ref();
         float rot = rotation.get();
-        float scl = scale.get();
 
         Batch batch = context.state().beginBatch();
 
@@ -31,7 +32,7 @@ public class StaticSpriteComponent extends BaseRenderComponent {
                 .idt()
                 .translate(pos.x, pos.y, 0)
                 .rotate(0,0,1,rot)
-                .scale(scl,scl,1);
+                .scale(scale,scale,1);
 
         batch.setTransformMatrix(matrix);
 

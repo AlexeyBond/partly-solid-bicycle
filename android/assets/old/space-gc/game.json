@@ -73,11 +73,8 @@
       "inherit": ["trash-base"],
       "components": {
         "box fixture": { "size": [280, 280] },
-        "sprite": { "sprite": "old/space-gc/trash12" }
+        "sprite": { "sprite": "old/space-gc/trash12", "scale": 0.2 }
       },
-      "properties": {
-        "scale": ["0.2"]
-      }
     },
 
     "supermassive-trash-base": {
@@ -107,67 +104,55 @@
           "type": "generic trigger",
           "ownerEvent": "deathTriggerHitStart",
           "targetEvent": "hitPlanet",
-        }
+        },
+        "minimapSprite": {
+          "type": "sprite",
+          "sprite": "old/space-gc/minimap-planet",
+          "pass": "minimap-objects",
+          "scale": 10
+        },
       }
     },
     "supermassive-trash-1": {
       "inherit": ["supermassive-trash-base"],
       "components": {
-        "sprite": { "sprite": "old/space-gc/supermassive-trash1" },
+        "sprite": { "sprite": "old/space-gc/supermassive-trash1", "scale": 0.5 },
         "circle fixture": { "radius": 350 },
       },
-      "properties": {
-        "scale": ["0.5"]
-      }
     },
     "supermassive-trash-2": {
       "inherit": ["supermassive-trash-base"],
       "components": {
-        "sprite": { "sprite": "old/space-gc/supermassive-trash2" },
+        "sprite": { "sprite": "old/space-gc/supermassive-trash2", "scale": 0.5 },
         "circle fixture": { "radius": 350 },
       },
-      "properties": {
-        "scale": ["0.5"]
-      }
     },
     "supermassive-trash-3": {
       "inherit": ["supermassive-trash-base"],
       "components": {
-        "sprite": { "sprite": "old/space-gc/supermassive-trash3" },
+        "sprite": { "sprite": "old/space-gc/supermassive-trash3", "scale": 0.5 },
         "circle fixture": { "radius": 350 },
       },
-      "properties": {
-        "scale": ["0.5"]
-      }
     },
     "supermassive-trash-4": {
       "inherit": ["supermassive-trash-base"],
       "components": {
-        "sprite": { "sprite": "old/space-gc/supermassive-trash4" },
+        "sprite": { "sprite": "old/space-gc/supermassive-trash4", "scale": 0.5 },
         "circle fixture": { "radius": 350 },
       },
-      "properties": {
-        "scale": ["0.5"]
-      }
     },
     "supermassive-trash-5": {
       "inherit": ["supermassive-trash-base"],
       "components": {
-        "sprite": { "sprite": "old/space-gc/supermassive-trash5" },
+        "sprite": { "sprite": "old/space-gc/supermassive-trash5", "scale": 0.5 },
         "circle fixture": { "radius": 350 },
       },
-      "properties": {
-        "scale": ["0.5"]
-      }
     },
     "supermassive-trash-6": {
       "inherit": ["supermassive-trash-base"],
       "components": {
-        "sprite": { "sprite": "old/space-gc/supermassive-trash6" },
+        "sprite": { "sprite": "old/space-gc/supermassive-trash6", "scale": 0.5 },
         "circle fixture": { "radius": 350 },
-      },
-      "properties": {
-        "scale": ["0.5"]
       }
     },
 
@@ -189,6 +174,24 @@
       }
     },
 
+    "miniCamera": {
+      "components": {
+        "camera": {
+          "pass": "setup-minimap-camera",
+          "globalAlias": "minimapCamera",
+        },
+        "attach to tagged": {
+          "tag": "player"
+        },
+        "tag": {
+          "tag": "miniCamera"
+        }
+      },
+      "properties": {
+        "zoom": ["0.025"]
+      }
+    },
+
     "background": {
       "components": {
         "background loop": {
@@ -200,6 +203,20 @@
       "properties": {
         "backgroundPositionScale": ["0.5"],
         "backgroundImageScale": ["2.0"],
+      }
+    },
+
+    "miniBackground": {
+      "components": {
+        "background loop": {
+          "pass": "minimap-background",
+          "texture": "old/space-gc/minimap-grid.png",
+          "camera": "minimapCamera"
+        }
+      },
+      "properties": {
+        "backgroundPositionScale": ["1"],
+        "backgroundImageScale": ["25"],
       }
     },
 
@@ -242,6 +259,12 @@
         "com.github.alexeybond.gdx_gm2.test_game.game.components.decl.FuelTankDecl": {},
         "com.github.alexeybond.gdx_gm2.test_game.game.components.decl.SpaceshipEnginesDecl": {},
         "sprite": { "sprite": "old/space-gc/256x256spaceship_1" },
+        "minimapSprite": {
+          "type": "sprite",
+          "sprite": "old/space-gc/minimap-player",
+          "pass": "minimap-objects",
+          "scale": 10
+        },
         "leftEngineParticles": {
           "type": "particles",
           "effect": "particles/spaceship-engine.p",
@@ -298,6 +321,9 @@
       "inherit": ["camera", "background"]
     },
     {
+      "inherit": ["miniCamera", "miniBackground"]
+    },
+    {
       "inherit": ["trash-12"],
       "properties": {
         "position": ["-600", "200"]
@@ -346,9 +372,9 @@
       },
       "properties": {
         "leaveZone": ["1"],
-        "keepZone": ["4"],
+        "keepZone": ["3"],
         "generateZone": ["5"],
-        "gridSize": ["5000"]
+        "gridSize": ["3000"]
       }
     }
   ]

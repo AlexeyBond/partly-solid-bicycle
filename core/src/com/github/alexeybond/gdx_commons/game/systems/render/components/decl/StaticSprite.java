@@ -13,8 +13,10 @@ public class StaticSprite implements ComponentDeclaration {
 
     public String sprite;
 
+    public float scale = 1f;
+
     @Override
     public Component create(GameDeclaration gameDeclaration) {
-        return new StaticSpriteComponent(pass, sprite);
+        return new StaticSpriteComponent(pass, sprite, scale);
     }
 }
