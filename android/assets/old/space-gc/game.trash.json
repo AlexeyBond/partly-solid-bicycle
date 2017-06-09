@@ -3,7 +3,7 @@
     "trash-destruction-effects": {
       "components": {
         "particles": {
-          "effect": "particles/spaceship-engine.p",
+          "effect": "particles/explosion.p",
           "masterProperty": "particles"
         },
         "one shot sound": {

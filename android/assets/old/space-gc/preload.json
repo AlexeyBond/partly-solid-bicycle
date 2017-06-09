@@ -12,6 +12,7 @@
     "particles": [
       "particles/spaceship-engine.p",
       "particles/spaceship-attractor.p",
+      "particles/explosion.p",
     ],
     "textures": [
       // TODO:: Move to atlas

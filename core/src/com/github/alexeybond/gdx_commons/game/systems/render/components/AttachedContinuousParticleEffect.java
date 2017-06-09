@@ -125,7 +125,7 @@ public class AttachedContinuousParticleEffect
         enableSubIdx = enableProperty.unsubscribe(enableSubIdx);
         timeSubIdx = deltaTimeEvent.unsubscribe(timeSubIdx);
 
-        effect.free();
+        if (null != effect) effect.free();
     }
 
     private void setupEffectTransform() {
