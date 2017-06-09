@@ -4,9 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.Predicate;
 import com.github.alexeybond.gdx_commons.drawing.rt.FboTarget;
+
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 /**
  *
@@ -75,7 +80,7 @@ public class Technique {
             public boolean evaluate(Scene scene) {
                 RenderTarget out = scene.context().getOutputTarget();
 
-                if (out.width() != savedW || out.height() != savedH) {
+                if (out.getPixelsWidth() != savedW || out.getPixelsHeight() != savedH) {
                     savedW = out.getPixelsWidth();
                     savedH = out.getPixelsHeight();
                     return true;
@@ -115,6 +120,87 @@ public class Technique {
             @Override
             public void run() {
                 Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            }
+        };
+    }
+
+    protected Runnable clearStencil() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                Gdx.gl.glClearStencil(0);
+                Gdx.gl.glClear(GL20.GL_STENCIL_BUFFER_BIT);
+            }
+        };
+    }
+
+    /**
+     * Draw to stencil buffer only. All drawn geometry will set stencil buffer to 1.
+     */
+    protected Runnable toStencil(final Runnable drawing) {
+        final DrawingState state = scene.context().state();
+        return new Runnable() {
+            @Override
+            public void run() {
+                state.flush();
+
+                GL20 gl = Gdx.gl;
+                gl.glEnable(GL20.GL_STENCIL_TEST);
+                gl.glStencilFunc(GL20.GL_ALWAYS, 1, 0x1);
+                gl.glStencilOp(GL20.GL_REPLACE, GL20.GL_REPLACE, GL20.GL_REPLACE);
+                gl.glStencilMask(0xFF);
+                gl.glColorMask(false, false, false, false);
+
+                try {
+                    drawing.run();
+                    state.flush();
+                } finally {
+                    gl.glStencilOp(GL20.GL_KEEP, GL20.GL_KEEP, GL20.GL_KEEP);
+                    gl.glColorMask(true, true, true, true);
+                    gl.glDisable(GL20.GL_STENCIL_TEST);
+                }
+            }
+        };
+    }
+
+    /**
+     * Enable stencil test for a drawable. Test will be passed when stencil value is non equal to zero.
+     */
+    protected Runnable withStencilTest(final Runnable drawing) {
+        final DrawingState state = scene.context().state();
+        return new Runnable() {
+            @Override
+            public void run() {
+                state.flush();
+
+                GL20 gl = Gdx.gl;
+                gl.glStencilFunc(GL20.GL_NOTEQUAL, 0, 0xFF);
+                gl.glEnable(GL20.GL_STENCIL_TEST);
+
+                try {
+                    drawing.run();
+                    state.flush();
+                } finally {
+                    gl.glDisable(GL20.GL_STENCIL_TEST);
+                }
+            }
+        };
+    }
+
+    /**
+     * Draw a circle with center in (0,0)
+     */
+    protected Runnable circle(final float radius, final int segments) {
+        final DrawingState state = scene.context().state();
+        return new Runnable() {
+            @Override
+            public void run() {
+                ShapeRenderer shapeRenderer = state.beginFilled();
+
+                shapeRenderer.getProjectionMatrix().idt();
+                shapeRenderer.updateMatrices();
+
+                shapeRenderer.circle(0, 0, radius, segments);
             }
         };
     }

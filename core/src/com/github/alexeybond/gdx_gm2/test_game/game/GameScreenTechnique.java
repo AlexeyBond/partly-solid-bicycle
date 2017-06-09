@@ -22,10 +22,18 @@ public class GameScreenTechnique extends Technique {
                 )),
                 pushingProjection(seq(
                         toTarget("minimapViewport"),
-                        withProjection(OrthoProjection.UNIT),
-                        pass("minimap-background"),
-                        pass("setup-minimap-camera"),
-                        pass("minimap-objects")
+                        // Android clears stencil buffer itself every frame
+                        /*onResize(*/toStencil(seq(
+                                clearStencil(),
+                                withProjection(OrthoProjection.UNIT_PN),
+                                circle(0.9f, 64)
+                        ))/*)*/,
+                        withStencilTest(seq(
+                                withProjection(OrthoProjection.UNIT),
+                                pass("minimap-background"),
+                                pass("setup-minimap-camera"),
+                                pass("minimap-objects")
+                        ))
                 )),
                 toOutput(),
                 pass("ui")

@@ -11,6 +11,7 @@ public class DesktopLauncher {
         IoC.init(new SingleContextHolder());
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.forceExit = false;
+        config.stencil = 8;
         new LwjglApplication(new MyGdxGame(), config);
     }
 }

@@ -14,6 +14,7 @@ public class AndroidLauncher extends AndroidApplication {
 		IoC.init(new ThreadLocalContext());
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+		config.stencil = 8;
 		initialize(new MyGdxGame(), config);
 	}
 }
