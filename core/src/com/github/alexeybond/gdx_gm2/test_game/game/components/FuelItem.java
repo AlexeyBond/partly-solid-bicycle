@@ -44,7 +44,7 @@ public class FuelItem
         pickEvent.trigger(this);
         amountProp.set(this, 0);
 
-        entity.components().removeAll();
+        entity.destroy();
 
         return true;
     }

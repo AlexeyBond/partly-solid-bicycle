@@ -1,5 +1,9 @@
 package com.github.alexeybond.gdx_commons.util.parts;
 
+import com.badlogic.gdx.Gdx;
+import com.github.alexeybond.gdx_commons.util.parts.exceptions.PartConnectException;
+import com.github.alexeybond.gdx_commons.util.parts.exceptions.PartConnectRejectedException;
+
 import java.util.*;
 
 /**
@@ -17,7 +21,17 @@ public class Parts<TOwner, T extends Part<TOwner>> implements AParts<TOwner, T> 
     public void add(String name, T part) {
         if (parts.containsKey(name)) return;
         parts.put(name, part);
-        part.onConnect(owner);
+
+        try {
+            part.onConnect(owner);
+        } catch (PartConnectRejectedException e) {
+            parts.remove(name);
+            Gdx.app.log("DEBUG",
+                    "Part " + part + " refuses to connect to " + this + " as \"" + name + "\"", e);
+        } catch (Exception e) {
+            parts.remove(name);
+            throw new PartConnectException("Could not connect " + part + " as \"" + name + "\"", e);
+        }
     }
 
     @Override

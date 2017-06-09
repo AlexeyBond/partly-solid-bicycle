@@ -81,11 +81,9 @@ public class GameScreen extends AScreen {
         TimingSystem timingSystem = game.systems().get("timing");
         TaggingSystem taggingSystem = game.systems().get("tagging");
 
-        Json json = IoC.resolve("json for game serialization");
-        GameDeclaration gameDeclaration = json.fromJson(
-                GameDeclaration.class,
-                Gdx.files.internal("old/space-gc/game.json"));
-        gameDeclaration.apply(game);
+        IoC.<GameDeclaration>resolve(
+                "load game declaration",
+                Gdx.files.internal("old/space-gc/game.json")).apply(game);
 
 //        physicsSystem.world().setGravity(new Vector2(0, -10));
 

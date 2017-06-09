@@ -9,6 +9,7 @@ import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSyste
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.BaseBodyComponent;
 import com.github.alexeybond.gdx_commons.util.event.props.BooleanProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
+import com.github.alexeybond.gdx_commons.util.parts.exceptions.PartConnectRejectedException;
 
 /**
  * Component added to a entity attracted by gravity of some other entity.
@@ -35,7 +36,11 @@ public class GravityAttractionEffect implements Component, PhysicsComponent {
 
     @Override
     public void onConnect(Entity entity) {
-        affectedBody = entity.components().<BaseBodyComponent>get("body").body();
+        try {
+            affectedBody = entity.components().<BaseBodyComponent>get("body").body();
+        } catch (Exception e) {
+            throw new PartConnectRejectedException("Body not found.", e);
+        }
         system = entity.game().systems().get("physics");
         system.registerComponent(this);
         alive = true;

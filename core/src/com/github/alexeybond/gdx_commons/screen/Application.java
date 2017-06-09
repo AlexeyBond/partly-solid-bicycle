@@ -12,9 +12,13 @@ import com.github.alexeybond.gdx_commons.ioc.Module;
 import com.github.alexeybond.gdx_commons.resource_management.modules.ResourceManagement;
 import com.github.alexeybond.gdx_commons.screen.modules.DefaultLoadingScreenModule;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  *
@@ -25,7 +29,7 @@ public abstract class Application implements ApplicationListener {
     private final ArrayList<Module> modules = new ArrayList<Module>();
 
     private AssetManager assetManager;
-    boolean isLoading = false;
+    private boolean isLoading = false;
 
     private static Collection<Module> getDefaultModules() {
         return Arrays.asList(
@@ -62,10 +66,15 @@ public abstract class Application implements ApplicationListener {
 
     @Override
     public void render() {
-        useContext();
-        nextScreen();
-        checkLoadRequired();
-        currentScreen.draw();
+        try {
+            useContext();
+            nextScreen();
+            checkLoadRequired();
+            currentScreen.draw();
+        } catch (RuntimeException e) {
+            logCrash(e);
+            throw e;
+        }
     }
 
     @Override
@@ -122,6 +131,19 @@ public abstract class Application implements ApplicationListener {
             }
         } else {
             isLoading = false;
+        }
+    }
+
+    private void logCrash(Throwable e) {
+        try {
+            PrintStream ps = new PrintStream(Gdx.files.external("crash-" + new Date() + ".log").write(false));
+            try {
+                e.printStackTrace(ps);
+            } finally {
+                ps.close();
+            }
+        } catch (Exception ee) {
+            ee.printStackTrace();
         }
     }
 }

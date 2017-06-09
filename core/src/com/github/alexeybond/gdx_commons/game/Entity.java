@@ -11,6 +11,8 @@ import com.github.alexeybond.gdx_commons.util.parts.Parts;
 public class Entity implements EventsOwner<Component> {
     private final Game game;
 
+    private boolean isAlive = true;
+
     private final Events<Component> events = new Events<Component>();
     private final Parts<Entity, Component> components = new Parts<Entity, Component>(this);
 
@@ -32,6 +34,14 @@ public class Entity implements EventsOwner<Component> {
     }
 
     public void destroy() {
-        components.removeAll();
+        try {
+            components.removeAll();
+        } finally {
+            isAlive = false;
+        }
+    }
+
+    public boolean alive() {
+        return isAlive;
     }
 }

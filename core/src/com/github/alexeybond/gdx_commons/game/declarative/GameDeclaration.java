@@ -43,7 +43,7 @@ public class GameDeclaration {
         EntityDeclaration declaration = classes.get(className);
 
         for (int i = 0; i < included.length && null == declaration; i++) {
-            declaration = included[i].getEntityClass(className);
+            declaration = included[i].getEntityClass0(className);
         }
 
         return declaration;

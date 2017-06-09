@@ -1,10 +1,14 @@
 package com.github.alexeybond.gdx_commons.game.modules;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.SerializationException;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
+import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
+import com.github.alexeybond.gdx_commons.ioc.IoCStrategy;
 import com.github.alexeybond.gdx_commons.ioc.Module;
 import com.github.alexeybond.gdx_commons.ioc.strategy.Singleton;
 
@@ -69,6 +73,38 @@ public class GameSerialization implements Module {
                 }
 
                 return json.readValue(resultType, jsonData);
+            }
+        });
+
+        IoC.register("load game declaration", new IoCStrategy() {
+            @Override
+            public Object resolve(Object... args) {
+                FileHandle fileHandle = (FileHandle) args[0];
+                Json json = IoC.resolve("json for game serialization");
+
+                GameDeclaration declaration = json.fromJson(GameDeclaration.class, fileHandle);
+
+                if (declaration.include.length != 0) {
+                    IoCStrategy loadStrategy = IoC.resolveS("load game declaration");
+                    FileHandle parent = fileHandle.parent();
+
+                    declaration.included = new GameDeclaration[declaration.include.length];
+
+                    for (int i = 0; i < declaration.include.length; i++) {
+                        FileHandle includedFileHandle;
+
+                        includedFileHandle = parent.child(declaration.include[i]);
+
+                        if (!includedFileHandle.exists() || includedFileHandle.isDirectory()) {
+                            includedFileHandle = Gdx.files.getFileHandle(declaration.include[i], parent.type());
+                        }
+
+                        declaration.included[i]
+                                = (GameDeclaration) loadStrategy.resolve(includedFileHandle);
+                    }
+                }
+
+                return declaration;
             }
         });
     }
