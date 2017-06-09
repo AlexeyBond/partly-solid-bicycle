@@ -2,6 +2,7 @@ package com.github.alexeybond.gdx_commons.util.event;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  *
@@ -23,7 +24,7 @@ public class Events<TInitiator> {
         T event = nullableEvent(name);
 
         if (null == event) {
-            throw new IllegalArgumentException("No such event: " + name);
+            throw new NoSuchElementException("No such event: " + name);
         }
 
         return event;

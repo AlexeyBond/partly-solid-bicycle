@@ -3,12 +3,15 @@ package com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.CollisionData;
+import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
 import com.github.alexeybond.gdx_commons.util.event.props.ObjectProperty;
 
+import java.util.NoSuchElementException;
+
 /**
  * Component that triggers an event on entity colliding component's owner passing owner entity as
- * event parameter.
+ * event parameter if event has type of {@link ObjectProperty} (otherwise just triggers the event).
  */
 public class GenericTrigger
         implements Component, EventListener<Component, ObjectProperty<CollisionData, Component>> {
@@ -40,16 +43,22 @@ public class GenericTrigger
     public boolean onTriggered(Component component, ObjectProperty<CollisionData, Component> event) {
         Entity target = event.get().that.entity();
 
-        ObjectProperty<Entity, Component> targetEvent;
+        Event<Component> targetEvent;
 
         try {
             targetEvent = target.events().event(targetEventName);
-        } catch (Exception e) {
+        } catch (NoSuchElementException e) {
             return false;
         }
 
-        targetEvent.setSilently(entity);
-        targetEvent.trigger(this);
+        if (targetEvent instanceof ObjectProperty) {
+            ObjectProperty<Entity, Component> asObjectProperty = (ObjectProperty) targetEvent;
+
+            asObjectProperty.setSilently(entity);
+            asObjectProperty.trigger(this);
+        } else {
+            targetEvent.trigger(this);
+        }
 
         return true;
     }

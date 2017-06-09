@@ -1,9 +1,34 @@
 {
   "classes": {
+    "trash-destruction-effects": {
+      "components": {
+        "particles": {
+          "effect": "particles/spaceship-engine.p",
+          "masterProperty": "particles"
+        },
+        "one shot sound": {
+          "event": "position",
+          "sound": "old/space-gc/sound/destroy.wav",
+        },
+        // This way world generator will destroy all effects player has gone away from far enough
+        "tag": { "tag": "trash" },
+      },
+    },
     "trash-base": {
       "components": {
         "body": { "bodyType": "DynamicBody" },
         "com.github.alexeybond.gdx_gm2.test_game.game.components.decl.FuelItemDecl": {},
+        "destroy on event": {
+          "event": "hitPlanet",
+          "initEvent": true,
+          "preDestroyEvent": "preDestroy"
+        },
+        "spawn on event": {
+          "classes": ["trash-destruction-effects"],
+          "event": "preDestroy",
+          "observerTag": "camera",
+          "maxObserverDistance": 2000,
+        },
       }
     },
     "trash-1": {

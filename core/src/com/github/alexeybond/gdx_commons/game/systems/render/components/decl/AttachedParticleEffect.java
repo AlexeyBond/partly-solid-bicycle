@@ -21,13 +21,19 @@ public class AttachedParticleEffect implements ComponentDeclaration {
     public float rotate = 0;
     public float[] offset = new float[0];
 
+    public boolean continuous = true;
+
     /** Name of boolean property that enables the effect */
     public String masterProperty = "enableParticles";
 
     @Override
     public Component create(GameDeclaration gameDeclaration) {
-        return new AttachedContinuousParticleEffect(
-                pass, effect, getOffset(), rotate, masterProperty);
+        if (continuous) {
+            return new AttachedContinuousParticleEffect(
+                    pass, effect, getOffset(), rotate, masterProperty);
+        } else {
+            throw new UnsupportedOperationException();
+        }
     }
 
     private Vector2 getOffset() {

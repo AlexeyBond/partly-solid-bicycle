@@ -89,4 +89,8 @@ public class Event<TInitiator> {
 
         return processed;
     }
+
+    public static <T> Event<T> make() {
+        return new Event<T>();
+    }
 }

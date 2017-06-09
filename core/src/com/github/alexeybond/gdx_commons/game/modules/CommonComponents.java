@@ -1,9 +1,6 @@
 package com.github.alexeybond.gdx_commons.game.modules;
 
-import com.github.alexeybond.gdx_commons.game.common_components.decl.AttachToTaggedDecl;
-import com.github.alexeybond.gdx_commons.game.common_components.decl.ContinuousSoundDecl;
-import com.github.alexeybond.gdx_commons.game.common_components.decl.InfiniteWorldGenDecl;
-import com.github.alexeybond.gdx_commons.game.common_components.decl.OneShotSoundDecl;
+import com.github.alexeybond.gdx_commons.game.common_components.decl.*;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.ioc.Module;
 
@@ -20,6 +17,8 @@ public class CommonComponents implements Module {
         map.put("one shot sound", OneShotSoundDecl.class);
         map.put("continuous sound", ContinuousSoundDecl.class);
         map.put("attach to tagged", AttachToTaggedDecl.class);
+        map.put("destroy on event", DestroyOnEventDecl.class);
+        map.put("spawn on event", SpawnOnEventDecl.class);
     }
 
     @Override

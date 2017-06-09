@@ -48,6 +48,7 @@
       "old/space-gc/sound/collect.wav",
       "old/space-gc/sound/tourbin-right.wav",
       "old/space-gc/sound/tourbin-left.wav",
+      "old/space-gc/sound/destroy.wav",
     ]
   }
 }

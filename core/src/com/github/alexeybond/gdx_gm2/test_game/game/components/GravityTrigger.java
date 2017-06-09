@@ -70,6 +70,8 @@ public class GravityTrigger
         if (affected == entity) return false;
 
         if (event == hitBeginEvent) {
+            if (!affected.alive()) return false;
+
             affected.components().add(attractorName, new GravityAttractionEffect(ownerPosition, enableEvent, 100000000));
             affectedEntities.add(affected);
         } else {

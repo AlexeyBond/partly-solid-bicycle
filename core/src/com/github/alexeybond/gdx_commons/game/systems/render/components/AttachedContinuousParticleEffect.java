@@ -139,8 +139,6 @@ public class AttachedContinuousParticleEffect
             ParticleEmitter emitter = emitters.get(i);
 
             emitter.setPosition(pos.x, pos.y);
-
-            // TODO:: This still looks like a crutch
             patchEmitterParameter(emitter.getAngle(), totalRotation);
         }
     }
