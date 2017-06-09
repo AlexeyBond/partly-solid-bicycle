@@ -1,0 +1,53 @@
+{
+  "preload": {
+    "lists": [
+    ],
+    "skins": [
+      "ui/uiskin.json",
+    ],
+    "texture loops": [
+      "old/space-gc/kosmosbg.png",
+      "old/space-gc/minimap-grid.png",
+    ],
+    "particles": [
+      "particles/spaceship-engine.p",
+      "particles/spaceship-attractor.p",
+    ],
+    "textures": [
+      // TODO:: Move to atlas
+      "old/space-gc/trash1.png",
+      "old/space-gc/trash2.png",
+      "old/space-gc/trash3.png",
+      "old/space-gc/trash6.png",
+      "old/space-gc/trash7.png",
+      "old/space-gc/trash8.png",
+      "old/space-gc/trash9.png",
+      "old/space-gc/trash10.png",
+      "old/space-gc/trash11.png",
+      "old/space-gc/trash12.png",
+
+      // TODO:: Move to atlas
+      "old/space-gc/supermassive-trash1.png",
+      "old/space-gc/supermassive-trash2.png",
+      "old/space-gc/supermassive-trash3.png",
+      "old/space-gc/supermassive-trash4.png",
+      "old/space-gc/supermassive-trash5.png",
+      "old/space-gc/supermassive-trash6.png",
+
+      "old/space-gc/256x256spaceship_1.png",
+      "old/space-gc/256x256spaceship_2.png",
+      "old/space-gc/256x256spaceship_3.png",
+
+      "old/space-gc/minimap-player.png",
+      "old/space-gc/minimap-planet.png",
+    ],
+    "atlases": [
+
+    ],
+    "sounds": [
+      "old/space-gc/sound/collect.wav",
+      "old/space-gc/sound/tourbin-right.wav",
+      "old/space-gc/sound/tourbin-left.wav",
+    ]
+  }
+}

@@ -44,7 +44,7 @@ public class EntityDeclaration {
      */
     public Entity apply(Entity entity, GameDeclaration gameDeclaration) {
         for (String anInherit : inherit)
-            entity = gameDeclaration.classes.get(anInherit).apply(entity, gameDeclaration);
+            entity = gameDeclaration.getEntityClass(anInherit).apply(entity, gameDeclaration);
 
         for (Map.Entry<String, ComponentDeclaration> entry : components.entrySet())
             entity.components().add(entry.getKey(), entry.getValue().create(gameDeclaration));

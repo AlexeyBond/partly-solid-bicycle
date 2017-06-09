@@ -26,6 +26,7 @@ import com.github.alexeybond.gdx_commons.game.systems.tagging.TaggingSystem;
 import com.github.alexeybond.gdx_commons.game.systems.timing.TimingSystem;
 import com.github.alexeybond.gdx_commons.input.InputEvents;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
+import com.github.alexeybond.gdx_commons.resource_management.PreloadList;
 import com.github.alexeybond.gdx_commons.screen.AScreen;
 import com.github.alexeybond.gdx_commons.screen.layers.GameLayer;
 import com.github.alexeybond.gdx_commons.screen.layers.StageLayer;
@@ -42,7 +43,15 @@ import java.util.regex.Pattern;
 public class GameScreen extends AScreen {
     public GameScreen() {
         super(new GameScreenTechnique());
+    }
 
+    @Override
+    protected void preload() {
+        IoC.<PreloadList>resolve("preload list", "old/space-gc/preload.json");
+    }
+
+    @Override
+    protected void create() {
         scene().context().getSlot("minimapViewport").set(
                 new ViewportTarget(
                         ScreenTarget.INSTANCE,

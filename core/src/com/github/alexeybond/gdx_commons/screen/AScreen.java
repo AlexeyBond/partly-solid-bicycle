@@ -16,19 +16,31 @@ import com.github.alexeybond.gdx_commons.ioc.IoC;
 /**
  *
  */
-public class AScreen {
+public abstract class AScreen {
     private AScreen next;
     private AScreen prev;
 
     private final Array<ALayer> layers = new Array<ALayer>(false, 4);
-    private final Scene scene;
     private final InputMultiplexer inputMultiplexer = new InputMultiplexer();
-    private final InputEvents inputEvents;
+    private final Technique technique;
+
+    private Scene scene;
+    private InputEvents inputEvents;
 
     private Viewport mainViewport;
     private RenderTarget mainTarget;
 
+    private boolean created = false;
+
     public AScreen(Technique technique) {
+        this.technique = technique;
+
+        preload();
+    }
+
+    private void ensureCreated() {
+        if (created) return;
+
         DrawingState drawingState = IoC.resolve("drawing state");
 
         mainViewport = initViewport();
@@ -40,6 +52,32 @@ public class AScreen {
         inputEvents.enable();
 
         this.scene = new Scene(new DrawingContext(drawingState, mainTarget), technique);
+
+        create();
+
+        created = true;
+        resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    }
+
+    /**
+     * Initialize all screen-specific things such as layers.
+     *
+     * Called at most once for every screen instance.
+     */
+    protected abstract void create();
+
+    /**
+     * Preload resources.
+     *
+     * Called before {@link #create()}. {@link #create()} will be called only after all resources
+     * are loaded completely.
+     */
+    protected void preload() {
+
+    }
+
+    protected boolean created() {
+        return created;
     }
 
     protected Viewport initViewport() {
@@ -93,6 +131,8 @@ public class AScreen {
     }
 
     public final void resize(int width, int height) {
+        if (!created) return;
+
         mainViewport.update(width, height);
 
         for (int i = 0; i < layers.size; i++) {
@@ -126,6 +166,8 @@ public class AScreen {
     }
 
     public void draw() {
+        ensureCreated();
+
         float dt = Gdx.graphics.getDeltaTime();
         for (int i = 0; i < layers.size; i++) {
             layers.get(i).update(dt);

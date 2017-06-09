@@ -2,6 +2,7 @@ package com.github.alexeybond.gdx_commons.screen;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.github.alexeybond.gdx_commons.drawing.modules.GlobalDrawingState;
 import com.github.alexeybond.gdx_commons.drawing.modules.GlobalParticlePool;
 import com.github.alexeybond.gdx_commons.game.modules.GameSerialization;
@@ -9,6 +10,7 @@ import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.ioc.IoCContext;
 import com.github.alexeybond.gdx_commons.ioc.Module;
 import com.github.alexeybond.gdx_commons.resource_management.modules.ResourceManagement;
+import com.github.alexeybond.gdx_commons.screen.modules.DefaultLoadingScreenModule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,9 +24,13 @@ public abstract class Application implements ApplicationListener {
     private IoCContext ioCContext;
     private final ArrayList<Module> modules = new ArrayList<Module>();
 
+    private AssetManager assetManager;
+    boolean isLoading = false;
+
     private static Collection<Module> getDefaultModules() {
         return Arrays.asList(
                 new ResourceManagement()
+                , new DefaultLoadingScreenModule()
                 , new GlobalDrawingState()
                 , new GlobalParticlePool()
                 , new GameSerialization()
@@ -43,6 +49,8 @@ public abstract class Application implements ApplicationListener {
 
         for (Module module : modules) module.init();
 
+        assetManager = IoC.resolve("asset manager");
+
         enterScreen(IoC.<AScreen>resolve("initial screen"));
     }
 
@@ -56,6 +64,7 @@ public abstract class Application implements ApplicationListener {
     public void render() {
         useContext();
         nextScreen();
+        checkLoadRequired();
         currentScreen.draw();
     }
 
@@ -103,5 +112,16 @@ public abstract class Application implements ApplicationListener {
 
     private void useContext() {
         IoC.use(ioCContext);
+    }
+
+    private void checkLoadRequired() {
+        if (assetManager.getProgress() != 1f) {
+            if (!isLoading) {
+                enterScreen(IoC.<AScreen>resolve("loading screen"));
+                isLoading = true;
+            }
+        } else {
+            isLoading = false;
+        }
     }
 }

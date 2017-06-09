@@ -22,7 +22,15 @@ import com.github.alexeybond.gdx_gm2.test_game.game.GameScreen;
 public class StartScreen extends AScreen {
     public StartScreen() {
         super(new UIScreenTechnique());
+    }
 
+    @Override
+    protected void preload() {
+        IoC.resolve("preload skin", "ui/uiskin.json");
+    }
+
+    @Override
+    protected void create() {
         Skin skin = IoC.resolve("load skin", "ui/uiskin.json");
 
         final Stage stage = addLayerFront(new StageLayer(this, "ui")).stage();
