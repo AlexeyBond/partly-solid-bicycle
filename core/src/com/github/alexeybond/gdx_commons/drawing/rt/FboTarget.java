@@ -13,6 +13,7 @@ public class FboTarget implements RenderTarget {
 
     public FboTarget(FrameBuffer fbo) {
         this.fbo = fbo;
+        this.region.setTexture(fbo.getColorBufferTexture());
         this.region.setRegion(0,0,fbo.getWidth(),fbo.getHeight());
     }
 

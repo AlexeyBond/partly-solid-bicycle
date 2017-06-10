@@ -1,4 +1,4 @@
-package com.github.alexeybond.gdx_commons.drawing;
+package com.github.alexeybond.gdx_commons.drawing.tech;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.Predicate;
+import com.github.alexeybond.gdx_commons.drawing.*;
 import com.github.alexeybond.gdx_commons.drawing.rt.FboTarget;
 
 /**
@@ -93,15 +94,8 @@ public class EDSLTechnique implements Technique {
     /**
      * Draw a pass.
      */
-    protected Runnable pass(String name, PassController controller) {
-        return scene.addPass(name, new Pass(scene.context(), controller));
-    }
-
-    /**
-     * Draw a pass with default settings.
-     */
     protected Runnable pass(String name) {
-        return pass(name, new PassController());
+        return scene.addPass(name, new Pass(scene.context()));
     }
 
     /**

@@ -10,13 +10,11 @@ public class Pass implements Runnable, Drawable {
 
     private final Array<Drawable> drawables;
     private final DrawingContext defaultContext;
-    private final PassController controller;
 
     private boolean enabled = true;
 
-    public Pass(DrawingContext defaultContext, PassController controller) {
+    public Pass(DrawingContext defaultContext) {
         this.defaultContext = defaultContext;
-        this.controller = controller;
 
         this.drawables = new Array<Drawable>(false, DEFAULT_RESERVED_CAPACITY);
     }
@@ -25,13 +23,9 @@ public class Pass implements Runnable, Drawable {
     public void draw(DrawingContext context) {
         if (!enabled) return;
 
-        controller.beforePass(context);
         for (int i = 0; i < drawables.size; i++) {
-            controller.beforeItem(context);
             drawables.get(i).draw(context);
-            controller.afterItem(context);
         }
-        controller.afterPass(context);
     }
 
     @Override

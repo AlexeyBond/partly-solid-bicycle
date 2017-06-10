@@ -35,12 +35,19 @@
       "old/space-gc/supermassive-trash5.png",
       "old/space-gc/supermassive-trash6.png",
 
+      // TODO:: Move to atlas
       "old/space-gc/256x256spaceship_1.png",
       "old/space-gc/256x256spaceship_2.png",
       "old/space-gc/256x256spaceship_3.png",
 
+      // TODO:: Move to atlas
       "old/space-gc/minimap-player.png",
       "old/space-gc/minimap-planet.png",
+
+      "old/space-gc/lose-distortions.png",
+
+      // TODO:: Move to atlas
+      "old/space-gc/wasted.png",
     ],
     "atlases": [
 
