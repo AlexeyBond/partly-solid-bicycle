@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.github.alexeybond.gdx_commons.drawing.modules.GlobalDrawingState;
 import com.github.alexeybond.gdx_commons.drawing.modules.GlobalParticlePool;
+import com.github.alexeybond.gdx_commons.drawing.modules.ShaderLoader;
 import com.github.alexeybond.gdx_commons.game.modules.GameSerialization;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.ioc.IoCContext;
@@ -37,6 +38,7 @@ public abstract class Application implements ApplicationListener {
                 , new DefaultLoadingScreenModule()
                 , new GlobalDrawingState()
                 , new GlobalParticlePool()
+                , new ShaderLoader()
                 , new GameSerialization()
         );
     }

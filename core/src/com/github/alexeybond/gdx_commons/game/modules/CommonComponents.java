@@ -19,6 +19,7 @@ public class CommonComponents implements Module {
         map.put("attach to tagged", AttachToTaggedDecl.class);
         map.put("destroy on event", DestroyOnEventDecl.class);
         map.put("spawn on event", SpawnOnEventDecl.class);
+        map.put("send event to game", SendEventToGameDecl.class);
     }
 
     @Override

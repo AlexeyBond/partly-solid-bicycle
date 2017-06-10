@@ -1,12 +1,12 @@
 package com.github.alexeybond.gdx_gm2.test_game.game;
 
-import com.github.alexeybond.gdx_commons.drawing.Technique;
+import com.github.alexeybond.gdx_commons.drawing.EDSLTechnique;
 import com.github.alexeybond.gdx_commons.drawing.projection.OrthoProjection;
 
 /**
  *
  */
-public class GameScreenTechnique extends Technique {
+public class GameScreenTechnique extends EDSLTechnique {
     @Override
     protected Runnable build() {
         return seq(

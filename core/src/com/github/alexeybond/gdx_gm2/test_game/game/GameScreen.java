@@ -30,6 +30,7 @@ import com.github.alexeybond.gdx_commons.resource_management.PreloadList;
 import com.github.alexeybond.gdx_commons.screen.AScreen;
 import com.github.alexeybond.gdx_commons.screen.layers.GameLayer;
 import com.github.alexeybond.gdx_commons.screen.layers.StageLayer;
+import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
 import com.github.alexeybond.gdx_commons.util.event.props.BooleanProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
@@ -85,7 +86,14 @@ public class GameScreen extends AScreen {
                 "load game declaration",
                 Gdx.files.internal("old/space-gc/game.json")).apply(game);
 
-//        physicsSystem.world().setGravity(new Vector2(0, -10));
+        game.events().event("lose").subscribe(new EventListener<GameSystem, Event<GameSystem>>() {
+            @Override
+            public boolean onTriggered(GameSystem gameSystem, Event<GameSystem> event) {
+                next(new LoseScreen(game, scene()));
+
+                return true;
+            }
+        });
 
         final Box2DDebugRenderer box2DDebugRenderer = new Box2DDebugRenderer();
         scene().getPass("game-debug").addDrawable(new Drawable() {

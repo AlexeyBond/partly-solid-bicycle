@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.github.alexeybond.gdx_commons.drawing.Drawable;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
-import com.github.alexeybond.gdx_commons.drawing.Technique;
+import com.github.alexeybond.gdx_commons.drawing.EDSLTechnique;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.screen.AScreen;
 
@@ -17,7 +17,7 @@ public class DefaultLoadingScreen extends AScreen {
     private AssetManager assetManager;
 
     public DefaultLoadingScreen() {
-        super(new Technique() {
+        super(new EDSLTechnique() {
             @Override
             protected Runnable build() {
                 return seq(

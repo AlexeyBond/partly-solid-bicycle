@@ -68,6 +68,19 @@
       }
     },
 
+    "player-destruction-effects": {
+      "components": {
+        "particles": {
+          "effect": "particles/explosion.p",
+          "masterProperty": "particles"
+        },
+        "one shot sound": {
+          "event": "position",
+          "sound": "old/space-gc/sound/destroy.wav",
+        },
+      },
+    },
+
     "player": {
       "components": {
         "body": { "bodyType": "DynamicBody" },
@@ -153,7 +166,20 @@
           "rightEngineControl": "D",
           "leftEngineControl": "A",
           "attractorControl": "W"
-        }}
+        }},
+        "destroy on event": {
+          "event": "hitPlanet",
+          "initEvent": true,
+          "preDestroyEvent": "preDestroy"
+        },
+        "spawn on event": {
+          "classes": ["player-destruction-effects"],
+          "event": "preDestroy",
+        },
+        "send event to game": {
+          "ownerEvent": "preDestroy",
+          "gameEvent": "lose",
+        }
       },
       "properties": {
         "fuelCapacity": ["100"],
