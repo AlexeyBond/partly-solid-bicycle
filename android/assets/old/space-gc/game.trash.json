@@ -31,6 +31,20 @@
         },
       }
     },
+    "trash-generator": {
+      "components": {
+        "infinite world generator": {
+          "observerTag": "player",
+          "generateTag": "trash",
+          "generateClasses": [
+            "trash-1", "trash-2", "trash-3",
+            "trash-6", "trash-7", "trash-8",
+            "trash-9", "trash-10", "trash-11",
+            "trash-12",
+          ]
+        }
+      },
+    },
     "trash-1": {
       "inherit": ["trash-base"],
       "components": {

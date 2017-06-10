@@ -210,18 +210,7 @@
       }
     },
     {
-      "components": {
-        "infinite world generator": {
-          "observerTag": "player",
-          "generateTag": "trash",
-          "generateClasses": [
-            "trash-1", "trash-2", "trash-3",
-            "trash-6", "trash-7", "trash-8",
-            "trash-9", "trash-10", "trash-11",
-            "trash-12",
-          ]
-        }
-      },
+      "inherit": ["trash-generator"],
       "properties": {
         "leaveZone": ["1"],
         "keepZone": ["4"],
@@ -230,20 +219,7 @@
       }
     },
     {
-      "components": {
-        "infinite world generator": {
-          "observerTag": "player",
-          "generateTag": "planet",
-          "generateClasses": [
-            "supermassive-trash-1",
-            "supermassive-trash-2",
-            "supermassive-trash-3",
-            "supermassive-trash-4",
-            "supermassive-trash-5",
-            "supermassive-trash-6",
-          ]
-        }
-      },
+      "inherit": ["supermassive-trash-generator"],
       "properties": {
         "leaveZone": ["1"],
         "keepZone": ["3"],

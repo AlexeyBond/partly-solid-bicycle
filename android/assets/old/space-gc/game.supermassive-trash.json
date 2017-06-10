@@ -36,6 +36,22 @@
         },
       }
     },
+    "supermassive-trash-generator": {
+      "components": {
+        "infinite world generator": {
+          "observerTag": "camera",
+          "generateTag": "planet",
+          "generateClasses": [
+            "supermassive-trash-1",
+            "supermassive-trash-2",
+            "supermassive-trash-3",
+            "supermassive-trash-4",
+            "supermassive-trash-5",
+            "supermassive-trash-6",
+          ]
+        }
+      },
+    },
     "supermassive-trash-1": {
       "inherit": ["supermassive-trash-base"],
       "components": {

@@ -59,7 +59,6 @@ public class LoseScreenTechnique extends PlainTechnique {
     private void setupDistortionShader() {
         GL20 gl = Gdx.gl;
         distortionMap.bind(1);
-        ShaderProgram.pedantic = false;
         shader.setUniformf("u_time", timePassed);
         shader.setUniformi("u_distortionTexture", 1);
         timePassed += Gdx.graphics.getDeltaTime();
