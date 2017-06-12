@@ -17,10 +17,23 @@ dependencies {
     compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
 
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-    compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion";
+    compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
 }
 
-project.ext.assetsDir = new File("../android/assets");
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+    }
+}
+
+project.ext.rootProjectDir = projectDir.parentFile
+project.ext.assetsDir = new File((File)project.ext.rootProjectDir, "android/assets");
+project.ext.rawAssetsDir = new File((File)project.ext.rootProjectDir, "_raw-assets");
 
 task PE(type: JavaExec) {
     main = "com.badlogic.gdx.tools.particleeditor.ParticleEditor"
@@ -28,4 +41,41 @@ task PE(type: JavaExec) {
     standardInput = System.in
     workingDir = project.assetsDir
     ignoreExitValue = true
+}
+
+import com.badlogic.gdx.tools.texturepacker.TexturePacker
+import com.badlogic.gdx.utils.Json
+
+class AtlasSettings {
+    // relative to _raw-assets directory
+    String src;
+    // relative to assets directory
+    String dst = ".";
+    // name without extension
+    String name = "atlas";
+}
+
+project.ext.atlasSettingsFile = new File((File)project.ext.rawAssetsDir, "atlases.json")
+
+task TP {
+    doLast {
+        Json json = new Json();
+        ArrayList<AtlasSettings> atlasSettingsList =
+                json.fromJson(
+                        ArrayList.class,
+                        AtlasSettings.class,
+                        new FileInputStream((File)atlasSettingsFile))
+
+        atlasSettingsList.each {
+            File src = new File((File)rawAssetsDir, it.src).canonicalFile;
+            File dst = new File((File)assetsDir, it.dst).canonicalFile;
+            String atlasName = it.name;
+
+            System.out.println("Packing \"${atlasName}\"")
+            System.out.println("\tfrom: ${src.getAbsolutePath()}")
+            System.out.println("\tto  : ${dst.getAbsolutePath()}")
+
+            TexturePacker.processIfModified(src.absolutePath, dst.absolutePath, atlasName);
+        }
+    }
 }

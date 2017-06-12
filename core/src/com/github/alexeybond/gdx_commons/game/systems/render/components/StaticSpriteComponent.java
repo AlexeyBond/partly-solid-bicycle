@@ -9,7 +9,6 @@ import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
 /**
  *
  */
-// TODO:: Sprite uses SIN/COS tables with low accuracy what causes artifacts on some objects. Add (optional) mode that uses more accurate SIN/COS computation.
 public class StaticSpriteComponent extends BaseRenderComponent {
     private final Sprite sprite;
 

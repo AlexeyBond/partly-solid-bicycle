@@ -1,0 +1,7 @@
+[
+  {
+    "name": "sprites",
+    "src": "sprites-space-gc",
+    "dst": "old/space-gc/sprites",
+  }
+]
