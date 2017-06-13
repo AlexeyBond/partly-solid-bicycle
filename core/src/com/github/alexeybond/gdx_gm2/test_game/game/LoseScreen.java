@@ -1,44 +1,40 @@
 package com.github.alexeybond.gdx_gm2.test_game.game;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.github.alexeybond.gdx_commons.application.Layer;
+import com.github.alexeybond.gdx_commons.application.Screen;
+import com.github.alexeybond.gdx_commons.application.impl.DefaultScreen;
+import com.github.alexeybond.gdx_commons.application.impl.layers.StageLayer;
 import com.github.alexeybond.gdx_commons.drawing.Drawable;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
 import com.github.alexeybond.gdx_commons.drawing.Scene;
+import com.github.alexeybond.gdx_commons.drawing.Technique;
 import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
-import com.github.alexeybond.gdx_commons.screen.AScreen;
-import com.github.alexeybond.gdx_commons.screen.layers.StageLayer;
+import com.github.alexeybond.gdx_commons.util.parts.AParts;
 
 import java.util.regex.Pattern;
 
 /**
  *
  */
-public class LoseScreen extends AScreen {
+public class LoseScreen extends DefaultScreen {
     private final Game lostGame;
     private final Scene oldScene;
 
     public LoseScreen(Game lostGame, Scene oldScene) {
-        super(new LoseScreenTechnique());
-
         this.lostGame = lostGame;
         this.oldScene = oldScene;
     }
 
     @Override
-    protected boolean keepPrev() {
-        // Unless there is already no way back we still have to keep a reference
-        // to prevent scene context destruction
-        return true;
-    }
+    protected void createLayers(AParts<Screen, Layer> layers) {
+        super.createLayers(layers);
 
-    @Override
-    protected void create() {
         oldScene.enableMatching(Pattern.compile(".*minimap.*"), false);
         oldScene.enableMatching(Pattern.compile(".*ui.*"), false);
 
@@ -50,7 +46,7 @@ public class LoseScreen extends AScreen {
             }
         });
 
-        Stage stage = addLayerFront(new StageLayer(this, "ui")).stage();
+        Stage stage = layers.add("ui", new StageLayer("ui")).stage();
 
         Skin skin = IoC.resolve("load skin", "ui/uiskin.json");
 
@@ -69,15 +65,25 @@ public class LoseScreen extends AScreen {
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                next(IoC.<AScreen>resolve("initial screen"));
+                next(IoC.<Screen>resolve("initial screen"));
             }
         });
     }
 
     @Override
-    public void draw() {
-        super.draw();
+    public void update(float dt) {
+        super.update(dt);
 
-        lostGame.update(Gdx.graphics.getDeltaTime() * 0.2f);
+        lostGame.update(dt * 0.2f);
+    }
+
+    @Override
+    protected Technique createTechnique() {
+        return new LoseScreenTechnique();
+    }
+
+    @Override
+    protected boolean checkKeepPrevious() {
+        return prev() == null;
     }
 }

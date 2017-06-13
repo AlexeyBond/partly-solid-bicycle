@@ -9,10 +9,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.github.alexeybond.gdx_commons.application.Layer;
+import com.github.alexeybond.gdx_commons.application.Screen;
+import com.github.alexeybond.gdx_commons.application.impl.DefaultScreen;
+import com.github.alexeybond.gdx_commons.application.impl.layers.GameLayerWith2DPhysicalGame;
+import com.github.alexeybond.gdx_commons.application.impl.layers.StageLayer;
 import com.github.alexeybond.gdx_commons.drawing.Drawable;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
+import com.github.alexeybond.gdx_commons.drawing.Technique;
+import com.github.alexeybond.gdx_commons.drawing.modules.GlobalParticlePool;
 import com.github.alexeybond.gdx_commons.drawing.rt.ScreenTarget;
 import com.github.alexeybond.gdx_commons.drawing.rt.ViewportTarget;
 import com.github.alexeybond.gdx_commons.game.Component;
@@ -26,33 +32,38 @@ import com.github.alexeybond.gdx_commons.game.systems.tagging.TaggingSystem;
 import com.github.alexeybond.gdx_commons.game.systems.timing.TimingSystem;
 import com.github.alexeybond.gdx_commons.input.InputEvents;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
-import com.github.alexeybond.gdx_commons.resource_management.PreloadList;
-import com.github.alexeybond.gdx_commons.screen.AScreen;
-import com.github.alexeybond.gdx_commons.screen.layers.GameLayer;
-import com.github.alexeybond.gdx_commons.screen.layers.StageLayer;
+import com.github.alexeybond.gdx_commons.ioc.modules.Modules;
+import com.github.alexeybond.gdx_commons.resource_management.modules.ResourcesListModule;
 import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
 import com.github.alexeybond.gdx_commons.util.event.props.BooleanProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.ObjectProperty;
+import com.github.alexeybond.gdx_commons.util.parts.AParts;
 
 import java.util.regex.Pattern;
 
 /**
  *
  */
-public class GameScreen extends AScreen {
-    public GameScreen() {
-        super(new GameScreenTechnique());
+public class GameScreen extends DefaultScreen {
+    @Override
+    protected Technique createTechnique() {
+        return new GameScreenTechnique();
     }
 
     @Override
-    protected void preload() {
-        IoC.<PreloadList>resolve("preload list", "old/space-gc/preload.json");
+    protected void createModules(Modules modules) {
+        super.createModules(modules);
+
+        modules.add(new GlobalParticlePool());
+        modules.add(new ResourcesListModule("old/space-gc/preload.json"));
     }
 
     @Override
-    protected void create() {
+    protected void createLayers(AParts<Screen, Layer> layers) {
+        super.createLayers(layers);
+
         scene().context().getSlot("minimapViewport").set(
                 new ViewportTarget(
                         ScreenTarget.INSTANCE,
@@ -71,7 +82,7 @@ public class GameScreen extends AScreen {
                 ));
 
         // -------------------- GAME SETUP --------------------
-        final Game game = addLayerFront(new GameLayer(this)).game();
+        final Game game = layers.add("game", new GameLayerWith2DPhysicalGame()).game();
 
         game.systems().add("physics", new PhysicsSystem());
         game.systems().add("tagging", new TaggingSystem());
@@ -106,7 +117,7 @@ public class GameScreen extends AScreen {
         });
 
         // --------------------  UI SETUP  --------------------
-        final Stage uiStage = addLayerFront(new StageLayer(this, "ui")).stage();
+        final Stage uiStage = layers.add("ui", new StageLayer("ui")).stage();
         uiStage.setDebugAll(true);
         Skin skin = IoC.resolve("load skin", "ui/uiskin.json");
 

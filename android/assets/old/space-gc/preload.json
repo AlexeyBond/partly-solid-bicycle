@@ -50,7 +50,7 @@
       "old/space-gc/wasted.png",
     ],
     "atlases": [
-
+      "old/space-gc/sprites/sprites.atlas",
     ],
     "sounds": [
       "old/space-gc/sound/collect.wav",

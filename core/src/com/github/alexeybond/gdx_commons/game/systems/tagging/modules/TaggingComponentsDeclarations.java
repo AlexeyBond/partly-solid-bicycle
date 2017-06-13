@@ -3,7 +3,7 @@ package com.github.alexeybond.gdx_commons.game.systems.tagging.modules;
 import com.github.alexeybond.gdx_commons.game.systems.tagging.components.decl.SingleTag;
 import com.github.alexeybond.gdx_commons.game.systems.tagging.components.decl.Tags;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
-import com.github.alexeybond.gdx_commons.ioc.Module;
+import com.github.alexeybond.gdx_commons.ioc.modules.Module;
 
 import java.util.Map;
 

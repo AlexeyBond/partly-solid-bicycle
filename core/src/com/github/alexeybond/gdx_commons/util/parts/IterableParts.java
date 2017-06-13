@@ -37,12 +37,14 @@ public class IterableParts<TOwner, T extends Part<TOwner>> implements AParts<TOw
     }
 
     @Override
-    public void add(String name, T part) {
-        parent.add(name, part);
+    public <TT extends T> TT add(String name, TT part) {
+        TT added = parent.<TT>add(name, part);
 
-        if (part == parent.get(name)) {
+        if (part == added) {
             iterationArray.add(part);
         }
+
+        return added;
     }
 
     @Override

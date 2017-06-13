@@ -1,7 +1,6 @@
 package com.github.alexeybond.gdx_gm2.test_game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -9,31 +8,33 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.github.alexeybond.gdx_commons.application.Layer;
+import com.github.alexeybond.gdx_commons.application.Screen;
+import com.github.alexeybond.gdx_commons.application.impl.DefaultScreen;
+import com.github.alexeybond.gdx_commons.application.impl.layers.StageLayer;
 import com.github.alexeybond.gdx_commons.drawing.Drawable;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
+import com.github.alexeybond.gdx_commons.drawing.Technique;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
-import com.github.alexeybond.gdx_commons.screen.AScreen;
-import com.github.alexeybond.gdx_commons.screen.layers.StageLayer;
+import com.github.alexeybond.gdx_commons.util.parts.AParts;
 import com.github.alexeybond.gdx_gm2.test_game.game.GameScreen;
 
 /**
  *
  */
-public class StartScreen extends AScreen {
-    public StartScreen() {
-        super(new UIScreenTechnique());
+public class StartScreen extends DefaultScreen {
+    @Override
+    protected Technique createTechnique() {
+        return new UIScreenTechnique();
     }
 
     @Override
-    protected void preload() {
-        IoC.resolve("preload skin", "ui/uiskin.json");
-    }
+    protected void createLayers(AParts<Screen, Layer> layers) {
+        super.createLayers(layers);
 
-    @Override
-    protected void create() {
         Skin skin = IoC.resolve("load skin", "ui/uiskin.json");
 
-        final Stage stage = addLayerFront(new StageLayer(this, "ui")).stage();
+        final Stage stage = layers.add("ui", new StageLayer("ui")).stage();
 
         TextButton textButton1 = new TextButton("NEW GAME", skin);
         textButton1.addListener(new ChangeListener() {
@@ -87,13 +88,7 @@ public class StartScreen extends AScreen {
             }
         });
 
-        goToGame();
-    }
-
-    @Override
-    public void draw() {
-        super.draw();
-//        Gdx.graphics.setTitle("Fps: " + Gdx.graphics.getFramesPerSecond());
+//        goToGame();
     }
 
     private void goToGame() {

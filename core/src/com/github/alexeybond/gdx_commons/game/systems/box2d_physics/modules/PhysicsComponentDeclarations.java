@@ -2,7 +2,7 @@ package com.github.alexeybond.gdx_commons.game.systems.box2d_physics.modules;
 
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.decl.*;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
-import com.github.alexeybond.gdx_commons.ioc.Module;
+import com.github.alexeybond.gdx_commons.ioc.modules.Module;
 
 import java.util.Map;
 

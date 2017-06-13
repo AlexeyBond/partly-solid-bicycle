@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.github.alexeybond.gdx_commons.drawing.DrawingState;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
-import com.github.alexeybond.gdx_commons.ioc.Module;
+import com.github.alexeybond.gdx_commons.ioc.modules.Module;
 import com.github.alexeybond.gdx_commons.ioc.strategy.Singleton;
 
 /**

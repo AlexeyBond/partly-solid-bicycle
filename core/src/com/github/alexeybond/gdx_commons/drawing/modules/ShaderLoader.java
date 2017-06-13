@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.ioc.IoCStrategy;
-import com.github.alexeybond.gdx_commons.ioc.Module;
+import com.github.alexeybond.gdx_commons.ioc.modules.Module;
 
 import java.util.HashMap;
 import java.util.Map;

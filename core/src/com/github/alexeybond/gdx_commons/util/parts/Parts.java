@@ -18,8 +18,9 @@ public class Parts<TOwner, T extends Part<TOwner>> implements AParts<TOwner, T> 
     }
 
     @Override
-    public void add(String name, T part) {
-        if (parts.containsKey(name)) return;
+    public <TT extends T> TT add(String name, TT part) {
+        TT exist = (TT) parts.get(name);
+        if (null != exist) return exist;
         parts.put(name, part);
 
         try {
@@ -28,10 +29,13 @@ public class Parts<TOwner, T extends Part<TOwner>> implements AParts<TOwner, T> 
             parts.remove(name);
             Gdx.app.log("DEBUG",
                     "Part " + part + " refuses to connect to " + this + " as \"" + name + "\"", e);
+            return null;
         } catch (Exception e) {
             parts.remove(name);
             throw new PartConnectException("Could not connect " + part + " as \"" + name + "\"", e);
         }
+
+        return part;
     }
 
     @Override

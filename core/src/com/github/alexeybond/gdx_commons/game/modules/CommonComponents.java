@@ -2,7 +2,7 @@ package com.github.alexeybond.gdx_commons.game.modules;
 
 import com.github.alexeybond.gdx_commons.game.common_components.decl.*;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
-import com.github.alexeybond.gdx_commons.ioc.Module;
+import com.github.alexeybond.gdx_commons.ioc.modules.Module;
 
 import java.util.Map;
 

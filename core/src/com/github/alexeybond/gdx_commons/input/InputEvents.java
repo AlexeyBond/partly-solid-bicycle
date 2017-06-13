@@ -20,5 +20,7 @@ public interface InputEvents extends EventsOwner<InputEvents> {
 
     void addSlaveProcessor(InputProcessor processor, boolean front);
 
+    void removeSlaveProcessor(InputProcessor processor);
+
     InputEvents makeChild();
 }

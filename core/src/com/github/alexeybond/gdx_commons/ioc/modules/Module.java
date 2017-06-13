@@ -1,4 +1,4 @@
-package com.github.alexeybond.gdx_commons.ioc;
+package com.github.alexeybond.gdx_commons.ioc.modules;
 
 /**
  * Object that registers something in IoC container and/or initializes something.

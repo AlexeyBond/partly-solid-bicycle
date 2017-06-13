@@ -1,23 +1,31 @@
-package com.github.alexeybond.gdx_commons.screen.screens;
+package com.github.alexeybond.gdx_commons.application.impl.screens;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.github.alexeybond.gdx_commons.application.Layer;
+import com.github.alexeybond.gdx_commons.application.Screen;
+import com.github.alexeybond.gdx_commons.application.impl.DefaultScreen;
 import com.github.alexeybond.gdx_commons.drawing.Drawable;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
+import com.github.alexeybond.gdx_commons.drawing.Technique;
 import com.github.alexeybond.gdx_commons.drawing.tech.EDSLTechnique;
-import com.github.alexeybond.gdx_commons.ioc.IoC;
-import com.github.alexeybond.gdx_commons.screen.AScreen;
+import com.github.alexeybond.gdx_commons.util.parts.AParts;
 
 /**
  *
  */
-public class DefaultLoadingScreen extends AScreen {
-    private AssetManager assetManager;
+public class DefaultLoadingScreen extends DefaultScreen {
+    private final AssetManager assetManager;
 
-    public DefaultLoadingScreen() {
-        super(new EDSLTechnique() {
+    public DefaultLoadingScreen(AssetManager assetManager) {
+        this.assetManager = assetManager;
+    }
+
+    @Override
+    protected Technique createTechnique() {
+        return new EDSLTechnique() {
             @Override
             protected Runnable build() {
                 return seq(
@@ -27,13 +35,13 @@ public class DefaultLoadingScreen extends AScreen {
                         pass("draw")
                 );
             }
-        });
-
-        assetManager = IoC.resolve("asset manager");
+        };
     }
 
     @Override
-    protected void create() {
+    protected void createLayers(AParts<Screen, Layer> layers) {
+        super.createLayers(layers);
+
         scene().getPass("setup-camera").addDrawable(new Drawable() {
             @Override
             public void draw(DrawingContext context) {
@@ -60,15 +68,16 @@ public class DefaultLoadingScreen extends AScreen {
     }
 
     @Override
-    protected boolean keepPrev() {
-        // Keep previous screen to go back to it when load finishes
-        return true;
+    public void update(float dt) {
+        super.update(dt);
+
+        if (assetManager.update()) {
+            next(prev());
+        }
     }
 
     @Override
-    public void draw() {
-        super.draw();
-
-        if (assetManager.update()) back();
+    protected boolean checkKeepPrevious() {
+        return true;
     }
 }

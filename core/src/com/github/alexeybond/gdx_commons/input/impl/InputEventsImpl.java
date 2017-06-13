@@ -114,6 +114,16 @@ public class InputEventsImpl implements InputEvents {
     }
 
     @Override
+    public void removeSlaveProcessor(InputProcessor processor) {
+        processors.remove(processor);
+
+        if (enabled) {
+            deactivateProcessors();
+            activateProcessors();
+        }
+    }
+
+    @Override
     public InputEvents makeChild() {
         InputEvents child = new InputEventsImpl(screenViewport);
         addSlaveProcessor(child.inputProcessor(), false);

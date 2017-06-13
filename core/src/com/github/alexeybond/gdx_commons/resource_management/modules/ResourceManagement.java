@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Logger;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.ioc.IoCStrategy;
-import com.github.alexeybond.gdx_commons.ioc.Module;
+import com.github.alexeybond.gdx_commons.ioc.modules.Module;
 import com.github.alexeybond.gdx_commons.ioc.strategy.Singleton;
 import com.github.alexeybond.gdx_commons.resource_management.PreloadList;
 import com.github.alexeybond.gdx_commons.resource_management.PreloadListLoader;
@@ -61,10 +61,21 @@ public class ResourceManagement implements Module {
         };
     }
 
+    private <T> IoCStrategy assetUnloadStrategy(final Class<T> type) {
+        return new IoCStrategy() {
+            @Override
+            public Object resolve(Object... args) {
+                assetManager.unload((String) args[0]);
+                return null;
+            }
+        };
+    }
+
     private <T> void registerAssetTypeStrategies(
             String name, final Class<T> type, final AssetLoaderParameters<T> params) {
         IoC.register("preload " + name, assetPreloadStrategy(type, params));
         IoC.register("load " + name, assetLoadStrategy(type, params));
+        IoC.register("unload " + name, assetUnloadStrategy(type));
     }
 
     @Override

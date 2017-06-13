@@ -1,9 +1,8 @@
 package com.github.alexeybond.gdx_commons.game.systems.input.modules;
 
-import com.github.alexeybond.gdx_commons.game.systems.input.components.KeyBindingsComponent;
 import com.github.alexeybond.gdx_commons.game.systems.input.components.decl.KeyBindings;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
-import com.github.alexeybond.gdx_commons.ioc.Module;
+import com.github.alexeybond.gdx_commons.ioc.modules.Module;
 
 import java.util.Map;
 

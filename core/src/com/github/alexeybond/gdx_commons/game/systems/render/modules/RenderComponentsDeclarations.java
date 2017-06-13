@@ -5,7 +5,7 @@ import com.github.alexeybond.gdx_commons.game.systems.render.components.decl.Att
 import com.github.alexeybond.gdx_commons.game.systems.render.components.decl.BackgroundLoop;
 import com.github.alexeybond.gdx_commons.game.systems.render.components.decl.StaticSprite;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
-import com.github.alexeybond.gdx_commons.ioc.Module;
+import com.github.alexeybond.gdx_commons.ioc.modules.Module;
 
 import java.util.Map;
 
