@@ -1,35 +1,24 @@
 package com.github.alexeybond.gdx_commons.game.systems.render.components;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
-import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
+import com.github.alexeybond.gdx_commons.drawing.sprite.DefaultSpriteTemplate;
+import com.github.alexeybond.gdx_commons.drawing.sprite.SpriteInstance;
+import com.github.alexeybond.gdx_commons.drawing.sprite.SpriteTemplate;
 
 /**
  *
  */
-public class StaticSpriteComponent extends BaseRenderComponent {
-    private final Sprite sprite;
+public class StaticSpriteComponent extends SpriteComponent {
+    private final SpriteTemplate template;
 
-    public StaticSpriteComponent(String passName, TextureRegion region, float scale) {
-        super(passName);
-
-        sprite = new Sprite(region);
-        sprite.setScale(scale);
-        sprite.setOriginCenter();
+    public StaticSpriteComponent(String passName, SpriteInstance sprite, TextureRegion region, float scale) {
+        super(passName, sprite, scale);
+        template = new DefaultSpriteTemplate(
+                region, .5f * (float)region.getRegionWidth(), .5f * (float)region.getRegionHeight(), 1, 0);
     }
 
     @Override
-    public void draw(DrawingContext context) {
-        Vector2 pos = position.ref();
-        float rot = rotation.get();
-
-        Batch batch = context.state().beginBatch();
-
-        if (rot != sprite.getRotation()) sprite.setRotation(rot);
-        sprite.setCenter(pos.x, pos.y);
-
-        sprite.draw(batch);
+    public SpriteTemplate getTemplate() {
+        return template;
     }
 }

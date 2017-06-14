@@ -2,6 +2,7 @@
   "include": [
     "game.trash.json",
     "game.supermassive-trash.json",
+    "game.player-animation.json",
   ],
   "classes": {
     "camera": {
@@ -82,6 +83,9 @@
     },
 
     "player": {
+      "inherit": [
+        "player-animation",
+      ],
       "components": {
         "body": { "bodyType": "DynamicBody" },
         "bodyFixture": {
@@ -119,7 +123,7 @@
         "tag:player": { "type": "tag", "tag": "player" },
         "com.github.alexeybond.gdx_gm2.test_game.game.components.decl.FuelTankDecl": {},
         "com.github.alexeybond.gdx_gm2.test_game.game.components.decl.SpaceshipEnginesDecl": {},
-        "sprite": { "sprite": "old/space-gc/256x256spaceship_1", "accurate": true },
+//        "sprite": { "sprite": "old/space-gc/256x256spaceship_1", "accurate": true },
         "minimapSprite": {
           "type": "sprite",
           "sprite": "old/space-gc/minimap-player",

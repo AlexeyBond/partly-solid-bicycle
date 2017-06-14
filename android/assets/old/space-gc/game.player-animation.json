@@ -1,0 +1,32 @@
+{
+  "classes": {
+    "player-animation": {
+      "components": {
+        "animated sprite": {
+          "accurate": true,
+          "animation": {
+            "sequences": {
+              "default": {
+                "loop": true,
+                "frames": [
+                  {
+                    "image": "old/space-gc/256x256spaceship_1",
+                    "duration": 0.2,
+                  },
+                  {
+                    "image": "old/space-gc/256x256spaceship_2",
+                    "duration": 0.2,
+                  },
+                  {
+                    "image": "old/space-gc/256x256spaceship_3",
+                    "duration": 0.2,
+                  },
+                ],
+              },
+            }
+          }
+        }
+      }
+    }
+  }
+}
