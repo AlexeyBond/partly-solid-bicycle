@@ -18,7 +18,6 @@ import com.github.alexeybond.gdx_commons.application.impl.layers.StageLayer;
 import com.github.alexeybond.gdx_commons.drawing.Drawable;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
 import com.github.alexeybond.gdx_commons.drawing.Technique;
-import com.github.alexeybond.gdx_commons.drawing.modules.GlobalParticlePool;
 import com.github.alexeybond.gdx_commons.drawing.rt.ScreenTarget;
 import com.github.alexeybond.gdx_commons.drawing.rt.ViewportTarget;
 import com.github.alexeybond.gdx_commons.game.Component;
@@ -56,7 +55,6 @@ public class GameScreen extends DefaultScreen {
     protected void createModules(Modules modules) {
         super.createModules(modules);
 
-        modules.add(new GlobalParticlePool());
         modules.add(new ResourcesListModule("old/space-gc/preload.json"));
     }
 

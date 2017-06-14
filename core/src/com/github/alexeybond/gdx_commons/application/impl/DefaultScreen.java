@@ -191,8 +191,6 @@ public abstract class DefaultScreen implements Screen {
     }
 
     private void create0() {
-        System.out.printf("create %s\n", getClass().getSimpleName());
-
         createModules(modules);
 
         viewport = createViewport();
@@ -209,8 +207,6 @@ public abstract class DefaultScreen implements Screen {
     }
 
     private void dispose0() {
-        System.out.printf("dispose %s\n", getClass().getSimpleName());
-
         layers.removeAll();
         scene.context().release();
         modules.dispose();

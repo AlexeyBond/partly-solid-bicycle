@@ -15,8 +15,12 @@ import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.ioc.IoCStrategy;
 import com.github.alexeybond.gdx_commons.ioc.modules.Module;
 import com.github.alexeybond.gdx_commons.ioc.strategy.Singleton;
+import com.github.alexeybond.gdx_commons.resource_management.ListUnloadCallback;
 import com.github.alexeybond.gdx_commons.resource_management.PreloadList;
 import com.github.alexeybond.gdx_commons.resource_management.PreloadListLoader;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -33,6 +37,7 @@ public class ResourceManagement implements Module {
     private Logger log = new Logger("ResourceManagement", Logger.DEBUG);
 
     private AssetManager assetManager;
+    private List<ListUnloadCallback> unloadCallbacks = new ArrayList<ListUnloadCallback>();
 
     private <T> IoCStrategy assetLoadStrategy(final Class<T> type, final AssetLoaderParameters<T> params) {
         return new IoCStrategy() {
@@ -84,9 +89,20 @@ public class ResourceManagement implements Module {
 
         IoC.register("asset manager", new Singleton(assetManager));
 
+        final ListUnloadCallback unloadCallback = new ListUnloadCallback() {
+            @Override
+            public void onUnload(PreloadList list, AssetManager assetManager) {
+                for (int i = 0; i < unloadCallbacks.size(); i++) {
+                    unloadCallbacks.get(i).onUnload(list, assetManager);
+                }
+            }
+        };
+
         PreloadListLoader preloadListLoader
-                = new PreloadListLoader(assetManager.getFileHandleResolver());
+                = new PreloadListLoader(assetManager.getFileHandleResolver(), assetManager, unloadCallback);
         assetManager.setLoader(PreloadList.class, preloadListLoader);
+
+        IoC.register("list unload callbacks", new Singleton(unloadCallbacks));
 
         preloadListLoader.registerClass("lists", PreloadList.class);
         preloadListLoader.registerClass("skins", Skin.class);

@@ -39,7 +39,6 @@ public class Application implements ApplicationListener {
         to.acquire();
         from.pause();
         from.leave(to);
-        System.out.printf("%s -> %s\n", from.getClass().getSimpleName(), to.getClass().getSimpleName());
         to.enter(from);
         to.unpause();
         from.release();

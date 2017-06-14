@@ -31,16 +31,24 @@ public class PreloadListLoader
 
     private final HashMap<String, ClassSettings> classes = new HashMap<String, ClassSettings>();
 
+    private final AssetManager assetManager;
+    private final ListUnloadCallback unloadCallback;
+
     private PreloadList preloadList;
 
-    public PreloadListLoader(FileHandleResolver resolver) {
+    public PreloadListLoader(FileHandleResolver resolver, AssetManager assetManager, ListUnloadCallback unloadCallback) {
         super(resolver);
+        this.assetManager = assetManager;
+        this.unloadCallback = unloadCallback;
     }
 
     private PreloadList doLoad(FileHandle fileHandle) {
         if (null != preloadList) return preloadList;
 
         preloadList = json.fromJson(PreloadList.class, fileHandle);
+
+        preloadList.onUnload = unloadCallback;
+        preloadList.assetManager = assetManager;
 
         return preloadList;
     }

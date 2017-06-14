@@ -1,5 +1,6 @@
 package com.github.alexeybond.gdx_commons.resource_management;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Disposable;
 
 import java.util.HashMap;
@@ -17,6 +18,9 @@ public class PreloadList implements Disposable {
 
     @Override
     public void dispose() {
-
+        if (null != onUnload) onUnload.onUnload(this, assetManager);
     }
+
+    transient ListUnloadCallback onUnload = null;
+    transient AssetManager assetManager = null;
 }
