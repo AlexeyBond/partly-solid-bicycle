@@ -32,14 +32,15 @@ public class PreloadListLoader
     private final HashMap<String, ClassSettings> classes = new HashMap<String, ClassSettings>();
 
     private final AssetManager assetManager;
-    private final ListUnloadCallback unloadCallback;
+    private final PreloadListCallback unloadCallback, loadCallback;
 
     private PreloadList preloadList;
 
-    public PreloadListLoader(FileHandleResolver resolver, AssetManager assetManager, ListUnloadCallback unloadCallback) {
+    public PreloadListLoader(FileHandleResolver resolver, AssetManager assetManager, PreloadListCallback unloadCallback, PreloadListCallback loadCallback) {
         super(resolver);
         this.assetManager = assetManager;
         this.unloadCallback = unloadCallback;
+        this.loadCallback = loadCallback;
     }
 
     private PreloadList doLoad(FileHandle fileHandle) {
@@ -59,7 +60,11 @@ public class PreloadListLoader
             String fileName,
             FileHandle file,
             AssetLoaderParameters<PreloadList> parameter) {
-        return doLoad(file);
+        PreloadList list = doLoad(file);
+
+        loadCallback.execute(list, assetManager);
+
+        return list;
     }
 
     @Override

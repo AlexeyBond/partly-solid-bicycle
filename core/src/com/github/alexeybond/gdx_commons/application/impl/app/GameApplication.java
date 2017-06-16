@@ -12,6 +12,7 @@ import com.github.alexeybond.gdx_commons.game.systems.input.modules.InputCompone
 import com.github.alexeybond.gdx_commons.game.systems.render.modules.RenderComponentsDeclarations;
 import com.github.alexeybond.gdx_commons.game.systems.tagging.modules.TaggingComponentsDeclarations;
 import com.github.alexeybond.gdx_commons.ioc.modules.Modules;
+import com.github.alexeybond.gdx_commons.music.modules.GlobalMusicPlayer;
 import com.github.alexeybond.gdx_commons.resource_management.modules.ResourceManagement;
 
 /**
@@ -28,6 +29,7 @@ public abstract class GameApplication extends Application {
         modules.add(new ShaderLoader());
         modules.add(new GameSerialization());
         modules.add(new DefaultLoadingScreenModule());
+        modules.add(new GlobalMusicPlayer());
 
         modules.add(new PhysicsComponentDeclarations());
         modules.add(new InputComponentsDeclarations());

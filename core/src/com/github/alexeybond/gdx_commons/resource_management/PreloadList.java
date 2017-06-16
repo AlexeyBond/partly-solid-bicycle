@@ -18,9 +18,9 @@ public class PreloadList implements Disposable {
 
     @Override
     public void dispose() {
-        if (null != onUnload) onUnload.onUnload(this, assetManager);
+        if (null != onUnload) onUnload.execute(this, assetManager);
     }
 
-    transient ListUnloadCallback onUnload = null;
+    transient PreloadListCallback onUnload = null;
     transient AssetManager assetManager = null;
 }

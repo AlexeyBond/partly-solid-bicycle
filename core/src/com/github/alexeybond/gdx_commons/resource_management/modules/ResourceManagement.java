@@ -3,6 +3,7 @@ package com.github.alexeybond.gdx_commons.resource_management.modules;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.TextureLoader;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -15,17 +16,26 @@ import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.ioc.IoCStrategy;
 import com.github.alexeybond.gdx_commons.ioc.modules.Module;
 import com.github.alexeybond.gdx_commons.ioc.strategy.Singleton;
-import com.github.alexeybond.gdx_commons.resource_management.ListUnloadCallback;
 import com.github.alexeybond.gdx_commons.resource_management.PreloadList;
+import com.github.alexeybond.gdx_commons.resource_management.PreloadListCallback;
 import com.github.alexeybond.gdx_commons.resource_management.PreloadListLoader;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  */
 public class ResourceManagement implements Module {
+    private static class CompositeListCallback
+            extends ArrayList<PreloadListCallback> implements PreloadListCallback {
+        @Override
+        public void execute(PreloadList list, AssetManager assetManager) {
+            for (int i = 0; i < size(); i++) {
+                get(i).execute(list, assetManager);
+            }
+        }
+    }
+
     private static TextureLoader.TextureParameter loopTextureParameter
             = new TextureLoader.TextureParameter() {{
         wrapU = Texture.TextureWrap.Repeat;
@@ -37,7 +47,6 @@ public class ResourceManagement implements Module {
     private Logger log = new Logger("ResourceManagement", Logger.DEBUG);
 
     private AssetManager assetManager;
-    private List<ListUnloadCallback> unloadCallbacks = new ArrayList<ListUnloadCallback>();
 
     private <T> IoCStrategy assetLoadStrategy(final Class<T> type, final AssetLoaderParameters<T> params) {
         return new IoCStrategy() {
@@ -89,24 +98,24 @@ public class ResourceManagement implements Module {
 
         IoC.register("asset manager", new Singleton(assetManager));
 
-        final ListUnloadCallback unloadCallback = new ListUnloadCallback() {
-            @Override
-            public void onUnload(PreloadList list, AssetManager assetManager) {
-                for (int i = 0; i < unloadCallbacks.size(); i++) {
-                    unloadCallbacks.get(i).onUnload(list, assetManager);
-                }
-            }
-        };
+        final PreloadListCallback loadCallback = new CompositeListCallback();
+        final PreloadListCallback unloadCallback = new CompositeListCallback();
 
         PreloadListLoader preloadListLoader
-                = new PreloadListLoader(assetManager.getFileHandleResolver(), assetManager, unloadCallback);
+                = new PreloadListLoader(
+                        assetManager.getFileHandleResolver(),
+                assetManager,
+                unloadCallback,
+                loadCallback);
         assetManager.setLoader(PreloadList.class, preloadListLoader);
 
-        IoC.register("list unload callbacks", new Singleton(unloadCallbacks));
+        IoC.register("list unload callbacks", new Singleton(unloadCallback));
+        IoC.register("list load callbacks", new Singleton(loadCallback));
 
         preloadListLoader.registerClass("lists", PreloadList.class);
         preloadListLoader.registerClass("skins", Skin.class);
         preloadListLoader.registerClass("sounds", Sound.class);
+        preloadListLoader.registerClass("music", Music.class);
         preloadListLoader.registerClass("particles", ParticleEffect.class);
         preloadListLoader.registerClass("textures", Texture.class);
         preloadListLoader.registerClass("atlases", TextureAtlas.class);
@@ -116,6 +125,7 @@ public class ResourceManagement implements Module {
 
         registerAssetTypeStrategies("skin", Skin.class, null);
         registerAssetTypeStrategies("sound", Sound.class, null);
+        registerAssetTypeStrategies("music", Music.class, null);
         registerAssetTypeStrategies("particles", ParticleEffect.class, null);
         registerAssetTypeStrategies("texture", Texture.class, null);
         registerAssetTypeStrategies("atlas", TextureAtlas.class, null);

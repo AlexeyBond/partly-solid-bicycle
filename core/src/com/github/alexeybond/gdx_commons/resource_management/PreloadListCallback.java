@@ -5,6 +5,6 @@ import com.badlogic.gdx.assets.AssetManager;
 /**
  *
  */
-public interface ListUnloadCallback {
-    void onUnload(PreloadList list, AssetManager assetManager);
+public interface PreloadListCallback {
+    void execute(PreloadList list, AssetManager assetManager);
 }

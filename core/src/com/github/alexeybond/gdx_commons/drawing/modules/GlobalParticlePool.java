@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.ioc.IoCStrategy;
 import com.github.alexeybond.gdx_commons.ioc.modules.Module;
-import com.github.alexeybond.gdx_commons.resource_management.ListUnloadCallback;
+import com.github.alexeybond.gdx_commons.resource_management.PreloadListCallback;
 import com.github.alexeybond.gdx_commons.resource_management.PreloadList;
 
 import java.util.HashMap;
@@ -38,9 +38,10 @@ public class GlobalParticlePool implements Module {
             }
         });
 
-        IoC.<List<ListUnloadCallback>>resolve("list unload callbacks").add(new ListUnloadCallback() {
+        IoC.<List<PreloadListCallback>>resolve("list unload callbacks")
+                .add(new PreloadListCallback() {
             @Override
-            public void onUnload(PreloadList list, AssetManager assetManager) {
+            public void execute(PreloadList list, AssetManager assetManager) {
                 // TODO:: Remove pools only for unloaded effects
                 // TODO:: Dispose pooled effects (implement own ParticleEffectPool? standard one doesn't provide method to dispose all effects)
                 particlePoolMap.clear();

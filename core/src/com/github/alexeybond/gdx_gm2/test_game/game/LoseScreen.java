@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.github.alexeybond.gdx_commons.application.Layer;
 import com.github.alexeybond.gdx_commons.application.Screen;
 import com.github.alexeybond.gdx_commons.application.impl.DefaultScreen;
+import com.github.alexeybond.gdx_commons.application.impl.layers.MusicLayer;
 import com.github.alexeybond.gdx_commons.application.impl.layers.StageLayer;
 import com.github.alexeybond.gdx_commons.drawing.Drawable;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
@@ -34,6 +35,8 @@ public class LoseScreen extends DefaultScreen {
     @Override
     protected void createLayers(AParts<Screen, Layer> layers) {
         super.createLayers(layers);
+
+        layers.add("music", new MusicLayer()).player().next();
 
         oldScene.enableMatching(Pattern.compile(".*minimap.*"), false);
         oldScene.enableMatching(Pattern.compile(".*ui.*"), false);

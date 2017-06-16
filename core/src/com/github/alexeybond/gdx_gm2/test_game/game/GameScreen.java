@@ -14,6 +14,7 @@ import com.github.alexeybond.gdx_commons.application.Layer;
 import com.github.alexeybond.gdx_commons.application.Screen;
 import com.github.alexeybond.gdx_commons.application.impl.DefaultScreen;
 import com.github.alexeybond.gdx_commons.application.impl.layers.GameLayerWith2DPhysicalGame;
+import com.github.alexeybond.gdx_commons.application.impl.layers.MusicLayer;
 import com.github.alexeybond.gdx_commons.application.impl.layers.StageLayer;
 import com.github.alexeybond.gdx_commons.drawing.Drawable;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
@@ -78,6 +79,9 @@ public class GameScreen extends DefaultScreen {
                             }
                         }
                 ));
+
+        //
+//        layers.add("music", new MusicLayer("old/space-gc/sound/background.mp3", true));
 
         // -------------------- GAME SETUP --------------------
         final Game game = layers.add("game", new GameLayerWith2DPhysicalGame()).game();
