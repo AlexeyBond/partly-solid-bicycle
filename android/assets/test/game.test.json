@@ -1,0 +1,62 @@
+{
+  "classes": {
+    "box-peace": {
+      "components": {
+        "body": {
+          "bodyType": "DynamicBody",
+        },
+      },
+    },
+  },
+  "entities": [
+    {
+      "components": {
+        "camera": {
+          "pass": "setup-main-camera",
+          "globalAlias": "mainCamera"
+        },
+      }
+    },
+    {
+      "components": {
+        "physics debugger": {
+          "camera": "mainCamera",
+        }
+      }
+    },
+    {
+      "components": {
+        "body": { "bodyType": "StaticBody" },
+        "box fixture": { "size": [1000, 30] },
+      },
+      "properties": {
+        "position": ["0", "-320"],
+      }
+    },
+    {
+      "components": {
+        "body": { "bodyType": "StaticBody" },
+        "box fixture": { "size": [80, 80] },
+      },
+      "properties": {
+        "position": ["0", "-300"],
+        "rotation": ["45"],
+      }
+    },
+
+    {
+      "components": {
+        "body": {
+          "bodyType": "StaticBody"
+        },
+        "box fixture": {
+          "size": [300, 300],
+        },
+        "com.github.alexeybond.gdx_gm2.test_game.test2.BreakableComponent$Decl": {},
+        "tag": {
+          "tag": "box",
+        }
+      }
+    }
+  ]
+}

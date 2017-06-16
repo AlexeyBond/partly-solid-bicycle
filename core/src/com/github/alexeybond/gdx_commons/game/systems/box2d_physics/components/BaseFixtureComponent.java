@@ -3,15 +3,15 @@ package com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
-import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.CollidablePhysicsComponent;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.CollisionData;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.FixturePhysicsComponent;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
 import com.github.alexeybond.gdx_commons.util.event.props.ObjectProperty;
 
 /**
  *
  */
-public abstract class BaseFixtureComponent implements CollidablePhysicsComponent {
+public abstract class BaseFixtureComponent implements FixturePhysicsComponent {
     private BaseBodyComponent bodyComponent;
     private Fixture fixture;
     private boolean alive = false;
@@ -31,6 +31,11 @@ public abstract class BaseFixtureComponent implements CollidablePhysicsComponent
      */
     protected BaseFixtureComponent() {
         this("collisionBegin", "collisionEnd");
+    }
+
+    @Override
+    public Fixture fixture() {
+        return fixture;
     }
 
     @Override

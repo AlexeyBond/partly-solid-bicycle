@@ -18,6 +18,7 @@ import com.github.alexeybond.gdx_commons.drawing.Technique;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.util.parts.AParts;
 import com.github.alexeybond.gdx_gm2.test_game.game.GameScreen;
+import com.github.alexeybond.gdx_gm2.test_game.test2.Test2Screen;
 
 /**
  *
@@ -44,11 +45,11 @@ public class StartScreen extends DefaultScreen {
             }
         });
 
-        TextButton textButton2 = new TextButton("Button 2", skin);
+        TextButton textButton2 = new TextButton("TEST 2", skin);
         textButton2.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("Pressed 2 !!!1!!");
+                next(new Test2Screen());
             }
         });
 
