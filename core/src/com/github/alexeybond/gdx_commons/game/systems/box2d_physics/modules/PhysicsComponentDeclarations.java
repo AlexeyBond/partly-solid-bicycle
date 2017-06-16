@@ -1,5 +1,6 @@
 package com.github.alexeybond.gdx_commons.game.systems.box2d_physics.modules;
 
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.PhysicsDebuggerComponent;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.decl.*;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.ioc.modules.Module;
@@ -18,6 +19,7 @@ public class PhysicsComponentDeclarations implements Module {
         map.put("polygon fixture", PolygonFixtureDecl.class);
         map.put("circle fixture", CircleFixtureDecl.class);
         map.put("generic trigger", GenericTriggerDecl.class);
+        map.put("physics debugger", PhysicsDebuggerComponent.Decl.class);
     }
 
     @Override

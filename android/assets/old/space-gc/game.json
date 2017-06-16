@@ -3,6 +3,7 @@
     "game.trash.json",
     "game.supermassive-trash.json",
     "game.player-animation.json",
+    "game.debug.json",
   ],
   "classes": {
     "camera": {

@@ -74,8 +74,6 @@ public class StartScreen extends DefaultScreen {
 
         stage.addActor(group);
 
-        stage.setDebugAll(true);
-
         scene().getPass("dbg").addDrawable(new Drawable() {
             @Override
             public void draw(DrawingContext context) {

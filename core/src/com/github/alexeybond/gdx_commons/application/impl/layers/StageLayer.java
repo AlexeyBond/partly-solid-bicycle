@@ -4,6 +4,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.github.alexeybond.gdx_commons.application.Screen;
 import com.github.alexeybond.gdx_commons.drawing.Drawable;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
+import com.github.alexeybond.gdx_commons.input.InputEvents;
+import com.github.alexeybond.gdx_commons.util.event.props.BooleanProperty;
 
 /**
  *
@@ -11,6 +13,8 @@ import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
 public class StageLayer extends LayerAdapter implements Drawable {
     private final String passName;
     private Stage stage;
+
+    private BooleanProperty<InputEvents> debugEnabledProp;
 
     public Stage stage() {
         return stage;
@@ -30,6 +34,8 @@ public class StageLayer extends LayerAdapter implements Drawable {
         this.stage = setupStage(this.stage = new Stage(screen.viewport()));
         screen.input().addSlaveProcessor(this.stage, true);
         screen.scene().getPass(passName).addDrawable(this);
+        debugEnabledProp = screen.input().events()
+                .event("debugEnabled", BooleanProperty.<InputEvents>make(false));
     }
 
     @Override
@@ -45,6 +51,7 @@ public class StageLayer extends LayerAdapter implements Drawable {
     public void draw(DrawingContext context) {
         // Stage calls batch.begin() so batch drawing should be ended
         context.state().end();
+        stage.setDebugAll(debugEnabledProp.get());
         stage.draw();
     }
 

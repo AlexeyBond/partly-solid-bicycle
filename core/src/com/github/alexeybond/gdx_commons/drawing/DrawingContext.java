@@ -44,6 +44,7 @@ public class DrawingContext {
         if (null == target) target = ScreenTarget.INSTANCE;
 
         if (target != currentRenderTarget) {
+            state.flush();
             currentRenderTarget.end();
             currentRenderTarget = target;
             currentRenderTarget.begin();

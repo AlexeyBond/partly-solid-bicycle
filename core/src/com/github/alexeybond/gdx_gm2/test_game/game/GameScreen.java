@@ -16,6 +16,7 @@ import com.github.alexeybond.gdx_commons.application.impl.DefaultScreen;
 import com.github.alexeybond.gdx_commons.application.impl.layers.GameLayerWith2DPhysicalGame;
 import com.github.alexeybond.gdx_commons.application.impl.layers.MusicLayer;
 import com.github.alexeybond.gdx_commons.application.impl.layers.StageLayer;
+import com.github.alexeybond.gdx_commons.application.util.ScreenUtils;
 import com.github.alexeybond.gdx_commons.drawing.Drawable;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
 import com.github.alexeybond.gdx_commons.drawing.Technique;
@@ -63,6 +64,8 @@ public class GameScreen extends DefaultScreen {
     protected void createLayers(AParts<Screen, Layer> layers) {
         super.createLayers(layers);
 
+        ScreenUtils.enableToggleDebug(this);
+
         scene().context().getSlot("minimapViewport").set(
                 new ViewportTarget(
                         ScreenTarget.INSTANCE,
@@ -108,19 +111,8 @@ public class GameScreen extends DefaultScreen {
             }
         });
 
-        final Box2DDebugRenderer box2DDebugRenderer = new Box2DDebugRenderer();
-        scene().getPass("game-debug").addDrawable(new Drawable() {
-            @Override
-            public void draw(DrawingContext context) {
-                context.state().end();
-                Camera camera = game.events().<ObjectProperty<Camera, GameSystem>>event("mainCamera").get();
-                box2DDebugRenderer.render(physicsSystem.world(), camera.combined);
-            }
-        });
-
         // --------------------  UI SETUP  --------------------
         final Stage uiStage = layers.add("ui", new StageLayer("ui")).stage();
-        uiStage.setDebugAll(true);
         Skin skin = IoC.resolve("load skin", "ui/uiskin.json");
 
         final ProgressBar progressBar = new ProgressBar(0, 100, 1, false, skin);
@@ -141,25 +133,6 @@ public class GameScreen extends DefaultScreen {
             @Override
             public boolean onTriggered(Component component, FloatProperty<Component> event) {
                 progressBar.setValue(event.get());
-                return true;
-            }
-        });
-
-        input().keyEvent("`").subscribe(new EventListener<InputEvents, BooleanProperty<InputEvents>>() {
-            boolean debug = false;
-
-            private void set() {
-                scene().enableMatching(Pattern.compile(".*debug.*"), debug);
-                uiStage.setDebugAll(debug);
-            }
-
-            {set();}
-
-            @Override
-            public boolean onTriggered(InputEvents inputEvents, BooleanProperty<InputEvents> event) {
-                if (event.get()) return false;
-                debug = !debug;
-                set();
                 return true;
             }
         });
