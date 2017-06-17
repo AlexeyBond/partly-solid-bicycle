@@ -182,49 +182,69 @@ public class DestroyerImpl implements Destroyer {
         }
     }
 
-    private void mark(Vertex vertex, float mark, int imark) {
-        if (vertex.markIter == imark && vertex.markValue <= mark) return;
+    private Queue<Vertex> markQueue = new Queue<Vertex>(100);
 
-        vertex.markIter = imark;
-        vertex.markValue = mark;
+    private void mark(Vertex from, Vertex to, int iteration) {
+        from.markIter = iteration;
+        from.markValue = 0;
+        markQueue.addLast(from);
 
-        for (int i = 0; i < vertex.edges.size; i++) {
-            Edge edge = vertex.edges.get(i);
-            mark(edge.other(vertex), edge.len + mark, imark);
+        while (markQueue.size != 0) {
+            Vertex cur = markQueue.removeFirst();
+            float curMark = cur.markValue;
+
+            if (to.markIter == iteration && to.markValue < curMark)
+                continue;
+
+            for (int i = 0; i < cur.edges.size; i++) {
+                Edge edge = cur.edges.get(i);
+                Vertex other = edge.other(cur);
+
+                float oMark = curMark + edge.len;
+
+                if (other.markIter == iteration && other.markValue <= oMark)
+                    continue;
+
+                other.markIter = iteration;
+                other.markValue = oMark;
+                markQueue.addLast(other);
+            }
         }
     }
 
-    private void walk(Vertex from, Vertex to, List<Edge> edges, List<Vertex> vertices) {
+    private void walk(Vertex from, Vertex to, List<Edge> edges, List<Vertex> vertices, int iteration) {
         vertices.add(from);
 
-        if (from == to) return;
+        while (from != to) {
 
-        Edge bestE = null;
-        Vertex bestV = null;
-        float bestMark = from.markValue;
+            Edge bestE = null;
+            Vertex bestV = null;
+            float bestMark = from.markValue;
 
-        for (int i = 0; i < from.edges.size; i++) {
-            Edge cur = from.edges.get(i);
-            Vertex cv = cur.other(from);
+            for (int i = 0; i < from.edges.size; i++) {
+                Edge cur = from.edges.get(i);
+                Vertex cv = cur.other(from);
 
-            if (cv.markValue < bestMark) {
-                bestMark = cv.markValue;
-                bestE = cur;
-                bestV = cv;
+                if (cv.markIter == iteration && cv.markValue < bestMark) {
+                    bestMark = cv.markValue;
+                    bestE = cur;
+                    bestV = cv;
+                }
             }
+
+            edges.add(bestE);
+
+            from = bestV;
+            vertices.add(from);
         }
-
-        edges.add(bestE);
-
-        walk(bestV, to, edges, vertices);
     }
 
     private void shortestPath(
             Vertex start, Vertex end,
             List<Edge> edges, List<Vertex> vertices,
             int imark) {
-        mark(end, 0, imark);
-        walk(start, end, edges, vertices);
+        mark(end, start, imark);
+        walk(start, end, edges, vertices, imark);
     }
 
     private boolean verifyPartShape(List<Vertex> vertices, List<Vector2> points) {
