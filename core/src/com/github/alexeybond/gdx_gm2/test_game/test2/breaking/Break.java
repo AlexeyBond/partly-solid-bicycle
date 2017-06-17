@@ -67,12 +67,10 @@ public class Break {
         final Vertex start;
         final Vector2 dir = new Vector2();
         final float maxLen;
-        final Edge owner;
 
-        private BRay(Vector2 dir, Vertex start1, float maxLen, Edge owner) {
+        private BRay(Vector2 dir, Vertex start1, float maxLen) {
             this.start = start1;
             this.maxLen = maxLen;
-            this.owner = owner;
             this.dir.set(dir);
         }
 
@@ -103,7 +101,7 @@ public class Break {
     }
 
     private static void startRays(
-            Queue<BRay> q, Vector2 dir, Vertex start, float range, int n, float maxLen, Edge owner) {
+            Queue<BRay> q, Vector2 dir, Vertex start, float range, int n, float maxLen) {
         Vector2 dirr = new Vector2();
 
         float sector = range * 2f / (float) n;
@@ -114,8 +112,7 @@ public class Break {
             q.addLast(new BRay(
                     dirr.set(dir).rotate(a),
                     start,
-                    maxLen,
-                    owner
+                    maxLen
             ));
         }
     }
@@ -139,12 +136,11 @@ public class Break {
 
         Edge bestE = null;
         Vertex bestV = null;
-        float bestMark = Float.POSITIVE_INFINITY;
+        float bestMark = from.fmark;
 
         for (int i = 0; i < from.edges.size(); i++) {
             Edge cur = from.edges.get(i);
             Vertex cv = cur.other(from);
-            if (cv == from) continue;
 
             if (cv.fmark < bestMark) {
                 bestMark = cv.fmark;
@@ -166,34 +162,23 @@ public class Break {
         walk(start, end, edges, vertices);
     }
 
-    private final static ArrayList<Vector2> tmpPoints = new ArrayList<Vector2>();
+    private static boolean verifyPartShape(List<Vertex> vertices, List<Vector2> points) {
+        for (int aIdx = 0; aIdx < vertices.size(); aIdx++) {
+            int bIdx = aIdx - 1; bIdx = (bIdx < 0) ? vertices.size() + bIdx : bIdx;
+            int cIdx = aIdx - 2; cIdx = (cIdx < 0) ? vertices.size() + cIdx : cIdx;
 
-    private static boolean verifyPartShape(List<Vector2> points) {
-        tmpPoints.clear();
-
-        for (int aIdx = 0; aIdx < points.size(); aIdx++) {
-            int bIdx = aIdx - 1; bIdx = (bIdx < 0) ? points.size() + bIdx : bIdx;
-            int cIdx = aIdx - 2; cIdx = (cIdx < 0) ? points.size() + cIdx : cIdx;
-
-            Vector2 a = points.get(aIdx);
-            Vector2 b = points.get(bIdx);
-            Vector2 c = points.get(cIdx);
+            Vector2 a = vertices.get(aIdx).pos;
+            Vector2 b = vertices.get(bIdx).pos;
+            Vector2 c = vertices.get(cIdx).pos;
 
             float area = Math.abs((b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x));
 
             if (area >= 1f) {
-                tmpPoints.add(b);
+                points.add(b);
             }
         }
 
-        if (tmpPoints.size() < 3) return false;
-
-        if (tmpPoints.size() != points.size()) {
-            points.clear();
-            points.addAll(tmpPoints);
-        }
-
-        return true;
+        return points.size() >= 3;
     }
 
     public static List<List<Vector2>> break_(List<Vector2> shape) {
@@ -219,7 +204,7 @@ public class Break {
 
         Vertex centerVert = new Vertex(center);
 
-        startRays(rays, new Vector2(1, 0), centerVert, 180, 6, 40, null);
+        startRays(rays, new Vector2(1, 0), centerVert, 180, 6, 40);
 
         while (rays.size != 0) {
             BRay ray = rays.removeFirst();
@@ -228,7 +213,6 @@ public class Break {
             float dst = ray.maxLen * 2;
 
             for (Edge edgex : edges) {
-                if (edgex == ray.owner) continue;
                 if (edgex.contains(ray.start)) continue;
                 float t = ray.test(edgex);
 
@@ -251,8 +235,7 @@ public class Break {
                         edge.vertex2,
                         80,
                         2,
-                        ray.maxLen,
-                        edge
+                        ray.maxLen
                 );
 
                 continue;
@@ -265,7 +248,7 @@ public class Break {
 
             edges.add(new Edge(ray.start, third, 2));
             edges.add(new Edge(edge.vertex1, third, edge.order));
-            edges.add(new Edge(edge.vertex2, third, edge.order));
+            edges.add(new Edge(third, edge.vertex2, edge.order));
         }
 
         long mTime = System.nanoTime();
@@ -274,13 +257,14 @@ public class Break {
 
         ArrayList<Edge> xEdges = new ArrayList<Edge>();
         ArrayList<Vertex> xVertices = new ArrayList<Vertex>();
+        List<Vector2> resShape = null;
+
         int i = 213;
         while (edges.size() != 0) {
             xEdges.clear();
             xVertices.clear();
 
             try {
-
                 Edge exe = side(edges);
                 Vertex corner = exe.vertex1;
                 Vertex other = exe.vertex2;
@@ -289,12 +273,13 @@ public class Break {
 
                 shortestPath(corner, other, xEdges, xVertices, ++i);
 
-                List<Vector2> resShape = new ArrayList<Vector2>(xVertices.size());
-                for (int j = 0; j < xVertices.size(); j++) {
-                    resShape.add(xVertices.get(j).pos);
-                }
-                if (verifyPartShape(resShape)) {
+                if (null == resShape) resShape = new ArrayList<Vector2>(xVertices.size());
+
+                if (verifyPartShape(xVertices, resShape)) {
                     res.add(resShape);
+                    resShape = null;
+                } else {
+                    resShape.clear();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
