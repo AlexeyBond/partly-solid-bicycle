@@ -18,6 +18,8 @@ import com.github.alexeybond.gdx_commons.input.InputEvents;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
+import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
+import com.github.alexeybond.gdx_commons.util.event.props.IntProperty;
 import com.github.alexeybond.gdx_commons.util.parts.AParts;
 
 /**
@@ -47,6 +49,12 @@ public class Test2Screen extends DefaultScreen {
         Game game = layers.add("game", new GameLayerWith2DPhysicalGame()).game();
 
         game.systems().<PhysicsSystem>get("physics").world().setGravity(new Vector2(0, -100));
+        game.systems().<PhysicsSystem>get("physics").events()
+                .<IntProperty<PhysicsSystem>>event("positionIterations").set(null, 4);
+        game.systems().<PhysicsSystem>get("physics").events()
+                .<IntProperty<PhysicsSystem>>event("velocityIterations").set(null, 6);
+        game.systems().<PhysicsSystem>get("physics").events()
+                .<FloatProperty<PhysicsSystem>>event("simulationStep").set(null, 0.005f);
 
         IoC.<GameDeclaration>resolve(
                 "load game declaration",

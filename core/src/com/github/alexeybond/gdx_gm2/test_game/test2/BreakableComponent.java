@@ -3,7 +3,6 @@ package com.github.alexeybond.gdx_gm2.test_game.test2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.Shape;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
@@ -11,9 +10,10 @@ import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.FixturePhysicsComponent;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.BaseBodyComponent;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.FixtureDefFixtureComponent;
+import com.github.alexeybond.gdx_commons.game.utils.destruction.Destroyer;
+import com.github.alexeybond.gdx_commons.game.utils.destruction.impl.DestroyerImpl;
 import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
-import com.github.alexeybond.gdx_gm2.test_game.test2.breaking.Break;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +46,8 @@ public class BreakableComponent
     private FixturePhysicsComponent fixtureComponent;
     private Entity entity;
 
+    private Destroyer destroyer = new DestroyerImpl();
+
     public BreakableComponent(GameDeclaration gameDeclaration) {
         this.gameDeclaration = gameDeclaration;
     }
@@ -75,7 +77,17 @@ public class BreakableComponent
             verts.add(v);
         }
 
-        List<List<Vector2>> broken = Break.break_(verts);
+        destroyer.config().crackLengthMax = 100;
+        destroyer.config().crackLengthMin = 70;
+        destroyer.config().minTriArea = 1;
+        destroyer.config().forkRaysMin = 2;
+        destroyer.config().forkRaysMax = 3;
+        destroyer.config().forkAngleRange = 80;
+        destroyer.config().forkAngleRestrictRangeFraction = 0.1f;
+
+        destroyer.prepare(verts);
+        destroyer.startCenter();
+        List<ArrayList<Vector2>> broken = destroyer.compute();
 
         PolygonShape polygonShape = new PolygonShape();
 
@@ -116,6 +128,8 @@ public class BreakableComponent
         }
 
         polygonShape.dispose();
+
+        destroyer.reset();
 
         entity.destroy();
         return true;
