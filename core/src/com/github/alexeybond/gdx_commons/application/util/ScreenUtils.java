@@ -16,25 +16,22 @@ public enum ScreenUtils {;
      * When debug is enabled all passes with names containing {@code "debug"} are enabled
      * and {@code "debugEnabled"} property of screen input is set to {@code true}.
      */
-    public static void enableToggleDebug(final Screen screen) {
+    public static void enableToggleDebug(final Screen screen, final boolean enable) {
         final BooleanProperty<InputEvents> debugEnabledProp
-                = screen.input().events().event("debugEnabled", BooleanProperty.<InputEvents>make(false));
+                = screen.input().events().event("debugEnabled", BooleanProperty.<InputEvents>make());
 
         screen.input().keyEvent("`").subscribe(new EventListener<InputEvents, BooleanProperty<InputEvents>>() {
-            boolean debug = false;
-
-            private void set() {
-                screen.scene().enableMatching(DEBUG_PASS_NAME_PATTERN, debug);
-                debugEnabledProp.set(screen.input(), debug);
+            private void set(boolean enable) {
+                screen.scene().enableMatching(DEBUG_PASS_NAME_PATTERN, enable);
+                debugEnabledProp.set(screen.input(), enable);
             }
 
-            {set();}
+            {set(enable);}
 
             @Override
             public boolean onTriggered(InputEvents inputEvents, BooleanProperty<InputEvents> event) {
                 if (event.get()) return false;
-                debug = !debug;
-                set();
+                set(!debugEnabledProp.get());
                 return true;
             }
         });

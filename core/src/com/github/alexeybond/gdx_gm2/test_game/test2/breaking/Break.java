@@ -5,9 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Queue;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -23,6 +21,11 @@ public class Break {
 
         int imark = Integer.MIN_VALUE;
         float fmark;
+
+        @Override
+        public int hashCode() {
+            return Float.floatToIntBits(pos.x) + Float.floatToIntBits(pos.y);
+        }
     }
 
     private static class Edge {
@@ -52,6 +55,11 @@ public class Break {
             if (vertex == vertex1) return vertex2;
             if (vertex == vertex2) return vertex1;
             throw new IllegalArgumentException();
+        }
+
+        @Override
+        public int hashCode() {
+            return vertex1.hashCode() + vertex2.hashCode();
         }
     }
 
@@ -84,29 +92,8 @@ public class Break {
         }
     }
 
-    private static Vertex corner(List<Edge> edges) {
-        for (int i = 0; i < edges.size(); i++) {
-            Edge edge = edges.get(i);
-
-            if (edge.order > 1) continue;
-
-            Vertex vertex = edge.vertex1;
-            if (vertex.edges.size() == 2) {
-                if (vertex.edges.get(0).order == 1 && vertex.edges.get(1).order == 1) return vertex;
-            }
-            vertex = edge.vertex2;
-            if (vertex.edges.size() == 2) {
-                if (vertex.edges.get(0).order == 1 && vertex.edges.get(1).order == 1) return vertex;
-            }
-        }
-
-        throw new IllegalStateException("No corners.");
-    }
-
-    private static Edge side(List<Edge> edges) {
-        for (int i = 0; i < edges.size(); i++) {
-            Edge edge = edges.get(i);
-
+    private static Edge side(Collection<Edge> edges) {
+        for (Edge edge : edges) {
             if (edge.order != 1) continue;
 
             return edge;
@@ -179,9 +166,41 @@ public class Break {
         walk(start, end, edges, vertices);
     }
 
+    private final static ArrayList<Vector2> tmpPoints = new ArrayList<Vector2>();
+
+    private static boolean verifyPartShape(List<Vector2> points) {
+        tmpPoints.clear();
+
+        for (int aIdx = 0; aIdx < points.size(); aIdx++) {
+            int bIdx = aIdx - 1; bIdx = (bIdx < 0) ? points.size() + bIdx : bIdx;
+            int cIdx = aIdx - 2; cIdx = (cIdx < 0) ? points.size() + cIdx : cIdx;
+
+            Vector2 a = points.get(aIdx);
+            Vector2 b = points.get(bIdx);
+            Vector2 c = points.get(cIdx);
+
+            float area = Math.abs((b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x));
+
+            if (area >= 1f) {
+                tmpPoints.add(b);
+            }
+        }
+
+        if (tmpPoints.size() < 3) return false;
+
+        if (tmpPoints.size() != points.size()) {
+            points.clear();
+            points.addAll(tmpPoints);
+        }
+
+        return true;
+    }
+
     public static List<List<Vector2>> break_(List<Vector2> shape) {
+        long sTime = System.nanoTime();
+
         Vector2 center = new Vector2();
-        List<Edge> edges = new ArrayList<Edge>();
+        Set<Edge> edges = new HashSet<Edge>();
         Queue<BRay> rays = new Queue<BRay>();
 
         {
@@ -199,14 +218,8 @@ public class Break {
         }
 
         Vertex centerVert = new Vertex(center);
-//        rays.addLast(new BRay(
-//                new Vector2(1,0).rotate(MathUtils.random(360f)),
-//                centerVert, 50, null));
-//        rays.addLast(new BRay(
-//                new Vector2(1,0).rotate(MathUtils.random(360f)),
-//                centerVert, 50, null));
 
-        startRays(rays, new Vector2(1, 0), centerVert, 180, 6, 60, null);
+        startRays(rays, new Vector2(1, 0), centerVert, 180, 6, 40, null);
 
         while (rays.size != 0) {
             BRay ray = rays.removeFirst();
@@ -232,20 +245,6 @@ public class Break {
                         2
                 ));
 
-//                rays.addLast(new BRay(
-//                        new Vector2(ray.dir)
-//                            .rotate(MathUtils.random(-45f, 45f)),
-//                        edge.vertex2,
-//                        ray.maxLen,
-//                        edge
-//                ));
-//                rays.addLast(new BRay(
-//                        new Vector2(ray.dir)
-//                            .rotate(MathUtils.random(-45f, 45f)),
-//                        edge.vertex2,
-//                        ray.maxLen,
-//                        edge
-//                ));
                 startRays(
                         rays,
                         ray.dir,
@@ -269,15 +268,9 @@ public class Break {
             edges.add(new Edge(edge.vertex2, third, edge.order));
         }
 
-        List<List<Vector2>> res = new ArrayList<List<Vector2>>();
+        long mTime = System.nanoTime();
 
-//        for (Edge edge : edges) {
-//            if (edge.vertex2.pos.dst2(edge.vertex1.pos) < 0.1) continue;
-//            Vector2 third = new Vector2(edge.vertex1.pos).add(edge.vertex2.pos).scl(.5f);
-//            Vector2 d = new Vector2(edge.vertex1.pos).sub(edge.vertex2.pos).rotate(90).nor().scl(5);
-//            third.add(d);
-//            res.add(Arrays.asList(edge.vertex1.pos, edge.vertex2.pos, third));
-//        }
+        List<List<Vector2>> res = new ArrayList<List<Vector2>>();
 
         ArrayList<Edge> xEdges = new ArrayList<Edge>();
         ArrayList<Vertex> xVertices = new ArrayList<Vertex>();
@@ -287,11 +280,6 @@ public class Break {
             xVertices.clear();
 
             try {
-//                Vertex corner = corner(edges);
-//                Edge exe = corner.edges.get(0);
-//                Vertex other = exe.other(corner);
-//                edges.remove(exe);
-//                exe.dispose();
 
                 Edge exe = side(edges);
                 Vertex corner = exe.vertex1;
@@ -301,13 +289,13 @@ public class Break {
 
                 shortestPath(corner, other, xEdges, xVertices, ++i);
 
-//                if (xVertices.size() <= 8) {
-                    List<Vector2> resShape = new ArrayList<Vector2>(xVertices.size());
-                    for (int j = 0; j < xVertices.size(); j++) {
-                        resShape.add(xVertices.get(j).pos);
-                    }
+                List<Vector2> resShape = new ArrayList<Vector2>(xVertices.size());
+                for (int j = 0; j < xVertices.size(); j++) {
+                    resShape.add(xVertices.get(j).pos);
+                }
+                if (verifyPartShape(resShape)) {
                     res.add(resShape);
-//                }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 break;
@@ -322,6 +310,12 @@ public class Break {
                 }
             }
         }
+
+        long eTime = System.nanoTime();
+
+        System.out.printf("Broken in %f ms; %f%% for tracing\n",
+                0.000001f * (float) (eTime - sTime),
+                100f * ((float)(mTime - sTime)) / ((float) (eTime - sTime)));
 
         return res;
     }

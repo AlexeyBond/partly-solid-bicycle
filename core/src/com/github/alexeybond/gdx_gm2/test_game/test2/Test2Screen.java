@@ -42,7 +42,7 @@ public class Test2Screen extends DefaultScreen {
     protected void createLayers(AParts<Screen, Layer> layers) {
         super.createLayers(layers);
 
-        ScreenUtils.enableToggleDebug(this);
+        ScreenUtils.enableToggleDebug(this, true);
 
         Game game = layers.add("game", new GameLayerWith2DPhysicalGame()).game();
 

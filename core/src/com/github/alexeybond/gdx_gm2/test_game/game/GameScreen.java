@@ -64,7 +64,7 @@ public class GameScreen extends DefaultScreen {
     protected void createLayers(AParts<Screen, Layer> layers) {
         super.createLayers(layers);
 
-        ScreenUtils.enableToggleDebug(this);
+        ScreenUtils.enableToggleDebug(this, false);
 
         scene().context().getSlot("minimapViewport").set(
                 new ViewportTarget(
