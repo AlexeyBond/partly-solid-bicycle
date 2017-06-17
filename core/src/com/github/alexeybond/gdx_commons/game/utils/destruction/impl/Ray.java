@@ -19,38 +19,36 @@ final class Ray {
         return this;
     }
 
-    float intersection(Edge edge, float defaultR, Vector2 tmp) {
-        if (edge.contains(start)) return defaultR;
+    float intersection(Edge edge, float curMax) {
+        if (edge.contains(start)) return curMax;
 
-        Vector2 R = tmp.set(edge.v1.p).sub(start.p);
-        Vector2 D = dir;
-        Vector2 d = edge.d;
-        if (D.x != 0 && D.y != 0) {
-            float v = (R.x - D.x * R.y / D.y) / (D.x * d.y / D.y - d.x);
-            if (v <= 0 || v > edge.len)
-                return defaultR;
-            float u = (R.x + d.x * v) / D.x;
-            if (u <= 0 || u > maxLen)
-                return defaultR;
-            return u;
-        }
+        Vector2 startV = start.p;
+        float startX = startV.x;
+        float startY = startV.y;
+        float dirX = dir.x;
+        float dirY = dir.y;
 
-        return defaultR;
+        float endX = dirX * curMax + startX;
+        float endY = dirY * curMax + startY;
+
+        Vector2 edge1 = edge.v1.p, edge2 = edge.v2.p;
+        float e1x = edge1.x, e1y = edge1.y;
+        float e2x = edge2.x, e2y = edge2.y;
+
+        boolean hit = true;
+        float d = (endY - startY) * (e2x - e1x) - (endX - startX) * (e2y - e1y);
+        if (d == 0) hit = false;
+
+        float yd = e1y - startY;
+        float xd = e1x - startX;
+        float ua = ((endX - startX) * yd - (endY - startY) * xd) / d;
+        if (ua < 0 || ua > 1) hit = false;
+
+        float ub = ((e2x - e1x) * yd - (e2y - e1y) * xd) / d;
+        if (ub < 0 || ub > 1) hit = false;
+
+        return hit ? ub * curMax : curMax;
     }
-
-
-//    float intersection(Edge edge, float defaultR, Vector2 tmp) {
-//        if (edge.contains(start)) return defaultR;
-//
-//        Vector2 end = new Vector2(dir)
-//                .scl(maxLen * 1.2f).add(start);
-//        Vector2 res = new Vector2();
-//        if (Intersector.intersectSegments(edge.v1, edge.v2, start, end, res)) {
-//            return res.sub(start).len();
-//        }
-//
-//        return defaultR;
-//    }
 
     Vertex skip(float distance, Vertex dst) {
         dst.p.set(dir).scl(distance).add(start.p);

@@ -77,11 +77,11 @@ public class BreakableComponent
             verts.add(v);
         }
 
-        destroyer.config().crackLengthMax = 100;
-        destroyer.config().crackLengthMin = 70;
+        destroyer.config().crackLengthMin = 40;
+        destroyer.config().crackLengthMax = 40;
         destroyer.config().minTriArea = 1;
         destroyer.config().forkRaysMin = 2;
-        destroyer.config().forkRaysMax = 3;
+        destroyer.config().forkRaysMax = 2;
         destroyer.config().forkAngleRange = 80;
         destroyer.config().forkAngleRestrictRangeFraction = 0.1f;
 

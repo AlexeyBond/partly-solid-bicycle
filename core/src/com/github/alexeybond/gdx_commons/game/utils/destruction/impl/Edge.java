@@ -1,15 +1,15 @@
 package com.github.alexeybond.gdx_commons.game.utils.destruction.impl;
 
 import com.badlogic.gdx.math.Vector2;
+import com.github.alexeybond.gdx_commons.game.utils.destruction.impl.pooling.LinkedPool;
+import com.github.alexeybond.gdx_commons.game.utils.destruction.impl.pooling.PooledItem;
 
-final class Edge {
+final class Edge extends PooledItem<Edge> {
     Vertex v1, v2;
     final Vector2 d = new Vector2();
     int order;
 
     float len;
-
-    boolean alive;
 
     boolean disorder() {
         if ((--order) <= 0) {
@@ -23,7 +23,6 @@ final class Edge {
     void dispose() {
         v1.edges.removeValue(this, true);
         v2.edges.removeValue(this, true);
-        v1 = v2 = null;
         alive = false;
     }
 
@@ -47,5 +46,16 @@ final class Edge {
 
     boolean contains(Vertex vertex) {
         return v1 == vertex || v2 == vertex;
+    }
+
+    public static final class Pool extends LinkedPool<Edge> {
+        public Pool(int preAlloc) {
+            super(preAlloc);
+        }
+
+        @Override
+        protected Edge alloc() {
+            return new Edge();
+        }
     }
 }

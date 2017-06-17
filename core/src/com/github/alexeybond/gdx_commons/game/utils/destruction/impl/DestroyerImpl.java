@@ -9,8 +9,6 @@ import com.github.alexeybond.gdx_commons.game.utils.destruction.Destroyer;
 import com.github.alexeybond.gdx_commons.game.utils.destruction.DestroyerConfig;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -45,27 +43,25 @@ public class DestroyerImpl implements Destroyer {
         checkConfigValue(config.forkAngleRestrictRangeFraction < 1, "forkAngleRestrictRangeFraction < 1");
     }
 
-    private HashSet<Edge> edges = new HashSet<Edge>();
     private Queue<Ray> rayQueue = new Queue<Ray>();
 
+    private final Edge.Pool edgePool = new Edge.Pool(900);
+
     protected Edge edge() {
-        Edge edge = new Edge();
-        edges.add(edge);
-        return edge;
+        return edgePool.acquire();
     }
 
     protected void noEdge(Edge edge) {
-        edges.remove(edge);
     }
 
     protected Edge sideEdge() {
-        if (edges.size() == 0) return null;
+        Edge edge = edgePool.first();
 
-        for (Edge edge : edges) {
-            if (edge.alive && edge.order == 1) return edge;
+        while (null != edge) {
+            if (edge.order == 1) return edge;
+            edge = edgePool.next(edge);
         }
 
-//        throw new IllegalStateException("No sides.");
         return null;
     }
 
@@ -144,8 +140,6 @@ public class DestroyerImpl implements Destroyer {
         throw new UnsupportedOperationException();
     }
 
-    private Vector2 tmp = new Vector2();
-
     private void traceCracks() {
         Ray ray;
 
@@ -153,12 +147,15 @@ public class DestroyerImpl implements Destroyer {
             Edge bestEdge = null;
             float bestDistance = ray.maxLen * 2f;
 
-            for (Edge edge : edges) {
-                float distance = ray.intersection(edge, bestDistance, tmp);
+            Edge edge = edgePool.first();
+            while (null != edge) {
+                float distance = ray.intersection(edge, bestDistance);
                 if (distance < bestDistance) {
                     bestDistance = distance;
                     bestEdge = edge;
                 }
+
+                edge = edgePool.next(edge);
             }
 
             if (null == bestEdge) {
@@ -316,6 +313,6 @@ public class DestroyerImpl implements Destroyer {
 
     @Override
     public void reset() {
-
+        edgePool.releaseAll();
     }
 }
