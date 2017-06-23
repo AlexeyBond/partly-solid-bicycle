@@ -44,18 +44,50 @@
       }
     },
 
+//    {
+//      "components": {
+//        "body": {
+//          "bodyType": "StaticBody"
+//        },
+//        "box fixture": {
+//          "size": [500, 500],
+//        },
+//        "com.github.alexeybond.gdx_gm2.test_game.test2.BreakableComponent$Decl": {},
+//        "tag": {
+//          "tag": "box",
+//        }
+//      },
+//      "properties": {
+//        "position": ["60", "100"],
+//        "rotation": ["45"],
+//      }
+//    }
     {
       "components": {
-        "body": {
-          "bodyType": "StaticBody"
+        "body": { "bodyType": "StaticBody" },
+        "box fixture": { "size": [500, 500] },
+        "tag": { "tag": "box" },
+        "destructible": {
+          "centerDestructionEvent": "break",
+          "destructionEndEvent": "destructionEnd",
+          "partClass": "box-peace",
+          "fromFixture": "box fixture",
+          "texture": "test/box",
+          "destroyerConfig": {
+            "crackLengthMin": 40,
+            "crackLengthMax": 40,
+            "minTriArea": 1,
+            "forkRaysMin": 2,
+            "forkRaysMax": 2,
+            "forkAngleRange": 80,
+            "forkAngleRestrictRangeFraction": 0.1,
+          }
         },
-        "box fixture": {
-          "size": [500, 500],
-        },
-        "com.github.alexeybond.gdx_gm2.test_game.test2.BreakableComponent$Decl": {},
-        "tag": {
-          "tag": "box",
-        }
+        "destroy on event": { "event": "destructionEnd" },
+      },
+      "properties": {
+        "position": ["60", "100"],
+        "rotation": ["45"],
       }
     }
   ]

@@ -15,12 +15,7 @@ import java.util.List;
  *
  */
 public class DestroyerImpl implements Destroyer {
-    private DestroyerConfig config = new DestroyerConfig();
-
-    @Override
-    public DestroyerConfig config() {
-        return config;
-    }
+    private final DestroyerConfig config = new DestroyerConfig();
 
     private void checkConfigValue(boolean expr, String msg) {
         if (!expr) {
@@ -28,8 +23,7 @@ public class DestroyerImpl implements Destroyer {
         }
     }
 
-    private void checkConfig() {
-        DestroyerConfig config = this.config;
+    private void checkConfig(DestroyerConfig config) {
         checkConfigValue(config.minTriArea > 0f, "minTriArea > 0");
         checkConfigValue(config.initialRaysMin >= 5, "initialRaysMin >= 5");
         checkConfigValue(config.initialRaysMax >= config.initialRaysMin, "initialRaysMax >= initialRaysMin");
@@ -91,9 +85,13 @@ public class DestroyerImpl implements Destroyer {
     private final Rectangle boundingRect = new Rectangle();
 
     @Override
-    public void prepare(List<Vector2> shape) {
-        checkConfig();
+    public void configure(DestroyerConfig config) {
+        checkConfig(config);
+        this.config.set(config);
+    }
 
+    @Override
+    public void prepare(List<Vector2> shape) {
         if (shape.size() < 3) throw new IllegalArgumentException("shape.size < 3");
 
         initialVertices.clear();

@@ -35,4 +35,16 @@ public class DestroyerConfig {
     public float forkAngleRange = 80;
 
     public float forkAngleRestrictRangeFraction = 0.1f;
+
+    public void set(DestroyerConfig config) {
+        this.minTriArea = config.minTriArea;
+        this.initialRaysMin = config.initialRaysMin;
+        this.initialRaysMax = config.initialRaysMax;
+        this.crackLengthMin = config.crackLengthMin;
+        this.crackLengthMax = config.crackLengthMax;
+        this.forkRaysMin = config.forkRaysMin;
+        this.forkRaysMax = config.forkRaysMax;
+        this.forkAngleRange = config.forkAngleRange;
+        this.forkAngleRestrictRangeFraction = config.forkAngleRestrictRangeFraction;
+    }
 }

@@ -10,7 +10,7 @@ import java.util.List;
  *
  */
 public interface Destroyer extends Pool.Poolable {
-    DestroyerConfig config();
+    void configure(DestroyerConfig config);
 
     /**
      * Verify configuration, create initial edges.

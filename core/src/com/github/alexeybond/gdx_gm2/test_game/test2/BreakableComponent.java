@@ -11,6 +11,7 @@ import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.FixturePhysi
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.BaseBodyComponent;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.FixtureDefFixtureComponent;
 import com.github.alexeybond.gdx_commons.game.utils.destruction.Destroyer;
+import com.github.alexeybond.gdx_commons.game.utils.destruction.DestroyerConfig;
 import com.github.alexeybond.gdx_commons.game.utils.destruction.impl.DestroyerImpl;
 import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
@@ -77,14 +78,16 @@ public class BreakableComponent
             verts.add(v);
         }
 
-        destroyer.config().crackLengthMin = 40;
-        destroyer.config().crackLengthMax = 40;
-        destroyer.config().minTriArea = 1;
-        destroyer.config().forkRaysMin = 2;
-        destroyer.config().forkRaysMax = 2;
-        destroyer.config().forkAngleRange = 80;
-        destroyer.config().forkAngleRestrictRangeFraction = 0.1f;
+        DestroyerConfig config = new DestroyerConfig();
+        config.crackLengthMin = 40;
+        config.crackLengthMax = 40;
+        config.minTriArea = 1;
+        config.forkRaysMin = 2;
+        config.forkRaysMax = 2;
+        config.forkAngleRange = 80;
+        config.forkAngleRestrictRangeFraction = 0.1f;
 
+        destroyer.configure(config);
         destroyer.prepare(verts);
         destroyer.startCenter();
         List<ArrayList<Vector2>> broken = destroyer.compute();

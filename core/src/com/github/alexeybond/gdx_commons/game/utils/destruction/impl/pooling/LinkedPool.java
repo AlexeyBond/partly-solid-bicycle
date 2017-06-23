@@ -44,6 +44,8 @@ public abstract class LinkedPool<T extends PooledItem<T>> {
             firstFree = item;
             item = next;
         }
+
+        firstActive = null;
     }
 
     private T next0(T item, T prev) {
