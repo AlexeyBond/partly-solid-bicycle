@@ -12,6 +12,7 @@ import com.github.alexeybond.gdx_commons.game.declarative.EntityDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.FixturePhysicsComponent;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.FixtureDefFixtureComponent;
+import com.github.alexeybond.gdx_commons.game.systems.render.components.PolySpriteComponent;
 import com.github.alexeybond.gdx_commons.game.utils.destruction.Destroyer;
 import com.github.alexeybond.gdx_commons.game.utils.destruction.DestroyerConfig;
 import com.github.alexeybond.gdx_commons.game.utils.destruction.DestructionHelper;
@@ -35,6 +36,7 @@ public class DestructibleComponent implements Component {
     private final float partDensity, partRestitution, partFriction;
     private final TextureRegion textureRegion;
     private final float[] texturePlacement;
+    private final String partPass;
     private final DestroyerConfig destroyerConfig;
     private final Pool<Destroyer> destroyerPool;
 
@@ -58,7 +60,7 @@ public class DestructibleComponent implements Component {
             float partDensity, float partRestitution, float partFriction,
             TextureRegion textureRegion,
             float[] texturePlacement,
-            DestroyerConfig destroyerConfig,
+            String partPass, DestroyerConfig destroyerConfig,
             Pool<Destroyer> destroyerPool) {
         this.destructionEndEventName = destructionEndEventName;
         this.centerDestructionStartEventName = centerDestructionStartEventName;
@@ -70,6 +72,7 @@ public class DestructibleComponent implements Component {
         this.partFriction = partFriction;
         this.textureRegion = textureRegion;
         this.texturePlacement = texturePlacement;
+        this.partPass = partPass;
         this.destroyerConfig = destroyerConfig;
         this.destroyerPool = destroyerPool;
     }
@@ -157,6 +160,8 @@ public class DestructibleComponent implements Component {
         DestructionHelper destructionHelper = new DestructionHelper();
 
         try {
+            destructionHelper.setupTexturePlacement(textureRegion, texturePlacement);
+
             for (int i = 0; i < parts.size(); i++) {
                 spawnPart(parts.get(i), destructionHelper);
             }
@@ -186,6 +191,14 @@ public class DestructibleComponent implements Component {
             partEntity.components().add(destructionHelper.fixtureName(),
                     new FixtureDefFixtureComponent(fd));
         }
+
+        partEntity.components().add("sprite",
+                new PolySpriteComponent(
+                        partPass,
+                        destructionHelper.partRenderVertices(),
+                        destructionHelper.partRenderIndices(),
+                        textureRegion.getTexture()
+                ));
 
         Vec2Property<Component> partPosition = partEntity.events()
                 .event("position", Vec2Property.<Component>make());

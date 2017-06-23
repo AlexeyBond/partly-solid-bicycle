@@ -34,6 +34,7 @@ public class Test2Screen extends DefaultScreen {
                 return seq(
                         clearColor(),
                         pass("setup-main-camera"),
+                        pass("game-objects"),
                         pass("game-debug")
                 );
             }

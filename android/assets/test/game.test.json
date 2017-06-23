@@ -43,30 +43,12 @@
         "rotation": ["45"],
       }
     },
-
-//    {
-//      "components": {
-//        "body": {
-//          "bodyType": "StaticBody"
-//        },
-//        "box fixture": {
-//          "size": [500, 500],
-//        },
-//        "com.github.alexeybond.gdx_gm2.test_game.test2.BreakableComponent$Decl": {},
-//        "tag": {
-//          "tag": "box",
-//        }
-//      },
-//      "properties": {
-//        "position": ["60", "100"],
-//        "rotation": ["45"],
-//      }
-//    }
     {
       "components": {
         "body": { "bodyType": "StaticBody" },
-        "box fixture": { "size": [500, 500] },
+        "box fixture": { "size": [512, 512] },
         "tag": { "tag": "box" },
+        "sprite": { "sprite": "test/box" },
         "destructible": {
           "centerDestructionEvent": "break",
           "destructionEndEvent": "destructionEnd",
@@ -74,8 +56,8 @@
           "fromFixture": "box fixture",
           "texture": "test/box",
           "destroyerConfig": {
-            "crackLengthMin": 40,
-            "crackLengthMax": 40,
+            "crackLengthMin": 50,
+            "crackLengthMax": 60,
             "minTriArea": 1,
             "forkRaysMin": 2,
             "forkRaysMax": 2,

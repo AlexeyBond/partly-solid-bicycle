@@ -1,6 +1,7 @@
 package com.github.alexeybond.gdx_commons.drawing.modules;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.github.alexeybond.gdx_commons.drawing.DrawingState;
@@ -17,7 +18,7 @@ public class GlobalDrawingState implements Module {
     @Override
     public void init() {
         // TODO:: Use CpuSpriteBatch? Or better add a way to choose...
-        Batch batch = new SpriteBatch();
+        Batch batch = new PolygonSpriteBatch();
         ShapeRenderer shaper = new ShapeRenderer();
         drawingState = new DrawingState(batch, shaper);
 

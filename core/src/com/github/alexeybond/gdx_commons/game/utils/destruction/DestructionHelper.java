@@ -1,5 +1,8 @@
 package com.github.alexeybond.gdx_commons.game.utils.destruction;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -9,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- *
+ * Helper that helps to build physical and visual components from output of destroyer.
  */
 public final class DestructionHelper implements Disposable {
     /** Box2D doesn't allow more than 8 vertices per shape. */
@@ -92,5 +95,54 @@ public final class DestructionHelper implements Disposable {
 
     public String fixtureName() {
         return FIXTURE_NAMES[fixtureIndex];
+    }
+
+    private TextureRegion texture;
+    private float ux, uy, vx, vy;
+    private float u0, v0;
+
+    public void setupTexturePlacement(TextureRegion texture, float[] placement) {
+        this.texture = texture;
+        float iw = 1f / (float) texture.getRegionWidth(), ih = 1f / (float) texture.getRegionHeight();
+        ux = placement[0] * iw; uy = placement[1] * iw;
+        vx = placement[3] * ih; vy = placement[4] * ih;
+        u0 = placement[2]; v0 = placement[5];
+    }
+
+    public short[] partRenderIndices() {
+        int n = part.size(), idx = 0;
+        short[] indices = new short[(n-2)*3];
+
+        for (short i = 2; i < n; i++) {
+            indices[idx++] = 0;
+            indices[idx++] = (short) (i - 1);
+            indices[idx++] = i;
+        }
+
+        return indices;
+    }
+
+    public float[] partRenderVertices() {
+        int n = part.size(), idx = 0;
+        float[] vertices = new float[n * 5];
+        float white = Color.WHITE.toFloatBits();
+
+        float u1 = texture.getU(), u2 = texture.getU2();
+        float v1 = texture.getV(), v2 = texture.getV2();
+
+        for (int i = 0; i < n; i++) {
+            Vector2 pos = part.get(i);
+
+            float uk = ux * pos.x + uy * pos.y + u0;
+            float vk = vx * pos.x + vy * pos.y + v0;
+
+            vertices[idx++] = pos.x - center.x;
+            vertices[idx++] = pos.y - center.y;
+            vertices[idx++] = white;
+            vertices[idx++] = MathUtils.lerp(u1, u2, uk);
+            vertices[idx++] = MathUtils.lerp(v2, v1, vk);
+        }
+
+        return vertices;
     }
 }

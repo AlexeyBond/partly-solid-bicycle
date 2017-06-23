@@ -51,6 +51,9 @@ public class DestructibleDecl implements ComponentDeclaration {
      */
     public float[] texturePlacement = DEFAULT_TEXTURE_PLACEMENT;
 
+    /** Pass where to draw the parts */
+    public String partPass = "game-objects";
+
     /** Configuration of the destroyer */
     public DestroyerConfig destroyerConfig = DEFAULT_DESTROYER_CONFIG;
 
@@ -70,6 +73,7 @@ public class DestructibleDecl implements ComponentDeclaration {
                 density, restitution, friction,
                 IoC.<TextureRegion>resolve("get texture region", texture),
                 texturePlacement,
+                partPass,
                 destroyerConfig,
                 IoC.<Pool<Destroyer>>resolve("destroyers pool")
         );
