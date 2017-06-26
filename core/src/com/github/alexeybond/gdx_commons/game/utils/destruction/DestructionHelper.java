@@ -56,7 +56,7 @@ public final class DestructionHelper implements Disposable {
         }
         center.scl(1f / (float) part.size());
 
-        fixtureIndex = 0;
+        fixtureIndex = -1;
         vertex2Index = 2;
     }
 
@@ -86,6 +86,7 @@ public final class DestructionHelper implements Disposable {
             polygonShape.set(Arrays.copyOf(shapeVertices, currentVertexIndex));
         }
 
+        ++fixtureIndex;
         return fixtureDef;
     }
 

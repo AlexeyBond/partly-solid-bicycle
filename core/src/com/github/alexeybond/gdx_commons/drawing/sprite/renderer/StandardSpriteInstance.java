@@ -16,13 +16,6 @@ public class StandardSpriteInstance implements SpriteInstance {
 
     @Override
     public void draw(Batch batch, SpriteTemplate template, Vector2 position, float scale, float rotation) {
-        rotation += template.rotation();
-        scale *= template.scale();
-
-        if (scale != sprite.getScaleX()) sprite.setScale(scale);
-        if (rotation != sprite.getRotation()) sprite.setRotation(rotation);
-        sprite.setPosition(position.x - sprite.getOriginX(), position.y - sprite.getOriginY());
-
         if (lastTemplate != template) {
             lastTemplate = template;
 
@@ -31,6 +24,13 @@ public class StandardSpriteInstance implements SpriteInstance {
             sprite.setSize(region.getRegionWidth(), region.getRegionHeight());
             sprite.setOrigin(template.originX(), template.originY());
         }
+
+        rotation += template.rotation();
+        scale *= template.scale();
+
+        if (scale != sprite.getScaleX()) sprite.setScale(scale);
+        if (rotation != sprite.getRotation()) sprite.setRotation(rotation);
+        sprite.setPosition(position.x - sprite.getOriginX(), position.y - sprite.getOriginY());
 
         sprite.draw(batch);
     }
