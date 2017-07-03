@@ -1,0 +1,134 @@
+{
+  "classes": {
+    "player": {
+      "components": {
+        "body": {
+          "bodyType": "DynamicBody",
+          "noRotation": true,
+          "isBullet": true,
+        },
+
+        "body box fixture": {
+          "type": "box fixture",
+          "center": [0, 60],
+          "size": [50, 80],
+        },
+
+        "feet fixture": {
+          "type": "polygon fixture",
+          "vertices": [
+            -25, 10,
+//            -15, 0,
+             0, 0,
+//             15, 0,
+             25, 10,
+             25, 20,
+            -25, 20,
+          ],
+        },
+
+        "ground sensor fixture": {
+          "type": "box fixture",
+          "center": [0, 7],
+          "size": [32, 20],
+          "sensor": true,
+          "collisionBeginEvent": "groundCollisionBegin",
+          "collisionEndEvent": "groundCollisionEnd",
+        },
+
+        "com.github.alexeybond.gdx_gm2.test_game.test3.components.PlatformerPlayerController$Decl": {
+
+        },
+
+        "key bindings": { "bind": {
+          "goLeftControl": "A",
+          "goRightControl": "D",
+          "jumpControl": "W",
+        }},
+      }
+    }
+  },
+  "entities": [
+    {
+      "components": {
+        "camera": {
+          "pass": "setup-main-camera",
+          "globalAlias": "mainCamera"
+        },
+      }
+    },
+    {
+      "components": {
+        "physics debugger": {
+          "camera": "mainCamera",
+        }
+      }
+    },
+    { // STATIC ENVIRONMENT
+      "components": {
+        "body": { "bodyType": "StaticBody", },
+        "f1": {
+          "type": "box fixture",
+          "size": [1000, 20],
+          "center": [0, -10],
+        },
+        "f2": {
+          "type": "box fixture",
+          "size": [10, 10],
+          "center": [100, 5],
+        },
+        "f3": {
+          "type": "box fixture",
+          "size": [400, 20],
+          "center": [-200, 20],
+          "angle": -15,
+          "friction": 1,
+        },
+        "f4": {
+          "type": "box fixture",
+          "size": [400, 20],
+          "center": [-300, 50],
+          "angle": -30,
+          "friction": 1,
+        },
+        "f5": {
+          "type": "box fixture",
+          "size": [400, 20],
+          "center": [-400, 120],
+          "angle": -60,
+          "friction": 1,
+        },
+        "f6": {
+          "type": "box fixture",
+          "size": [400, 20],
+          "center": [-470, 200],
+          "angle": -90,
+          "friction": 1,
+        },
+        "f7": {
+          "type": "box fixture",
+          "size": [1000, 20],
+          "center": [500, -100],
+          "restitution": 2,
+        },
+      }
+    }, // END STATIC ENVIRONMENT
+
+    {
+      "components": {
+        "body": { "bodyType": "DynamicBody" },
+        "box fixture": {
+          "size": [100, 100],
+          "density": 0.1,
+        },
+      },
+      "properties": {
+        "position": ["200", "50"],
+      }
+    },
+
+    {
+      "inherit": ["player"]
+    }
+  ]
+}

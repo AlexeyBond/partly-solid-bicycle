@@ -14,6 +14,7 @@ public class BodyDecl implements ComponentDeclaration {
 
     public String bodyType = "DynamicBody";
     public boolean isBullet = true;
+    public boolean noRotation = false;
 
     @Override
     public Component create(GameDeclaration gameDeclaration) {
@@ -28,5 +29,6 @@ public class BodyDecl implements ComponentDeclaration {
 
         bodyDef.type = BodyDef.BodyType.valueOf(bodyType);
         bodyDef.bullet = isBullet;
+        bodyDef.fixedRotation = noRotation;
     }
 }
