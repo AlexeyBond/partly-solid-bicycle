@@ -29,11 +29,11 @@ public class RenderSystem implements GameSystem {
 
     }
 
-    public void addToPass(String passName, RenderComponent component) {
+    public void addToPass(String passName, com.github.alexeybond.gdx_commons.game.systems.render.interfaces.RenderComponent component) {
         scene.getPass(passName).addDrawable(component);
     }
 
-    public void removeFromPass(String passName, RenderComponent component) {
+    public void removeFromPass(String passName, com.github.alexeybond.gdx_commons.game.systems.render.interfaces.RenderComponent component) {
         scene.getPass(passName).removeDrawable(component);
     }
 }

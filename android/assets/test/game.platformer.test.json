@@ -16,6 +16,7 @@
 
         "feet fixture": {
           "type": "polygon fixture",
+//          "friction": 1,
           "vertices": [
             -25, 10,
 //            -15, 0,
@@ -45,6 +46,8 @@
           "goRightControl": "D",
           "jumpControl": "W",
         }},
+
+        "tag": {"tag": "player"},
       }
     }
   },
@@ -55,6 +58,12 @@
           "pass": "setup-main-camera",
           "globalAlias": "mainCamera"
         },
+        "camera controller": {
+        },
+        "tag": { "tag": "camera" },
+      },
+      "properties": {
+        "zoomFunction": ["fixed diagonal zoom function", "2000"],
       }
     },
     {
@@ -114,21 +123,93 @@
       }
     }, // END STATIC ENVIRONMENT
 
+//    {
+//      "components": {
+//        "body": { "bodyType": "DynamicBody" },
+//        "box fixture": {
+//          "size": [100, 100],
+//          "density": 0.1,
+//        },
+//      },
+//      "properties": {
+//        "position": ["200", "50"],
+//      }
+//    },
+
     {
       "components": {
-        "body": { "bodyType": "DynamicBody" },
-        "box fixture": {
-          "size": [100, 100],
-          "density": 0.1,
+        "body": {"bodyType": "StaticBody"},
+        "circle fixture": {
+          "radius": 20,
+          "sensor": true,
+          "collisionBeginEvent": "trigger",
         },
+        "collision event filter": {
+          "collisionEvent": "trigger",
+          "filteredEvent": "playerTrigger",
+          "filterTag": "player",
+        },
+        "set camera target": {
+          "event": "playerTrigger",
+          "cameraTag": "camera",
+          "targetTag": "target_002",
+          "time": 1.0,
+        }
       },
       "properties": {
-        "position": ["200", "50"],
+        "position": ["400", "50"],
+      }
+    },
+    {
+      "components": {
+        "body": {"bodyType": "StaticBody"},
+        "circle fixture": {
+          "radius": 20,
+          "sensor": true,
+          "collisionBeginEvent": "trigger",
+        },
+        "collision event filter": {
+          "collisionEvent": "trigger",
+          "filteredEvent": "playerTrigger",
+          "filterTag": "player",
+        },
+        "set camera target": {
+          "event": "playerTrigger",
+          "cameraTag": "camera",
+          "targetTag": "target_001",
+          "time": 1.0,
+        }
+      },
+      "properties": {
+        "position": ["350", "50"],
+      }
+    },
+    {
+      "components": {
+        "camera target": {
+        },
+        "tag": {"tag": "target_001"}
+      },
+      "properties": {
+        "position": ["0", "0"],
+        "zoomFunction": ["fixed diagonal zoom function", "2000"],
+      }
+    },
+    {
+      "components": {
+        "camera target": {
+        },
+        "tag": {"tag": "target_002"}
+      },
+      "properties": {
+        "position": ["800", "0"],
+        "rotation": ["-30"],
+        "zoomFunction": ["fixed diagonal zoom function", "2500"],
       }
     },
 
     {
       "inherit": ["player"]
-    }
+    },
   ]
 }

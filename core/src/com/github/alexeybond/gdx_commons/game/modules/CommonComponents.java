@@ -21,6 +21,7 @@ public class CommonComponents implements Module {
         map.put("spawn on event", SpawnOnEventDecl.class);
         map.put("send event to game", SendEventToGameDecl.class);
         map.put("destructible", DestructibleDecl.class);
+        map.put("collision event filter", CollisionEventFilterDecl.class);
     }
 
     @Override

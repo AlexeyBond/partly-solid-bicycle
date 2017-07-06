@@ -4,7 +4,7 @@ import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
-import com.github.alexeybond.gdx_commons.game.systems.render.RenderComponent;
+import com.github.alexeybond.gdx_commons.game.systems.render.interfaces.RenderComponent;
 import com.github.alexeybond.gdx_commons.game.systems.render.RenderSystem;
 
 /**

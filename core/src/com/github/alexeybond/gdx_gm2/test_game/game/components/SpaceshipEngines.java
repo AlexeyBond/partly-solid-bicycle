@@ -9,7 +9,7 @@ import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.BaseBodyComponent;
-import com.github.alexeybond.gdx_commons.game.systems.render.RenderComponent;
+import com.github.alexeybond.gdx_commons.game.systems.render.interfaces.RenderComponent;
 import com.github.alexeybond.gdx_commons.game.systems.render.RenderSystem;
 import com.github.alexeybond.gdx_commons.game.systems.timing.TimingSystem;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;

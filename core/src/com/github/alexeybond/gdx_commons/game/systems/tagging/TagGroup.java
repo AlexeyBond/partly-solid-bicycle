@@ -48,4 +48,8 @@ public class TagGroup {
                     "Expected exactly one entity with tag \"" + tag() + "\" but found " + entities.size);
         return entities.first();
     }
+
+    public boolean contains(Entity entity) {
+        return entities.contains(entity, true);
+    }
 }

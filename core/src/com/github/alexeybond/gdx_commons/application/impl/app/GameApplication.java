@@ -10,6 +10,7 @@ import com.github.alexeybond.gdx_commons.game.modules.GameSerialization;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.modules.PhysicsComponentDeclarations;
 import com.github.alexeybond.gdx_commons.game.systems.input.modules.InputComponentsDeclarations;
 import com.github.alexeybond.gdx_commons.game.systems.render.modules.RenderComponentsDeclarations;
+import com.github.alexeybond.gdx_commons.game.systems.render.modules.ZoomFunctionsModule;
 import com.github.alexeybond.gdx_commons.game.systems.tagging.modules.TaggingComponentsDeclarations;
 import com.github.alexeybond.gdx_commons.ioc.modules.Modules;
 import com.github.alexeybond.gdx_commons.music.modules.GlobalMusicPlayer;
@@ -34,6 +35,7 @@ public abstract class GameApplication extends Application {
         modules.add(new PhysicsComponentDeclarations());
         modules.add(new InputComponentsDeclarations());
         modules.add(new RenderComponentsDeclarations());
+        modules.add(new ZoomFunctionsModule());
         modules.add(new TaggingComponentsDeclarations());
         modules.add(new CommonComponents());
 

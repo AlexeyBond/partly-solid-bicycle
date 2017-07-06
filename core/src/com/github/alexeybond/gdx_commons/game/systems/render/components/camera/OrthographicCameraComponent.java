@@ -1,4 +1,4 @@
-package com.github.alexeybond.gdx_commons.game.systems.render.components;
+package com.github.alexeybond.gdx_commons.game.systems.render.components.camera;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -8,6 +8,8 @@ import com.github.alexeybond.gdx_commons.drawing.RenderTarget;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.GameSystem;
+import com.github.alexeybond.gdx_commons.game.systems.render.interfaces.ZoomFunction;
+import com.github.alexeybond.gdx_commons.game.systems.render.components.BaseRenderComponent;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.ObjectProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
@@ -20,8 +22,19 @@ public class OrthographicCameraComponent extends BaseRenderComponent {
     private final OrthographicCamera camera;
 
     private FloatProperty<Component> zoomProp;
+    private ObjectProperty<ZoomFunction, Component> zoomFunctionProp;
     private Vec2Property<Component> axisScaleProp;
     private ObjectProperty<Camera, GameSystem> aliasProp;
+
+    private float actualZoom(float w, float h) {
+        ZoomFunction zoomFunction = zoomFunctionProp.get();
+
+        if (null == zoomFunction) {
+            return zoomProp.get();
+        }
+
+        return zoomFunction.compute(w, h);
+    }
 
     public OrthographicCameraComponent(String passName, String globalAlias) {
         super(passName);
@@ -36,12 +49,13 @@ public class OrthographicCameraComponent extends BaseRenderComponent {
 
     @Override
     public void draw(DrawingContext context) {
-        float zoomInv = 1f / zoomProp.get();
         Vector2 axisScale = axisScaleProp.ref();
         RenderTarget target = context.getCurrentRenderTarget();
+        float w = target.width(), h = target.height();
+        float zoomInv = 1f / actualZoom(w, h);
 
-        camera.viewportWidth = target.width() * zoomInv * axisScale.x;
-        camera.viewportHeight = target.height() * zoomInv * axisScale.y;
+        camera.viewportWidth = w * zoomInv * axisScale.x;
+        camera.viewportHeight = h * zoomInv * axisScale.y;
 
         Vector2 pos = position.ref();
         camera.position.set(pos.x, pos.y, 0);
@@ -61,6 +75,7 @@ public class OrthographicCameraComponent extends BaseRenderComponent {
         // Properties "zoom" and "axisScale" allow other components to control camera zoom
         zoomProp = entity.events().event("zoom", FloatProperty.<Component>make(1));
         axisScaleProp = entity.events().event("axisScale", Vec2Property.<Component>make(1,1));
+        zoomFunctionProp = entity.events().event("zoomFunction", ObjectProperty.<ZoomFunction, Component>make());
 
         aliasProp = entity.game().events()
                 .event(globalAlias, ObjectProperty.<Camera, GameSystem>make());
