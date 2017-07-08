@@ -1,6 +1,5 @@
 package com.github.alexeybond.gdx_gm2.test_game.test3.components;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
@@ -59,7 +58,7 @@ public class PlatformerPlayerController implements Component {
     private Vec2Property<Component> positionProp;
 
     private int sensorCollisionCount = 0;
-    private boolean isWalking = false;
+    private boolean jumping;
 
     @Override
     public void onConnect(Entity entity) {
@@ -80,7 +79,6 @@ public class PlatformerPlayerController implements Component {
                 .event("groundCollisionEnd", ObjectProperty.<CollisionData, Component>make()));
 
         sensorCollisionCount = 0;
-        isWalking = false;
     }
 
     @Override
@@ -96,7 +94,12 @@ public class PlatformerPlayerController implements Component {
         final boolean grounded = isGrounded();
 
         if (grounded && jumpControl.get()) {
-            velocity.y = Math.min(jumpVelocity, velocity.y + jumpVelocity);
+            if (!jumping && velocity.y > -jumpVelocity) {
+                velocity.y = Math.max(jumpVelocity, velocity.y + jumpVelocity);
+                jumping = true;
+            }
+        } else {
+            jumping = false;
         }
 
         int vxi = 0;
@@ -113,15 +116,9 @@ public class PlatformerPlayerController implements Component {
             if (Math.signum(targetVelocityDelta) == Math.signum(targetVelocity)) {
                 velocity.x = targetVelocity;
             }
-
-            isWalking = true;
         } else {
-            if (isWalking) {
-                if (grounded) {
-                    velocity.x = 0;
-                }
-
-                isWalking = false;
+            if (grounded && Math.abs(velocity.x) < walkVelocity) {
+                velocity.x = 0;
             }
         }
 
