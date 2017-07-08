@@ -12,6 +12,7 @@
           "type": "box fixture",
           "center": [0, 60],
           "size": [50, 80],
+          "collisionCategories": ["default", "player-body"],
         },
 
         "feet fixture": {
@@ -34,7 +35,7 @@
           "size": [32, 20],
           "sensor": true,
           "collisionBeginEvent": "groundCollisionBegin",
-          "collisionEndEvent": "groundCollisionEnd",
+          "collisionEndEvent": "groundCollisionEnd"
         },
 
         "com.github.alexeybond.gdx_gm2.test_game.test3.components.PlatformerPlayerController$Decl": {
@@ -44,10 +45,26 @@
         "key bindings": { "bind": {
           "goLeftControl": "A",
           "goRightControl": "D",
-          "jumpControl": "W",
+          "jumpControl": "W"
         }},
 
-        "tag": {"tag": "player"},
+        "tag": {"tag": "player"}
+      }
+    }, // END PLAYER CLASS
+    "mini-trigger": {
+      "components": {
+        "body": {
+          "bodyType": "StaticBody",
+        },
+        "circle fixture": {
+          "radius": 20,
+          "sensor": true,
+          "collisionBeginEvent": "trigger",
+          "collisionGroup": "-triggers",
+          "collisionMask": [
+            "player-body",
+          ],
+        }
       }
     }
   },
@@ -119,7 +136,7 @@
           "size": [1000, 20],
           "center": [500, -100],
           "restitution": 2,
-        },
+        }
       }
     }, // END STATIC ENVIRONMENT
 
@@ -137,20 +154,10 @@
 //    },
 
     {
+      "inherit": ["mini-trigger"],
       "components": {
-        "body": {"bodyType": "StaticBody"},
-        "circle fixture": {
-          "radius": 20,
-          "sensor": true,
-          "collisionBeginEvent": "trigger",
-        },
-        "collision event filter": {
-          "collisionEvent": "trigger",
-          "filteredEvent": "playerTrigger",
-          "filterTag": "player",
-        },
         "set camera target": {
-          "event": "playerTrigger",
+          "event": "trigger",
           "cameraTag": "camera",
           "targetTag": "target_002",
           "time": 1.0,
@@ -161,20 +168,10 @@
       }
     },
     {
+      "inherit": ["mini-trigger"],
       "components": {
-        "body": {"bodyType": "StaticBody"},
-        "circle fixture": {
-          "radius": 20,
-          "sensor": true,
-          "collisionBeginEvent": "trigger",
-        },
-        "collision event filter": {
-          "collisionEvent": "trigger",
-          "filteredEvent": "playerTrigger",
-          "filterTag": "player",
-        },
         "set camera target": {
-          "event": "playerTrigger",
+          "event": "trigger",
           "cameraTag": "camera",
           "targetTag": "target_001",
           "time": 1.0,

@@ -2,6 +2,7 @@ package com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.
 
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.github.alexeybond.gdx_commons.game.Component;
+import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.EmptyBodyComponent;
@@ -17,7 +18,7 @@ public class BodyDecl implements ComponentDeclaration {
     public boolean noRotation = false;
 
     @Override
-    public Component create(GameDeclaration gameDeclaration) {
+    public Component create(GameDeclaration gameDeclaration, Game game) {
         initDef();
         return new EmptyBodyComponent(bodyDef);
     }

@@ -2,6 +2,7 @@ package com.github.alexeybond.gdx_commons.game.common_components.decl;
 
 import com.badlogic.gdx.utils.Array;
 import com.github.alexeybond.gdx_commons.game.Component;
+import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.common_components.InfiniteWorldGenerator;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.EntityDeclaration;
@@ -16,7 +17,7 @@ public class InfiniteWorldGenDecl implements ComponentDeclaration {
     public String[] generateClasses;
 
     @Override
-    public Component create(GameDeclaration gameDeclaration) {
+    public Component create(GameDeclaration gameDeclaration, Game game) {
         Array<EntityDeclaration> genClasses = new Array<EntityDeclaration>(generateClasses.length);
 
         for (int i = 0; i < generateClasses.length; i++) {

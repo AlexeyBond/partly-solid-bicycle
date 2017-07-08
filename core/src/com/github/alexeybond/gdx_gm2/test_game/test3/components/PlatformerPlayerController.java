@@ -3,6 +3,7 @@ package com.github.alexeybond.gdx_gm2.test_game.test3.components;
 import com.badlogic.gdx.math.Vector2;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
+import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.CollisionData;
@@ -138,7 +139,7 @@ public class PlatformerPlayerController implements Component {
     public static class Decl implements ComponentDeclaration {
 
         @Override
-        public Component create(GameDeclaration gameDeclaration) {
+        public Component create(GameDeclaration gameDeclaration, Game game) {
             return new PlatformerPlayerController();
         }
     }

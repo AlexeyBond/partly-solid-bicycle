@@ -2,6 +2,7 @@ package com.github.alexeybond.gdx_commons.game.systems.render.components.decl;
 
 import com.badlogic.gdx.math.Vector2;
 import com.github.alexeybond.gdx_commons.game.Component;
+import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.systems.render.components.AttachedContinuousParticleEffect;
@@ -27,7 +28,7 @@ public class AttachedParticleEffect implements ComponentDeclaration {
     public String masterProperty = "enableParticles";
 
     @Override
-    public Component create(GameDeclaration gameDeclaration) {
+    public Component create(GameDeclaration gameDeclaration, Game game) {
         if (continuous) {
             return new AttachedContinuousParticleEffect(
                     pass, effect, getOffset(), rotate, masterProperty);

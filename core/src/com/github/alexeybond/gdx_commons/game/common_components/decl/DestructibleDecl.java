@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.github.alexeybond.gdx_commons.game.Component;
+import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.common_components.DestructibleComponent;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
@@ -63,7 +64,7 @@ public class DestructibleDecl implements ComponentDeclaration {
     public float friction = 0.2f;
 
     @Override
-    public Component create(GameDeclaration gameDeclaration) {
+    public Component create(GameDeclaration gameDeclaration, Game game) {
         return new DestructibleComponent(
                 destructionEndEvent,
                 centerDestructionEvent,

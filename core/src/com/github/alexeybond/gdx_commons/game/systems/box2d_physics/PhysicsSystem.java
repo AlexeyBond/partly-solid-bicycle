@@ -7,6 +7,9 @@ import com.github.alexeybond.gdx_commons.game.GameSystem;
 import com.github.alexeybond.gdx_commons.util.event.Events;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.IntProperty;
+import com.github.alexeybond.gdx_commons.util.number_allocator.IncrementalSequenceNumberAllocator;
+import com.github.alexeybond.gdx_commons.util.number_allocator.NamedNumberAllocator;
+import com.github.alexeybond.gdx_commons.util.number_allocator.PowerOfTwoSequenceNumberAllocator;
 import com.github.alexeybond.gdx_commons.util.updatable.UnorederedUpdateGroup;
 import com.github.alexeybond.gdx_commons.util.updatable.UpdateGroup;
 
@@ -40,6 +43,29 @@ public class PhysicsSystem implements GameSystem, ContactListener {
 
     private boolean isUpdating = false;
     private ArrayList<PhysicsComponent> disposeQueue = new ArrayList<PhysicsComponent>(16);
+
+    private final NamedNumberAllocator categoryAllocator = new PowerOfTwoSequenceNumberAllocator(Short.MAX_VALUE);
+    {categoryAllocator.resolve("default");}
+    private final NamedNumberAllocator selfCollidableGroupAllocator = new IncrementalSequenceNumberAllocator(1, 1, Short.MAX_VALUE);
+    private final NamedNumberAllocator nonSelfCollidableGroupAllocator = new IncrementalSequenceNumberAllocator(-1, -1, Short.MIN_VALUE);
+
+    /**
+     * Get index of a named collision group.
+     *
+     * If group name starts with a {@code '+'} character then will be returned self-colliding group index (positive),
+     * non-self-colliding group index (negative) will be returned else.
+     */
+    public short collisionGroup(String name) {
+        if (name.charAt(0) == '+') {
+            return (short) selfCollidableGroupAllocator.resolve(name);
+        } else {
+            return (short) nonSelfCollidableGroupAllocator.resolve(name);
+        }
+    }
+
+    public short categoryFlag(String categoryName) {
+        return (short) categoryAllocator.resolve(categoryName);
+    }
 
     private void disposeEnqueued() {
         for (int i = 0; i < disposeQueue.size(); i++) {

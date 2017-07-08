@@ -5,6 +5,7 @@ import com.github.alexeybond.gdx_commons.drawing.sprite.SpriteInstance;
 import com.github.alexeybond.gdx_commons.drawing.sprite.renderer.AccurateSpriteInstance;
 import com.github.alexeybond.gdx_commons.drawing.sprite.renderer.StandardSpriteInstance;
 import com.github.alexeybond.gdx_commons.game.Component;
+import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.systems.render.components.StaticSpriteComponent;
@@ -26,7 +27,7 @@ public class StaticSprite implements ComponentDeclaration {
     public boolean accurate = false;
 
     @Override
-    public Component create(GameDeclaration gameDeclaration) {
+    public Component create(GameDeclaration gameDeclaration, Game game) {
         if (null == region) region = IoC.resolve("get texture region", sprite);
 
         SpriteInstance spriteInst = accurate ? new AccurateSpriteInstance() : new StandardSpriteInstance();

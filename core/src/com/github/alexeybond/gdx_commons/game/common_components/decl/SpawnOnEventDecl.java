@@ -2,6 +2,7 @@ package com.github.alexeybond.gdx_commons.game.common_components.decl;
 
 import com.badlogic.gdx.math.Vector2;
 import com.github.alexeybond.gdx_commons.game.Component;
+import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.common_components.SpawnOnEvent;
 import com.github.alexeybond.gdx_commons.game.common_components.SpawnOnEventNearToObserver;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
@@ -27,7 +28,7 @@ public class SpawnOnEventDecl implements ComponentDeclaration {
     private transient Vector2 offsetV;
 
     @Override
-    public Component create(GameDeclaration gameDeclaration) {
+    public Component create(GameDeclaration gameDeclaration, Game game) {
         offsetV = DeclUtils.readVector(offsetV, offset, offsetX, offsetY);
         classDecls = DeclUtils.readClasses(classDecls, gameDeclaration, classes);
 

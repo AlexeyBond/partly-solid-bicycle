@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
+import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.GameSystem;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
@@ -67,7 +68,7 @@ public class PhysicsDebuggerComponent implements Component, RenderComponent {
         public String camera;
 
         @Override
-        public Component create(GameDeclaration gameDeclaration) {
+        public Component create(GameDeclaration gameDeclaration, Game game) {
             return new PhysicsDebuggerComponent(pass, camera);
         }
     }

@@ -1,6 +1,7 @@
 package com.github.alexeybond.gdx_commons.game.systems.input.components.decl;
 
 import com.github.alexeybond.gdx_commons.game.Component;
+import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.systems.input.components.KeyBindingsComponent;
@@ -15,7 +16,7 @@ public class KeyBindings implements ComponentDeclaration {
     public HashMap<String, String> bind = new HashMap<String, String>();
 
     @Override
-    public Component create(GameDeclaration gameDeclaration) {
+    public Component create(GameDeclaration gameDeclaration, Game game) {
         return new KeyBindingsComponent(bind);
     }
 }

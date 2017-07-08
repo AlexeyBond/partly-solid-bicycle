@@ -1,6 +1,7 @@
 package com.github.alexeybond.gdx_commons.game.declarative;
 
 import com.github.alexeybond.gdx_commons.game.Component;
+import com.github.alexeybond.gdx_commons.game.Game;
 
 /**
  *
@@ -31,5 +32,5 @@ import com.github.alexeybond.gdx_commons.game.Component;
  * </pre>
  */
 public interface ComponentDeclaration {
-    Component create(GameDeclaration gameDeclaration);
+    Component create(GameDeclaration gameDeclaration, Game game);
 }

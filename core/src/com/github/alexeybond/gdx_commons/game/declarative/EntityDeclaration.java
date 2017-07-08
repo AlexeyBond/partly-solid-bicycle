@@ -2,6 +2,7 @@ package com.github.alexeybond.gdx_commons.game.declarative;
 
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
+import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.util.event.props.Property;
 
 import java.util.LinkedHashMap;
@@ -43,11 +44,13 @@ public class EntityDeclaration {
      *          (no one of created components created property with that name)
      */
     public Entity apply(Entity entity, GameDeclaration gameDeclaration) {
+        Game game = entity.game();
+
         for (String anInherit : inherit)
             entity = gameDeclaration.getEntityClass(anInherit).apply(entity, gameDeclaration);
 
         for (Map.Entry<String, ComponentDeclaration> entry : components.entrySet())
-            entity.components().add(entry.getKey(), entry.getValue().create(gameDeclaration));
+            entity.components().add(entry.getKey(), entry.getValue().create(gameDeclaration, game));
 
         for (Map.Entry<String, String[]> entry : properties.entrySet())
             entity.events().<Property<Component>>event(entry.getKey()).load(null, entry.getValue());
