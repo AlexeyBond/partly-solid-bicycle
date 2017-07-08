@@ -101,11 +101,12 @@
           "collisionBeginEvent": "collectorHitStart",
           "collisionEndEvent": "collectorHitEnd",
           "sensor": true,
+          "collisionGroup": "-triggers",
         },
         "collectorTrigger": {
           "type": "generic trigger",
           "ownerEvent": "collectorHitStart",
-          "targetEvent": "playerCollect"
+          "targetEvent": "playerCollect",
         },
         "attractorTriggerFixture": {
           "type": "polygon fixture",
@@ -119,6 +120,7 @@
           ],
           "density": 0,
           "sensor": true,
+          "collisionGroup": "-triggers",
         },
         "com.github.alexeybond.gdx_gm2.test_game.game.components.decl.ControlledAttractorDecl": {},
         "tag:player": { "type": "tag", "tag": "player" },

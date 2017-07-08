@@ -9,6 +9,7 @@
           "collisionBeginEvent": "gravityTriggerHitStart",
           "collisionEndEvent": "gravityTriggerHitEnd",
           "sensor": true,
+          "collisionGroup": "-triggers",
         },
         "gravityTrigger": {
           "type": "com.github.alexeybond.gdx_gm2.test_game.game.components.decl.GravityTriggerDecl",
@@ -22,6 +23,7 @@
           "collisionBeginEvent": "deathTriggerHitStart",
           "collisionEndEvent": "deathTriggerHitEnd",
           "sensor": true,
+          "collisionGroup": "-triggers",
         },
         "deathTrigger": {
           "type": "generic trigger",
