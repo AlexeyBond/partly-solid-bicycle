@@ -11,6 +11,7 @@ import com.github.alexeybond.gdx_commons.drawing.Technique;
 import com.github.alexeybond.gdx_commons.drawing.tech.EDSLTechnique;
 import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
+import com.github.alexeybond.gdx_commons.game.declarative.visitor.impl.ApplyGameDeclarationVisitor;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.util.parts.AParts;
@@ -44,8 +45,10 @@ public class Test3Screen extends DefaultScreen {
 
         game.systems().<PhysicsSystem>get("physics").world().setGravity(new Vector2(0, -100));
 
-        IoC.<GameDeclaration>resolve(
+        GameDeclaration gameDeclaration = IoC.resolve(
                 "load game declaration",
-                Gdx.files.internal("test/game.platformer.test.json")).apply(game);
+                Gdx.files.internal("test/game.platformer.test.json"));
+
+        game = new ApplyGameDeclarationVisitor().doVisit(gameDeclaration, game);
     }
 }

@@ -26,6 +26,7 @@ import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.GameSystem;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
+import com.github.alexeybond.gdx_commons.game.declarative.visitor.impl.ApplyGameDeclarationVisitor;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
 import com.github.alexeybond.gdx_commons.game.systems.input.InputSystem;
 import com.github.alexeybond.gdx_commons.game.systems.render.RenderSystem;
@@ -98,9 +99,11 @@ public class GameScreen extends DefaultScreen {
         TimingSystem timingSystem = game.systems().get("timing");
         TaggingSystem taggingSystem = game.systems().get("tagging");
 
-        IoC.<GameDeclaration>resolve(
+        GameDeclaration gameDeclaration = IoC.resolve(
                 "load game declaration",
-                Gdx.files.internal("old/space-gc/game.json")).apply(game);
+                Gdx.files.internal("old/space-gc/game.json"));
+
+        new ApplyGameDeclarationVisitor().doVisit(gameDeclaration, game);
 
         game.events().event("lose").subscribe(new EventListener<GameSystem, Event<GameSystem>>() {
             @Override

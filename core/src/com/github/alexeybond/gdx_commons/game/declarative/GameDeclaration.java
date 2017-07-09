@@ -1,9 +1,6 @@
 package com.github.alexeybond.gdx_commons.game.declarative;
 
-import com.github.alexeybond.gdx_commons.game.Entity;
-import com.github.alexeybond.gdx_commons.game.Game;
-import com.github.alexeybond.gdx_commons.game.GameSystem;
-import com.github.alexeybond.gdx_commons.util.event.props.Property;
+import com.github.alexeybond.gdx_commons.game.declarative.visitor.GameDeclarationVisitor;
 
 import java.util.*;
 
@@ -39,6 +36,36 @@ public class GameDeclaration {
     public LinkedHashMap<String, String[]> properties
             = new LinkedHashMap<String, String[]>();
 
+    public void visit(GameDeclarationVisitor visitor) {
+        visitor.beginVisitDeclaration(this);
+
+        for (int i = 0; i < included.length; i++)
+            visitor.visitIncludedDeclaration(include[i], included[i]);
+
+        if (visitor.beginVisitClassDeclarations()) {
+            for (Map.Entry<String, EntityDeclaration> e : classes.entrySet())
+                visitor.visitClassDeclaration(e.getKey(), e.getValue());
+
+            visitor.endVisitClassDeclarations();
+        }
+
+        if (visitor.beginVisitEntityDeclarations()) {
+            for (int i = 0; i < entities.length; i++)
+                visitor.visitEntityDeclaration(entities[i]);
+
+            visitor.endVisitEntityDeclarations();
+        }
+
+        if (visitor.beginVisitProperties()) {
+            for (Map.Entry<String, String[]> e : properties.entrySet())
+                visitor.visitProperty(e.getKey(), e.getValue());
+
+            visitor.endVisitProperties();
+        }
+
+        visitor.endVisitDeclaration(this);
+    }
+
     private EntityDeclaration getEntityClass0(String className) {
         EntityDeclaration declaration = classes.get(className);
 
@@ -56,52 +83,5 @@ public class GameDeclaration {
             throw new NoSuchElementException("No such entity class: \"" + className + "\"");
 
         return declaration;
-    }
-
-    /**
-     * Fill a game world with entities described by this declaration.
-     */
-    public Game apply(Game game) {
-        for (GameDeclaration includedDeclaration : included)
-            game = includedDeclaration.apply(game);
-
-        for (EntityDeclaration entityDeclaration : entities)
-            entityDeclaration.apply(new Entity(game), this);
-
-        for (Map.Entry<String, String[]> entry : properties.entrySet())
-            game.events().<Property<GameSystem>>event(entry.getKey())
-                    .load(null, entry.getValue());
-
-        return game;
-    }
-
-    /**
-     * Convert this declaration from declaration with includes to a "flat" declaration.
-     *
-     * This method assumes that included declarations (if any) are loaded.
-     *
-     * If there is no declarations included then {@code this} is returned.
-     */
-    public GameDeclaration flatten() {
-        if (include.length == 0) return this;
-
-        GameDeclaration result = new GameDeclaration();
-
-        ArrayList<EntityDeclaration> allEntities = new ArrayList<EntityDeclaration>();
-
-        for (GameDeclaration includedDeclaration : included) {
-            GameDeclaration d = includedDeclaration.flatten();
-            result.classes.putAll(d.classes);
-            result.properties.putAll(d.properties);
-            allEntities.addAll(Arrays.asList(d.entities));
-        }
-
-        result.classes.putAll(this.classes);
-        result.properties.putAll(this.properties);
-        allEntities.addAll(Arrays.asList(entities));
-
-        result.entities = allEntities.toArray(new EntityDeclaration[allEntities.size()]);
-
-        return result;
     }
 }

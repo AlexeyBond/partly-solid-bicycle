@@ -1,9 +1,6 @@
 package com.github.alexeybond.gdx_commons.game.declarative;
 
-import com.github.alexeybond.gdx_commons.game.Component;
-import com.github.alexeybond.gdx_commons.game.Entity;
-import com.github.alexeybond.gdx_commons.game.Game;
-import com.github.alexeybond.gdx_commons.util.event.props.Property;
+import com.github.alexeybond.gdx_commons.game.declarative.visitor.EntityDeclarationVisitor;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -35,26 +32,16 @@ public class EntityDeclaration {
     public LinkedHashMap<String, String[]> properties
             = new LinkedHashMap<String, String[]>();
 
-    /**
-     * Create a entity described by this declaration.
-     *
-     * @throws NullPointerException if one of class names in {@link #inherit} is not valid (no entry with
-     *          that name in {@code classes} map)
-     * @throws java.util.NoSuchElementException if one of property names in {@link #properties} is invalid
-     *          (no one of created components created property with that name)
-     */
-    public Entity apply(Entity entity, GameDeclaration gameDeclaration) {
-        Game game = entity.game();
+    public void visit(EntityDeclarationVisitor visitor) {
+        visitor.beginVisitDeclaration(this);
+        visitor.visitInheritedClasses(inherit);
 
-        for (String anInherit : inherit)
-            entity = gameDeclaration.getEntityClass(anInherit).apply(entity, gameDeclaration);
+        for (Map.Entry<String, ComponentDeclaration> e : components.entrySet())
+            visitor.visitComponent(e.getKey(), e.getValue());
 
-        for (Map.Entry<String, ComponentDeclaration> entry : components.entrySet())
-            entity.components().add(entry.getKey(), entry.getValue().create(gameDeclaration, game));
+        for (Map.Entry<String, String[]> e : properties.entrySet())
+            visitor.visitProperty(e.getKey(), e.getValue());
 
-        for (Map.Entry<String, String[]> entry : properties.entrySet())
-            entity.events().<Property<Component>>event(entry.getKey()).load(null, entry.getValue());
-
-        return entity;
+        visitor.endVisitDeclaration(this);
     }
 }

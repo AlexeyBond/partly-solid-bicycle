@@ -12,6 +12,7 @@ import com.github.alexeybond.gdx_commons.drawing.tech.EDSLTechnique;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
+import com.github.alexeybond.gdx_commons.game.declarative.visitor.impl.ApplyGameDeclarationVisitor;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
 import com.github.alexeybond.gdx_commons.game.systems.tagging.TaggingSystem;
 import com.github.alexeybond.gdx_commons.input.InputEvents;
@@ -57,9 +58,11 @@ public class Test2Screen extends DefaultScreen {
         game.systems().<PhysicsSystem>get("physics").events()
                 .<FloatProperty<PhysicsSystem>>event("simulationStep").set(null, 0.005f);
 
-        IoC.<GameDeclaration>resolve(
+        GameDeclaration gameDeclaration = IoC.resolve(
                 "load game declaration",
-                Gdx.files.internal("test/game.test.json")).apply(game);
+                Gdx.files.internal("test/game.test.json"));
+
+        game = new ApplyGameDeclarationVisitor().doVisit(gameDeclaration, game);
 
         final Entity box = game.systems().<TaggingSystem>get("tagging").group("box").getOnly();
 

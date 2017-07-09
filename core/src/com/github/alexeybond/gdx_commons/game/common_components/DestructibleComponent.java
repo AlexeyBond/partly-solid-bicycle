@@ -10,6 +10,7 @@ import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.declarative.EntityDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
+import com.github.alexeybond.gdx_commons.game.declarative.visitor.impl.ApplyEntityDeclarationVisitor;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.FixturePhysicsComponent;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.FixtureDefFixtureComponent;
 import com.github.alexeybond.gdx_commons.game.systems.render.components.PolySpriteComponent;
@@ -28,6 +29,8 @@ import java.util.List;
  *
  */
 public class DestructibleComponent implements Component {
+    private final ApplyEntityDeclarationVisitor entityDeclarationVisitor = new ApplyEntityDeclarationVisitor();
+
     private final String destructionEndEventName;
     private final String centerDestructionStartEventName;
     private final ShapeSource shapeSource;
@@ -179,7 +182,7 @@ public class DestructibleComponent implements Component {
         destructionHelper.beginPart(shape);
 
         Entity partEntity = new Entity(entity.game());
-        partClass.apply(partEntity, gameDeclaration);
+        partEntity = entityDeclarationVisitor.doVisit(partClass, gameDeclaration, partEntity);
 
         FixtureDef fd;
 

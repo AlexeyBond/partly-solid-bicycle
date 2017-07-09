@@ -6,6 +6,7 @@ import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.declarative.EntityDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
+import com.github.alexeybond.gdx_commons.game.declarative.visitor.impl.ApplyEntityDeclarationVisitor;
 import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
@@ -16,6 +17,8 @@ import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
  */
 public class SpawnOnEvent
         implements Component, EventListener<Component, Event<Component>> {
+    private final ApplyEntityDeclarationVisitor entityDeclarationVisitor = new ApplyEntityDeclarationVisitor();
+
     private final String eventName;
     private final Vector2 offset;
     private final float rotation;
@@ -63,7 +66,7 @@ public class SpawnOnEvent
         if (!checkSpawn()) return false;
 
         EntityDeclaration cls = spawnClasses[MathUtils.random(0, spawnClasses.length - 1)];
-        Entity spawned = cls.apply(new Entity(entity.game()), gameDeclaration);
+        Entity spawned = entityDeclarationVisitor.doVisit(cls, gameDeclaration, new Entity(entity.game()));
 
         tmp.set(offset).rotate(entityRotationProp.get()).add(entityPositionProp.ref());
 

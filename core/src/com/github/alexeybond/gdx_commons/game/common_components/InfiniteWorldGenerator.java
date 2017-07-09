@@ -11,6 +11,7 @@ import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.declarative.EntityDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
+import com.github.alexeybond.gdx_commons.game.declarative.visitor.impl.ApplyEntityDeclarationVisitor;
 import com.github.alexeybond.gdx_commons.game.systems.render.interfaces.RenderComponent;
 import com.github.alexeybond.gdx_commons.game.systems.render.RenderSystem;
 import com.github.alexeybond.gdx_commons.game.systems.tagging.TagGroup;
@@ -26,6 +27,8 @@ import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
  */
 public class InfiniteWorldGenerator
         implements Component, EventListener<Component, Vec2Property<Component>>, RenderComponent {
+    private final ApplyEntityDeclarationVisitor entityDeclarationVisitor = new ApplyEntityDeclarationVisitor();
+
     private final String observerTag, generatedTag;
     private final Array<EntityDeclaration> generateClasses;
     private final GameDeclaration gameDeclaration;
@@ -120,7 +123,7 @@ public class InfiniteWorldGenerator
 
     private Entity generateEntity() {
         int classIdx = MathUtils.random(generateClasses.size - 1);
-        return generateClasses.get(classIdx).apply(new Entity(game), gameDeclaration);
+        return entityDeclarationVisitor.doVisit(generateClasses.get(classIdx), gameDeclaration, new Entity(game));
     }
 
     private void regenerate() {
