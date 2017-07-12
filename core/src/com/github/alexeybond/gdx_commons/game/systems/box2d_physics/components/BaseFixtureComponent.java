@@ -4,17 +4,20 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.CollisionData;
-import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.FixturePhysicsComponent;
-import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.APhysicsSystem;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.BodyPhysicsComponent;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.DisposablePhysicsComponent;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.FixturePhysicsComponent;
 import com.github.alexeybond.gdx_commons.util.event.props.ObjectProperty;
 
 /**
  *
  */
-public abstract class BaseFixtureComponent implements FixturePhysicsComponent {
-    private BaseBodyComponent bodyComponent;
+public abstract class BaseFixtureComponent
+        implements FixturePhysicsComponent, DisposablePhysicsComponent {
+    private BodyPhysicsComponent bodyComponent;
+    private Entity entity;
     private Fixture fixture;
-    private boolean alive = false;
     private final String collisionBeginEventName, collisionEndEventName;
 
     private ObjectProperty<CollisionData, Component> collisionBeginEvent;
@@ -40,6 +43,7 @@ public abstract class BaseFixtureComponent implements FixturePhysicsComponent {
 
     @Override
     public void onConnect(Entity entity) {
+        this.entity = entity;
         bodyComponent = entity.components().get("body");
         collisionBeginEvent = entity.events().event(
                         collisionBeginEventName,
@@ -49,12 +53,11 @@ public abstract class BaseFixtureComponent implements FixturePhysicsComponent {
                         ObjectProperty.<CollisionData, Component>make());
         fixture = createFixture();
         fixture.setUserData(this);
-        alive = true;
     }
 
     @Override
     public void onDisconnect(Entity entity) {
-        entity.game().systems().<PhysicsSystem>get("physics").disposeComponent(this);
+        entity.game().systems().<APhysicsSystem>get("physics").disposeComponent(this);
     }
 
     @Override
@@ -67,18 +70,8 @@ public abstract class BaseFixtureComponent implements FixturePhysicsComponent {
     }
 
     @Override
-    public void update() {
-        // No update required
-    }
-
-    @Override
-    public boolean isAlive() {
-        return bodyComponent.isAlive() && alive;
-    }
-
-    @Override
     public Entity entity() {
-        return bodyComponent.entity();
+        return entity;
     }
 
     @Override
@@ -93,7 +86,7 @@ public abstract class BaseFixtureComponent implements FixturePhysicsComponent {
         collisionEndEvent.trigger(this);
     }
 
-    public BaseBodyComponent parent() {
+    public BodyPhysicsComponent parent() {
         return bodyComponent;
     }
 

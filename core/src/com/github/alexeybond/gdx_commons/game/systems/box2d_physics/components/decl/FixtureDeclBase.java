@@ -7,8 +7,8 @@ import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
-import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.FixtureDefFixtureComponent;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.APhysicsSystem;
 
 /**
  *
@@ -73,7 +73,7 @@ abstract class FixtureDeclBase implements ComponentDeclaration {
     private void initFilters(Game game) {
         if (this.game == game) return;
 
-        PhysicsSystem physicsSystem = game.systems().get("physics");
+        APhysicsSystem physicsSystem = game.systems().get("physics");
 
         fixtureDef.filter.categoryBits = initFilterFlags(physicsSystem, collisionCategories, (short) 0x01);
         fixtureDef.filter.maskBits = initFilterFlags(physicsSystem, collisionMask, (short) -1);
@@ -85,7 +85,7 @@ abstract class FixtureDeclBase implements ComponentDeclaration {
         this.game = game;
     }
 
-    private short initFilterFlags(PhysicsSystem physicsSystem, String[] settings, short defaultFlags) {
+    private short initFilterFlags(APhysicsSystem physicsSystem, String[] settings, short defaultFlags) {
         if (null == settings) {
             return defaultFlags;
         }

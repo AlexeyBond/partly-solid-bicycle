@@ -4,9 +4,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
-import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsComponent;
-import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.BaseBodyComponent;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.APhysicsSystem;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.DisposablePhysicsComponent;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.UpdatablePhysicsComponent;
 import com.github.alexeybond.gdx_commons.util.event.props.BooleanProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
 import com.github.alexeybond.gdx_commons.util.parts.exceptions.PartConnectRejectedException;
@@ -14,12 +15,13 @@ import com.github.alexeybond.gdx_commons.util.parts.exceptions.PartConnectReject
 /**
  * Component added to a entity attracted by gravity of some other entity.
  */
-public class GravityAttractionEffect implements Component, PhysicsComponent {
+public class GravityAttractionEffect
+        implements Component, UpdatablePhysicsComponent, DisposablePhysicsComponent {
     private final Vec2Property<Component> ownerPositionProperty;
     private final BooleanProperty<Component> enableEvent;
     private final float massProduct;
 
-    private PhysicsSystem system;
+    private APhysicsSystem system;
     private Body affectedBody;
     private boolean alive = false;
 

@@ -10,9 +10,9 @@ import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.GameSystem;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
-import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
-import com.github.alexeybond.gdx_commons.game.systems.render.interfaces.RenderComponent;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.APhysicsSystem;
 import com.github.alexeybond.gdx_commons.game.systems.render.RenderSystem;
+import com.github.alexeybond.gdx_commons.game.systems.render.interfaces.RenderComponent;
 import com.github.alexeybond.gdx_commons.util.event.props.ObjectProperty;
 
 /**
@@ -23,7 +23,7 @@ public class PhysicsDebuggerComponent implements Component, RenderComponent {
 
     private Box2DDebugRenderer debugRenderer;
     private RenderSystem renderSystem;
-    private PhysicsSystem physicsSystem;
+    private APhysicsSystem physicsSystem;
     private ObjectProperty<Camera, GameSystem> cameraProperty;
 
     private final Matrix4 tmp = new Matrix4();

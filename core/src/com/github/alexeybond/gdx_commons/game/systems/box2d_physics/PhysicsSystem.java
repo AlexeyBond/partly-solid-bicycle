@@ -2,8 +2,10 @@ package com.github.alexeybond.gdx_commons.game.systems.box2d_physics;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Queue;
 import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.GameSystem;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.*;
 import com.github.alexeybond.gdx_commons.util.event.Events;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.IntProperty;
@@ -13,48 +15,41 @@ import com.github.alexeybond.gdx_commons.util.number_allocator.PowerOfTwoSequenc
 import com.github.alexeybond.gdx_commons.util.updatable.UnorederedUpdateGroup;
 import com.github.alexeybond.gdx_commons.util.updatable.UpdateGroup;
 
-import java.util.ArrayList;
-
 /**
  *
  */
-public class PhysicsSystem implements GameSystem, ContactListener {
+public class PhysicsSystem implements GameSystem, ContactListener, APhysicsSystem {
     static {
         Box2D.init();
     }
 
     public static int RESERVE_COMPONENTS_CAPACITY = 32;
 
-    private final Events<PhysicsSystem> events = new Events<PhysicsSystem>();
-    private final FloatProperty<PhysicsSystem> autoTimeScale
-            = events.event("autoTimeScale", FloatProperty.<PhysicsSystem>make(1f));
-    private final FloatProperty<PhysicsSystem> timeAccumulator
-            = events.event("timeAccumulator", FloatProperty.<PhysicsSystem>make(0));
-    private final FloatProperty<PhysicsSystem> simulationStep
-            = events.event("simulationStep", FloatProperty.<PhysicsSystem>make(0.01f));
-    private final IntProperty<PhysicsSystem> positionIterations
-            = events.event("positionIterations", IntProperty.<PhysicsSystem>make(2));
-    private final IntProperty<PhysicsSystem> velocityIterations
-            = events.event("velocityIterations", IntProperty.<PhysicsSystem>make(6));
+    private final Events<APhysicsSystem> events = new Events<APhysicsSystem>();
+    private final FloatProperty<APhysicsSystem> autoTimeScale
+            = events.event("autoTimeScale", FloatProperty.<APhysicsSystem>make(1f));
+    private final FloatProperty<APhysicsSystem> timeAccumulator
+            = events.event("timeAccumulator", FloatProperty.<APhysicsSystem>make(0));
+    private final FloatProperty<APhysicsSystem> simulationStep
+            = events.event("simulationStep", FloatProperty.<APhysicsSystem>make(0.01f));
+    private final IntProperty<APhysicsSystem> positionIterations
+            = events.event("positionIterations", IntProperty.<APhysicsSystem>make(2));
+    private final IntProperty<APhysicsSystem> velocityIterations
+            = events.event("velocityIterations", IntProperty.<APhysicsSystem>make(6));
 
     private World world;
-    private UpdateGroup<PhysicsComponent> components
-            = new UnorederedUpdateGroup<PhysicsComponent>(RESERVE_COMPONENTS_CAPACITY);
+    private UpdateGroup<UpdatablePhysicsComponent> components
+            = new UnorederedUpdateGroup<UpdatablePhysicsComponent>(RESERVE_COMPONENTS_CAPACITY);
 
     private boolean isUpdating = false;
-    private ArrayList<PhysicsComponent> disposeQueue = new ArrayList<PhysicsComponent>(16);
+    private Queue<DisposablePhysicsComponent> disposeQueue = new Queue<DisposablePhysicsComponent>(16);
+    private Queue<CreatablePhysicsComponent> createQueue = new Queue<CreatablePhysicsComponent>(16);
 
     private final NamedNumberAllocator categoryAllocator = new PowerOfTwoSequenceNumberAllocator(Short.MAX_VALUE);
     {categoryAllocator.resolve("default");}
     private final NamedNumberAllocator selfCollidableGroupAllocator = new IncrementalSequenceNumberAllocator(1, 1, Short.MAX_VALUE);
     private final NamedNumberAllocator nonSelfCollidableGroupAllocator = new IncrementalSequenceNumberAllocator(-1, -1, Short.MIN_VALUE);
 
-    /**
-     * Get index of a named collision group.
-     *
-     * If group name starts with a {@code '+'} character then will be returned self-colliding group index (positive),
-     * non-self-colliding group index (negative) will be returned else.
-     */
     public short collisionGroup(String name) {
         if (name.charAt(0) == '+') {
             return (short) selfCollidableGroupAllocator.resolve(name);
@@ -67,18 +62,19 @@ public class PhysicsSystem implements GameSystem, ContactListener {
         return (short) categoryAllocator.resolve(categoryName);
     }
 
-    private void disposeEnqueued() {
-        for (int i = 0; i < disposeQueue.size(); i++) {
-            disposeQueue.get(i).dispose();
-        }
+    private void executeEnqueued() {
+        while (0 != createQueue.size)
+            createQueue.removeFirst().create();
 
-        disposeQueue.clear();
+        while (0 != disposeQueue.size)
+            disposeQueue.removeFirst().dispose();
     }
 
-    public Events<PhysicsSystem> events() {
+    public Events<APhysicsSystem> events() {
         return events;
     }
 
+    @Override
     public World world() {
         return world;
     }
@@ -97,25 +93,27 @@ public class PhysicsSystem implements GameSystem, ContactListener {
 
     @Override
     public void update(float deltaTime) {
-        disposeEnqueued();
-
         deltaTime = Math.min(deltaTime, 0.25f);
 
         float acc = timeAccumulator.get() + autoTimeScale.get() * deltaTime;
         float step = simulationStep.get();
         int pi = positionIterations.get(), vi = velocityIterations.get();
 
-        isUpdating = true;
+        try {
+            isUpdating = true;
 
-        while (acc >= step) {
-            world.step(step, vi, pi);
+            while (acc >= step) {
+                world.step(step, vi, pi);
 
-            acc -= step;
+                acc -= step;
+            }
+        } finally {
+            isUpdating = false;
         }
 
-        isUpdating = false;
-
         timeAccumulator.set(this, acc);
+
+        executeEnqueued();
 
         components.updateItems();
     }
@@ -176,18 +174,27 @@ public class PhysicsSystem implements GameSystem, ContactListener {
 
     }
 
-    public void registerComponent(PhysicsComponent component) {
+    @Override
+    public void registerComponent(UpdatablePhysicsComponent component) {
         components.addItem(component);
     }
 
     /**
-     * Calls {@link PhysicsComponent#dispose()} immediately or later if world update is in progress.
+     * Calls {@link DisposablePhysicsComponent#dispose()} immediately or later if world update is in progress.
      */
-    public void disposeComponent(PhysicsComponent component) {
+    public void disposeComponent(DisposablePhysicsComponent component) {
         if (isUpdating) {
-            disposeQueue.add(component);
+            disposeQueue.addLast(component);
         } else {
             component.dispose();
+        }
+    }
+
+    public void createComponent(CreatablePhysicsComponent component) {
+        if (isUpdating) {
+            createQueue.addLast(component);
+        } else {
+            component.create();
         }
     }
 }

@@ -14,6 +14,7 @@ import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.visitor.impl.ApplyGameDeclarationVisitor;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.APhysicsSystem;
 import com.github.alexeybond.gdx_commons.game.systems.tagging.TaggingSystem;
 import com.github.alexeybond.gdx_commons.input.InputEvents;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
@@ -51,12 +52,12 @@ public class Test2Screen extends DefaultScreen {
         Game game = layers.add("game", new GameLayerWith2DPhysicalGame()).game();
 
         game.systems().<PhysicsSystem>get("physics").world().setGravity(new Vector2(0, -100));
+        game.systems().<APhysicsSystem>get("physics").events()
+                .<IntProperty<APhysicsSystem>>event("positionIterations").set(null, 4);
         game.systems().<PhysicsSystem>get("physics").events()
-                .<IntProperty<PhysicsSystem>>event("positionIterations").set(null, 4);
+                .<IntProperty<APhysicsSystem>>event("velocityIterations").set(null, 6);
         game.systems().<PhysicsSystem>get("physics").events()
-                .<IntProperty<PhysicsSystem>>event("velocityIterations").set(null, 6);
-        game.systems().<PhysicsSystem>get("physics").events()
-                .<FloatProperty<PhysicsSystem>>event("simulationStep").set(null, 0.005f);
+                .<FloatProperty<APhysicsSystem>>event("simulationStep").set(null, 0.005f);
 
         GameDeclaration gameDeclaration = IoC.resolve(
                 "load game declaration",

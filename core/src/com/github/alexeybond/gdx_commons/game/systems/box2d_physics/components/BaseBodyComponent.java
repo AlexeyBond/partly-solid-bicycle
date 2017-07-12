@@ -7,19 +7,20 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.CollisionData;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.*;
 import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.ObjectProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
-import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.CollidablePhysicsComponent;
-import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
 
 /**
  *
  */
 public abstract class BaseBodyComponent
-        implements CollidablePhysicsComponent, EventListener<Component, Event<Component>> {
+        implements CollidablePhysicsComponent, EventListener<Component, Event<Component>>,
+        BodyPhysicsComponent, DisposablePhysicsComponent, CreatablePhysicsComponent,
+        UpdatablePhysicsComponent {
     private boolean alive = false;
     private Entity entity;
 
@@ -33,14 +34,14 @@ public abstract class BaseBodyComponent
 
     private Body body;
 
-    private PhysicsSystem system;
+    private APhysicsSystem system;
 
     @Override
     public void update() {
         Transform transform = body.getTransform();
         positionProp.set(this, transform.getPosition());
         rotationProp.set(this, MathUtils.radiansToDegrees * transform.getRotation());
-            // TODO:: Use body.getAngle()?, seems to be more efficient
+        // TODO:: Use body.getAngle()?, seems to be more efficient
     }
 
     @Override
@@ -69,9 +70,6 @@ public abstract class BaseBodyComponent
     public void onConnect(Entity entity) {
         system = entity.game().systems().get("physics");
 
-        body = createBody();
-        body.setUserData(this);
-
         this.entity = entity;
         this.alive = true;
 
@@ -86,7 +84,7 @@ public abstract class BaseBodyComponent
         positionSubIdx = positionProp.subscribe(this);
         rotationSubIdx = rotationProp.subscribe(this);
 
-        system.registerComponent(this);
+        system.createComponent(this);
     }
 
     @Override
@@ -97,6 +95,14 @@ public abstract class BaseBodyComponent
         rotationSubIdx = rotationProp.unsubscribe(rotationSubIdx);
 
         system.disposeComponent(this);
+    }
+
+    @Override
+    public void create() {
+        body = createBody();
+        body.setUserData(this);
+
+        system.registerComponent(this);
     }
 
     @Override
@@ -119,10 +125,11 @@ public abstract class BaseBodyComponent
 
     protected abstract Body createBody();
 
-    public PhysicsSystem system() {
+    public APhysicsSystem system() {
         return system;
     }
 
+    @Override
     public Body body() {
         return body;
     }

@@ -11,7 +11,7 @@ import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.declarative.EntityDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.visitor.impl.ApplyEntityDeclarationVisitor;
-import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.FixturePhysicsComponent;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.FixturePhysicsComponent;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.FixtureDefFixtureComponent;
 import com.github.alexeybond.gdx_commons.game.systems.render.components.PolySpriteComponent;
 import com.github.alexeybond.gdx_commons.game.utils.destruction.Destroyer;

@@ -11,7 +11,8 @@ public enum  DeclUtils {;
     public static Vector2 readVector(Vector2 present, float[] val, float valX, float valY) {
         if (null != present) return present;
 
-        if (val.length != 0) return new Vector2(val[0], val[1]);
+        if (null != val && val.length != 0)
+            return new Vector2(val[0], val[1]);
 
         return new Vector2(valX, valY);
     }

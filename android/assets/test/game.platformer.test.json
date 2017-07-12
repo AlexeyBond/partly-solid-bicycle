@@ -92,6 +92,7 @@
     },
     { // STATIC ENVIRONMENT
       "components": {
+        "tag": { "tag": "static" },
         "body": { "bodyType": "StaticBody", },
         "f1": {
           "type": "box fixture",
@@ -202,6 +203,42 @@
         "position": ["800", "0"],
         "rotation": ["-30"],
         "zoomFunction": ["fixed diagonal zoom function", "2500"],
+      }
+    },
+
+    {
+      "components": {
+        "body": { "bodyType": "DynamicBody", },
+        "box fixture": {
+          "size": [100, 20],
+        },
+        "tag": {"tag": "platform_00"},
+      },
+      "properties": {
+        "position": ["800", "0"],
+      },
+    },
+
+    {
+      "components": {
+        "j1": {
+          "type": "distance joint",
+          "entity1": "static",
+          "entity2": "platform_00",
+          "anchor1": [600, 200],
+          "local1": false,
+          "anchor2": [-50, 10],
+          "local2": true,
+        },
+        "j2": {
+          "type": "distance joint",
+          "entity1": "static",
+          "entity2": "platform_00",
+          "anchor1": [1000, 200],
+          "local1": false,
+          "anchor2": [50, 10],
+          "local2": true,
+        }
       }
     },
 
