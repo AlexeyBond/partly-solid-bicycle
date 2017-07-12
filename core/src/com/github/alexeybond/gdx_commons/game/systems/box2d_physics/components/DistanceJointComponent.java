@@ -1,14 +1,29 @@
 package com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import com.github.alexeybond.gdx_commons.game.Component;
+import com.github.alexeybond.gdx_commons.game.Entity;
+import com.github.alexeybond.gdx_commons.util.event.helpers.Subscription;
+import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
 
-public class DistanceJointComponent extends BaseJointComponent<DistanceJointDef> {
-    private final DistanceJointDef jointDef = new DistanceJointDef();
+import static com.github.alexeybond.gdx_commons.game.systems.box2d_physics.helpers.BodyAnchorsHelper.*;
 
+public class DistanceJointComponent extends BaseJointComponent<DistanceJoint, DistanceJointDef> {
     private final Vector2 anchorA, anchorB;
     private final boolean isLocalA, isLocalB;
+
+    // TODO:: Add properties for damping and frequency
+    private final Subscription<Component, FloatProperty<Component>> lengthSub
+            = new Subscription<Component, FloatProperty<Component>>() {
+        @Override
+        public boolean onTriggered(Component component, FloatProperty<Component> event) {
+            if (DistanceJointComponent.this == component) return false;
+            joint().setLength(event.get());
+            return true;
+        }
+    };
 
     public DistanceJointComponent(
             String entityATag, String entityBTag,
@@ -23,6 +38,27 @@ public class DistanceJointComponent extends BaseJointComponent<DistanceJointDef>
     }
 
     @Override
+    public void onConnect(Entity entity) {
+        lengthSub.set(entity.events().event("jointLength", FloatProperty.<Component>make()), false);
+
+        super.onConnect(entity);
+    }
+
+    @Override
+    public void onDisconnect(Entity entity) {
+        super.onDisconnect(entity);
+
+        lengthSub.clear();
+    }
+
+    @Override
+    public void create() {
+        super.create();
+
+        lengthSub.enable();
+    }
+
+    @Override
     protected DistanceJointDef setupJointDef(DistanceJointDef jointDef) {
         jointDef = super.setupJointDef(jointDef);
 
@@ -31,15 +67,5 @@ public class DistanceJointComponent extends BaseJointComponent<DistanceJointDef>
         jointDef.length = globalAnchor(jointDef.bodyA, anchorA, isLocalA).dst(globalAnchor(jointDef.bodyB, anchorB, isLocalB));
 
         return jointDef;
-    }
-
-    private Vector2 localAnchor(Body body, Vector2 anchor, boolean isLocal) {
-        if (isLocal) return anchor;
-        return body.getLocalPoint(anchor);
-    }
-
-    private Vector2 globalAnchor(Body body, Vector2 anchor, boolean isLocal) {
-        if (!isLocal) return anchor;
-        return body.getWorldPoint(anchor);
     }
 }

@@ -19,7 +19,7 @@ import com.github.alexeybond.gdx_commons.game.systems.tagging.TaggingSystem;
  *     approach may cause bugs with bodies having non-zero position/rotation.
  * </p>
  */
-public abstract class BaseJointComponent <TDef extends JointDef>
+public abstract class BaseJointComponent <TJoint extends Joint, TDef extends JointDef>
         implements Component, DisposablePhysicsComponent, CreatablePhysicsComponent, JointPhysicsComponent {
     private final String entityATag, entityBTag;
     /* May be shared across multiple instances created by the same declaration */
@@ -27,7 +27,7 @@ public abstract class BaseJointComponent <TDef extends JointDef>
 
     private Entity entity;
     private BaseBodyComponent bodyComponentA, bodyComponentB;
-    private Joint joint;
+    private TJoint joint;
     private APhysicsSystem physicsSystem;
 
     protected BaseJointComponent(String entityATag, String entityBTag, TDef def) {
@@ -41,7 +41,7 @@ public abstract class BaseJointComponent <TDef extends JointDef>
     }
 
     @Override
-    public Joint joint() {
+    public TJoint joint() {
         return joint;
     }
 
@@ -72,7 +72,8 @@ public abstract class BaseJointComponent <TDef extends JointDef>
     @Override
     public void create() {
         TDef def = setupJointDef(this.def);
-        joint = physicsSystem.world().createJoint(def);
+        joint = (TJoint) physicsSystem.world().createJoint(def);
+        joint.setUserData(this);
     }
 
     protected TDef setupJointDef(TDef jointDef) {

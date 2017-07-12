@@ -1,15 +1,15 @@
 package com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.decl;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.util.DeclUtils;
-import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.DistanceJointComponent;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.RopeJointComponent;
 
-public class DistanceJointDecl implements ComponentDeclaration {
+public class RopeJointDecl implements ComponentDeclaration {
     public String entity1, entity2;
 
     public float[] anchor1 = null, anchor2 = null;
@@ -20,28 +20,32 @@ public class DistanceJointDecl implements ComponentDeclaration {
 
     public boolean collideConnected = true;
 
-    public float damping = 0;
+    public float relLength = 1;
 
-    public float frequency = 0;
+    public float addLength = 0;
 
     private transient Vector2 anchorV1, anchorV2;
-    private transient DistanceJointDef jointDef;
+    private transient RopeJointDef jointDef;
 
     @Override
     public Component create(GameDeclaration gameDeclaration, Game game) {
-        Vector2 a1 = (anchorV1 = DeclUtils.readVector(anchorV1, anchor1, x1, y1));
-        Vector2 a2 = (anchorV2 = DeclUtils.readVector(anchorV2, anchor2, x2, y2));
-        return new DistanceJointComponent(entity1, entity2, createDef(jointDef), a1, a2, local1, local2);
+        anchorV1 = DeclUtils.readVector(anchorV1, anchor1, x1, y1);
+        anchorV2 = DeclUtils.readVector(anchorV2, anchor2, x2, y2);
+
+        return new RopeJointComponent(
+                entity1, entity2,
+                createDef(jointDef),
+                anchorV1, anchorV2,
+                local1, local2,
+                addLength, relLength);
     }
 
-    private DistanceJointDef createDef(DistanceJointDef present) {
+    private RopeJointDef createDef(RopeJointDef present) {
         if (null != present) return present;
 
-        DistanceJointDef jointDef = new DistanceJointDef();
+        RopeJointDef jointDef = new RopeJointDef();
 
         jointDef.collideConnected = collideConnected;
-        jointDef.dampingRatio = damping;
-        jointDef.frequencyHz = frequency;
 
         return this.jointDef = jointDef;
     }

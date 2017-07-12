@@ -211,12 +211,26 @@
         "body": { "bodyType": "DynamicBody", },
         "box fixture": {
           "size": [100, 20],
+          "friction": 1,
         },
         "tag": {"tag": "platform_00"},
       },
       "properties": {
         "position": ["800", "0"],
       },
+    },
+
+    {
+      "components": {
+        "body": {"bodyType": "DynamicBody"},
+        "box fixture": {
+          "size": [50, 50],
+        },
+        "tag": {"tag": "box_00"},
+      },
+      "properties": {
+        "position": ["900", "-40"],
+      }
     },
 
     {
@@ -229,6 +243,8 @@
           "local1": false,
           "anchor2": [-50, 10],
           "local2": true,
+          "frequency": 0.5,
+          "damping": 0.5,
         },
         "j2": {
           "type": "distance joint",
@@ -238,7 +254,18 @@
           "local1": false,
           "anchor2": [50, 10],
           "local2": true,
+          "frequency": 0.5,
+          "damping": 0.5,
+        },
+        "j3": {
+          "type": "rope joint",
+          "entity1": "platform_00",
+          "entity2": "box_00",
+          "relLength": 1.5,
         }
+      },
+      "properties": {
+        "jointLength": ["200"],
       }
     },
 
