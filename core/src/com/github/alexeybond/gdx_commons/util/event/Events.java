@@ -7,11 +7,11 @@ import java.util.NoSuchElementException;
 /**
  *
  */
-public class Events<TInitiator> {
-    private final Map<String, Event<TInitiator>> events = new HashMap<String, Event<TInitiator>>();
+public class Events {
+    private final Map<String, Event> events = new HashMap<String, Event>();
 
-    public <T extends Event<TInitiator>> T event(String name, T event) {
-        Event<TInitiator> present = events.get(name);
+    public <T extends Event> T event(String name, T event) {
+        Event present = events.get(name);
 
         if (null != present) return (T) present;
 
@@ -20,7 +20,7 @@ public class Events<TInitiator> {
         return event;
     }
 
-    public <T extends Event<TInitiator>> T event(String name) {
+    public <T extends Event> T event(String name) {
         T event = nullableEvent(name);
 
         if (null == event) {
@@ -30,7 +30,7 @@ public class Events<TInitiator> {
         return event;
     }
 
-    public <T extends Event<TInitiator>> T nullableEvent(String name) {
+    public <T extends Event> T nullableEvent(String name) {
         return (T) events.get(name);
     }
 }

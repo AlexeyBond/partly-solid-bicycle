@@ -11,8 +11,8 @@ import com.github.alexeybond.gdx_commons.util.parts.Parts;
 /**
  *
  */
-public class Game implements EventsOwner<GameSystem>, Disposable {
-    private final Events<GameSystem> events = new Events<GameSystem>();
+public class Game implements EventsOwner, Disposable {
+    private final Events events = new Events();
     private final IterableParts<Game, GameSystem> systems
             = new IterableParts<Game, GameSystem>(new Parts<Game, GameSystem>(this));
 
@@ -21,7 +21,7 @@ public class Game implements EventsOwner<GameSystem>, Disposable {
     }
 
     @Override
-    public Events<GameSystem> events() {
+    public Events events() {
         return events;
     }
 

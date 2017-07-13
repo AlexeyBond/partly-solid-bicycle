@@ -23,8 +23,8 @@ public abstract class BackgroundLoopComponent implements RenderComponent {
 
     private float invWidth, invHeight;
 
-    private FloatProperty<Component> imageScaleProp;
-    private FloatProperty<Component> positionScaleProp;
+    private FloatProperty imageScaleProp;
+    private FloatProperty positionScaleProp;
 
     public BackgroundLoopComponent(String passName, Texture texture) {
         this.passName = passName;

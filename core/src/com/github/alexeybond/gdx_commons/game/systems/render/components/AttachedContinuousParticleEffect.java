@@ -18,7 +18,7 @@ import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
  *
  */
 public class AttachedContinuousParticleEffect
-        extends BaseRenderComponent implements EventListener<Component, BooleanProperty<Component>> {
+        extends BaseRenderComponent implements EventListener<BooleanProperty> {
     private final ParticleEffectPool effectPool;
     private final Vector2 relativePos;
     private final float relativeRotation;
@@ -30,8 +30,8 @@ public class AttachedContinuousParticleEffect
             = new Array<ParticleEffectPool.PooledEffect>(false, 4);
     private ParticleEffectPool.PooledEffect effect;
 
-    private BooleanProperty<Component> enableProperty;
-    private FloatProperty<TimingSystem> deltaTimeEvent;
+    private BooleanProperty enableProperty;
+    private FloatProperty deltaTimeEvent;
 
     private final Vector2 tmp = new Vector2();
 
@@ -96,7 +96,7 @@ public class AttachedContinuousParticleEffect
 
         enableProperty = entity
                 .events()
-                .event(enablePropertyName, BooleanProperty.<Component>make(true));
+                .event(enablePropertyName, BooleanProperty.make(true));
         deltaTimeEvent = entity
                 .game()
                 .systems()
@@ -105,9 +105,9 @@ public class AttachedContinuousParticleEffect
                 .event("deltaTime");
 
         enableSubIdx = enableProperty.subscribe(this);
-        timeSubIdx = deltaTimeEvent.subscribe(new EventListener<TimingSystem, FloatProperty<TimingSystem>>() {
+        timeSubIdx = deltaTimeEvent.subscribe(new EventListener<FloatProperty>() {
             @Override
-            public boolean onTriggered(TimingSystem timingSystem, FloatProperty<TimingSystem> dt) {
+            public boolean onTriggered(FloatProperty dt) {
                 lastDeltaTime = dt.get();
                 return true;
             }
@@ -164,7 +164,7 @@ public class AttachedContinuousParticleEffect
     }
 
     @Override
-    public boolean onTriggered(Component component, BooleanProperty<Component> event) {
+    public boolean onTriggered(BooleanProperty event) {
         if (event.get()) {
             startEffect();
         } else {

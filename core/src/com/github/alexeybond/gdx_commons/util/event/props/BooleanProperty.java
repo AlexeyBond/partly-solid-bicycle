@@ -3,7 +3,7 @@ package com.github.alexeybond.gdx_commons.util.event.props;
 /**
  *
  */
-public class BooleanProperty<TInitiator> extends Property<TInitiator> {
+public class BooleanProperty extends Property {
     private boolean value;
 
     public BooleanProperty(boolean value) {
@@ -14,8 +14,8 @@ public class BooleanProperty<TInitiator> extends Property<TInitiator> {
         return value;
     }
 
-    public boolean set(TInitiator initiator, boolean value) {
-        return setSilently(value) && trigger(initiator);
+    public boolean set(boolean value) {
+        return setSilently(value) && trigger();
     }
 
     public boolean setSilently(boolean value) {
@@ -27,11 +27,11 @@ public class BooleanProperty<TInitiator> extends Property<TInitiator> {
         return false;
     }
 
-    public static <T> BooleanProperty<T> make(boolean value) {
-        return new BooleanProperty<T>(value);
+    public static BooleanProperty make(boolean value) {
+        return new BooleanProperty(value);
     }
 
-    public static <T> BooleanProperty<T> make() {
+    public static BooleanProperty make() {
         return make(false);
     }
 
@@ -41,7 +41,7 @@ public class BooleanProperty<TInitiator> extends Property<TInitiator> {
     }
 
     @Override
-    public void load(TInitiator initiator, String[] value) {
-        set(initiator, Boolean.valueOf(value[0]));
+    public void load(String[] value) {
+        set(Boolean.valueOf(value[0]));
     }
 }

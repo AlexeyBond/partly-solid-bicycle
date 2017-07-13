@@ -14,15 +14,15 @@ import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
  * State of a camera in which it is attached to an entity.
  */
 public class EntityCameraState implements CameraState {
-    private final Vec2Property<Component> positionProp;
-    private final FloatProperty<Component> rotationProp;
-    private final ObjectProperty<ZoomFunction, Component> zoomFunctionProp;
+    private final Vec2Property positionProp;
+    private final FloatProperty rotationProp;
+    private final ObjectProperty<ZoomFunction> zoomFunctionProp;
 
     public EntityCameraState(Entity entity, ZoomFunction defaultZoomFunction) {
-        positionProp = entity.events().event("position", Vec2Property.<Component>make());
+        positionProp = entity.events().event("position", Vec2Property.make());
         rotationProp = entity.events().event("rotation", FloatProperty.<Component>make());
         zoomFunctionProp = entity.events().event("zoomFunction",
-                ObjectProperty.<ZoomFunction, Component>make(defaultZoomFunction));
+                ObjectProperty.<ZoomFunction>make(defaultZoomFunction));
     }
 
     public EntityCameraState(Entity entity) {

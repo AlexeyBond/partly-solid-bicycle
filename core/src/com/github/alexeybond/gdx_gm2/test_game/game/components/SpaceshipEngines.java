@@ -31,20 +31,20 @@ import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
  * </ul>
  */
 public class SpaceshipEngines
-        implements Component, EventListener<TimingSystem, FloatProperty<TimingSystem>>,
+        implements Component, EventListener<FloatProperty>,
         RenderComponent {
-    private BooleanProperty<Component> rightEngineControl;
-    private BooleanProperty<Component> leftEngineControl;
-    private BooleanProperty<Component> rightEngineEnabled;
-    private BooleanProperty<Component> leftEngineEnabled;
-    private FloatProperty<TimingSystem> dtProperty;
+    private BooleanProperty rightEngineControl;
+    private BooleanProperty leftEngineControl;
+    private BooleanProperty rightEngineEnabled;
+    private BooleanProperty leftEngineEnabled;
+    private FloatProperty dtProperty;
     private BaseBodyComponent bodyComponent;
 
-    private FloatProperty<Component> engineImpulse;
-    private FloatProperty<Component> engineOffset;
+    private FloatProperty engineImpulse;
+    private FloatProperty engineOffset;
 
-    private FloatProperty<Component> fuel;
-    private FloatProperty<Component> fuelConsumption;
+    private FloatProperty fuel;
+    private FloatProperty fuelConsumption;
 
     private int dtSubId;
 
@@ -55,10 +55,10 @@ public class SpaceshipEngines
 
     @Override
     public void onConnect(Entity entity) {
-        rightEngineControl = entity.events().event("rightEngineControl", BooleanProperty.<Component>make());
-        leftEngineControl = entity.events().event("leftEngineControl", BooleanProperty.<Component>make());
-        rightEngineEnabled = entity.events().event("rightEngineEnabled", BooleanProperty.<Component>make());
-        leftEngineEnabled = entity.events().event("leftEngineEnabled", BooleanProperty.<Component>make());
+        rightEngineControl = entity.events().event("rightEngineControl", BooleanProperty.make());
+        leftEngineControl = entity.events().event("leftEngineControl", BooleanProperty.make());
+        rightEngineEnabled = entity.events().event("rightEngineEnabled", BooleanProperty.make());
+        leftEngineEnabled = entity.events().event("leftEngineEnabled", BooleanProperty.make());
 
         engineImpulse = entity.events().event("engineImpulse", FloatProperty.<Component>make(1000));
         engineOffset = entity.events().event("engineOffset", FloatProperty.<Component>make(50));
@@ -79,17 +79,17 @@ public class SpaceshipEngines
     }
 
     @Override
-    public boolean onTriggered(TimingSystem timingSystem, FloatProperty<TimingSystem> deltaTime) {
+    public boolean onTriggered(FloatProperty deltaTime) {
         float fuelLeft = fuel.get();
 
         if (fuelLeft <= 0) {
-            rightEngineEnabled.set(this, false);
-            leftEngineEnabled.set(this, false);
+            rightEngineEnabled.set(false);
+            leftEngineEnabled.set(false);
 
             return false;
         } else {
-            rightEngineEnabled.set(this, rightEngineControl.get());
-            leftEngineEnabled.set(this, leftEngineControl.get());
+            rightEngineEnabled.set(rightEngineControl.get());
+            leftEngineEnabled.set(leftEngineControl.get());
         }
 
         Body body = bodyComponent.body();
@@ -111,7 +111,7 @@ public class SpaceshipEngines
             fuelLeft -= fuelConsumption.get() * deltaTime.get();
         }
 
-        fuel.set(this, Math.max(0f, fuelLeft));
+        fuel.set(Math.max(0f, fuelLeft));
 
         return true;
     }

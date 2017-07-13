@@ -9,10 +9,10 @@ import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
  *
  */
 public class SpaceshipFuelTank
-        implements Component, EventListener<Component, FloatProperty<Component>> {
-    private FloatProperty<Component> capacityProp;
-    private FloatProperty<Component> fuelProp;
-    private FloatProperty<Component> fuelPickEvent;
+        implements Component, EventListener<FloatProperty> {
+    private FloatProperty capacityProp;
+    private FloatProperty fuelProp;
+    private FloatProperty fuelPickEvent;
     private int fuelPickSubIdx = -1;
 
     @Override
@@ -32,8 +32,8 @@ public class SpaceshipFuelTank
     }
 
     @Override
-    public boolean onTriggered(Component component, FloatProperty<Component> event) {
-        fuelProp.set(this, Math.min(capacityProp.get(), fuelProp.get() + event.get()));
+    public boolean onTriggered(FloatProperty event) {
+        fuelProp.set(Math.min(capacityProp.get(), fuelProp.get() + event.get()));
 
         return true;
     }

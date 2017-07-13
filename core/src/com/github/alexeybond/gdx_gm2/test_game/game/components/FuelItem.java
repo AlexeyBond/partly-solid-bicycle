@@ -10,12 +10,12 @@ import com.github.alexeybond.gdx_commons.util.event.props.ObjectProperty;
  *
  */
 public class FuelItem
-        implements Component, EventListener<Component, ObjectProperty<Entity, Component>> {
+        implements Component, EventListener<ObjectProperty<Entity>> {
     private final float defaultAmount;
     private int hitSubIdx = -1;
     private Entity entity;
-    private ObjectProperty<Entity, Component> hitEvent;
-    private FloatProperty<Component> amountProp;
+    private ObjectProperty<Entity> hitEvent;
+    private FloatProperty amountProp;
 
     public FuelItem(float defaultAmount) {
         this.defaultAmount = defaultAmount;
@@ -25,7 +25,7 @@ public class FuelItem
     public void onConnect(Entity entity) {
         this.entity = entity;
         hitEvent = entity.events()
-                .event("playerCollect", ObjectProperty.<Entity, Component>make());
+                .event("playerCollect", ObjectProperty.<Entity>make());
         amountProp = entity.events()
                 .event("amount", FloatProperty.<Component>make(defaultAmount));
         hitSubIdx = hitEvent.subscribe(this);
@@ -37,12 +37,12 @@ public class FuelItem
     }
 
     @Override
-    public boolean onTriggered(Component component, ObjectProperty<Entity, Component> event) {
-        FloatProperty<Component> pickEvent = event.get().events().event("fuelPicked");
+    public boolean onTriggered(ObjectProperty<Entity> event) {
+        FloatProperty pickEvent = event.get().events().event("fuelPicked");
 
         pickEvent.setSilently(amountProp.get());
-        pickEvent.trigger(this);
-        amountProp.set(this, 0);
+        pickEvent.trigger();
+        amountProp.set(0);
 
         entity.destroy();
 

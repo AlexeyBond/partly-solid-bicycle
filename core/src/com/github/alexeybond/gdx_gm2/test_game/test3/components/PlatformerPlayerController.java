@@ -26,37 +26,37 @@ public class PlatformerPlayerController implements Component {
     private Entity entity;
     private BaseBodyComponent bodyComponent;
 
-    private final Subscription<TimingSystem, FloatProperty<TimingSystem>> deltaTimeSub
-            = new Subscription<TimingSystem, FloatProperty<TimingSystem>>() {
+    private final Subscription<FloatProperty> deltaTimeSub
+            = new Subscription<FloatProperty>() {
         @Override
-        public boolean onTriggered(TimingSystem timingSystem, FloatProperty<TimingSystem> event) {
+        public boolean onTriggered(FloatProperty event) {
             update(event.get());
             return true;
         }
     };
 
-    private final Subscription<Component, ObjectProperty<CollisionData, Component>> groundCollisionBeginSub
-            = new Subscription<Component, ObjectProperty<CollisionData, Component>>() {
+    private final Subscription<ObjectProperty<CollisionData>> groundCollisionBeginSub
+            = new Subscription<ObjectProperty<CollisionData>>() {
         @Override
-        public boolean onTriggered(Component component, ObjectProperty<CollisionData, Component> event) {
+        public boolean onTriggered(ObjectProperty<CollisionData> event) {
             if (checkIgnoreGroundCollision(event.get().that.entity())) return false;
             ++sensorCollisionCount;
             return true;
         }
     };
 
-    private final Subscription<Component, ObjectProperty<CollisionData, Component>> groundCollisionEndSub
-            = new Subscription<Component, ObjectProperty<CollisionData, Component>>() {
+    private final Subscription<ObjectProperty<CollisionData>> groundCollisionEndSub
+            = new Subscription<ObjectProperty<CollisionData>>() {
         @Override
-        public boolean onTriggered(Component component, ObjectProperty<CollisionData, Component> event) {
+        public boolean onTriggered(ObjectProperty<CollisionData> event) {
             if (checkIgnoreGroundCollision(event.get().that.entity())) return false;
             --sensorCollisionCount;
             return true;
         }
     };
 
-    private BooleanProperty<Component> goRightControl, goLeftControl, jumpControl;
-    private Vec2Property<Component> positionProp;
+    private BooleanProperty goRightControl, goLeftControl, jumpControl;
+    private Vec2Property positionProp;
 
     private int sensorCollisionCount = 0;
     private boolean jumping;
@@ -67,17 +67,17 @@ public class PlatformerPlayerController implements Component {
         bodyComponent = entity.components().get("body");
 
         deltaTimeSub.set(entity.game().systems().<TimingSystem>get("timing").events()
-                .<FloatProperty<TimingSystem>>event("deltaTime"));
+                .<FloatProperty>event("deltaTime"));
 
-        goRightControl = entity.events().event("goRightControl", BooleanProperty.<Component>make());
-        goLeftControl = entity.events().event("goLeftControl", BooleanProperty.<Component>make());
-        jumpControl = entity.events().event("jumpControl", BooleanProperty.<Component>make());
-        positionProp = entity.events().event("position", Vec2Property.<Component>make());
+        goRightControl = entity.events().event("goRightControl", BooleanProperty.make());
+        goLeftControl = entity.events().event("goLeftControl", BooleanProperty.make());
+        jumpControl = entity.events().event("jumpControl", BooleanProperty.make());
+        positionProp = entity.events().event("position", Vec2Property.make());
 
         groundCollisionBeginSub.set(entity.events()
-                .event("groundCollisionBegin", ObjectProperty.<CollisionData, Component>make()));
+                .event("groundCollisionBegin", ObjectProperty.<CollisionData>make()));
         groundCollisionEndSub.set(entity.events()
-                .event("groundCollisionEnd", ObjectProperty.<CollisionData, Component>make()));
+                .event("groundCollisionEnd", ObjectProperty.<CollisionData>make()));
 
         sensorCollisionCount = 0;
     }

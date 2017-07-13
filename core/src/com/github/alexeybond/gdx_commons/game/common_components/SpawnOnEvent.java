@@ -16,7 +16,7 @@ import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
  *
  */
 public class SpawnOnEvent
-        implements Component, EventListener<Component, Event<Component>> {
+        implements Component, EventListener<Event> {
     private final ApplyEntityDeclarationVisitor entityDeclarationVisitor = new ApplyEntityDeclarationVisitor();
 
     private final String eventName;
@@ -26,9 +26,9 @@ public class SpawnOnEvent
     private final GameDeclaration gameDeclaration;
 
     protected Entity entity;
-    protected Vec2Property<Component> entityPositionProp;
-    protected FloatProperty<Component> entityRotationProp;
-    protected Event<Component> event;
+    protected Vec2Property entityPositionProp;
+    protected FloatProperty entityRotationProp;
+    protected Event event;
     private int eventSubIdx = -1;
 
     private final Vector2 tmp = new Vector2();
@@ -52,7 +52,7 @@ public class SpawnOnEvent
         event = entity.events().event(eventName);
         eventSubIdx = event.subscribe(this);
 
-        entityPositionProp = entity.events().event("position", Vec2Property.<Component>make());
+        entityPositionProp = entity.events().event("position", Vec2Property.make());
         entityRotationProp = entity.events().event("rotation", FloatProperty.<Component>make());
     }
 
@@ -62,7 +62,7 @@ public class SpawnOnEvent
     }
 
     @Override
-    public boolean onTriggered(Component component, Event<Component> event) {
+    public boolean onTriggered(Event event) {
         if (!checkSpawn()) return false;
 
         EntityDeclaration cls = spawnClasses[MathUtils.random(0, spawnClasses.length - 1)];
@@ -70,16 +70,16 @@ public class SpawnOnEvent
 
         tmp.set(offset).rotate(entityRotationProp.get()).add(entityPositionProp.ref());
 
-        Vec2Property<Component> spawnedPositionProp = spawned.events()
-                .event("position", Vec2Property.<Component>make());
-        FloatProperty<Component> spawnedRotationProp = spawned.events()
+        Vec2Property spawnedPositionProp = spawned.events()
+                .event("position", Vec2Property.make());
+        FloatProperty spawnedRotationProp = spawned.events()
                 .event("rotation", FloatProperty.<Component>make());
 
         spawnedPositionProp.ref().set(tmp);
         spawnedRotationProp.setSilently(rotation + entityRotationProp.get());
 
-        spawnedPositionProp.trigger(this);
-        spawnedRotationProp.trigger(this);
+        spawnedPositionProp.trigger();
+        spawnedRotationProp.trigger();
 
         return true;
     }

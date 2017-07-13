@@ -8,7 +8,7 @@ import com.github.alexeybond.gdx_commons.util.event.Event;
  * Property has methods to load/store to string array. Those methods are used to load and save
  * declarative descriptions of entities.
  */
-public abstract class Property <TChangeInitiator> extends Event<TChangeInitiator> {
+public abstract class Property extends Event {
     protected Property() {
         // By-default do not create listeners array. Array will be created lazily
         super(0);
@@ -24,5 +24,5 @@ public abstract class Property <TChangeInitiator> extends Event<TChangeInitiator
     /**
      * Set value from saved state.
      */
-    public abstract void load(TChangeInitiator initiator, String[] value);
+    public abstract void load(String[] value);
 }

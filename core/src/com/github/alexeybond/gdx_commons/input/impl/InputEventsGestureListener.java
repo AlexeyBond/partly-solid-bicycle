@@ -9,10 +9,10 @@ import com.github.alexeybond.gdx_commons.util.event.Events;
  *
  */
 class InputEventsGestureListener implements GestureDetector.GestureListener {
-    private final Events<InputEvents> events;
+    private final Events events;
     private final InputEvents owner;
 
-    public InputEventsGestureListener(Events<InputEvents> events, InputEvents owner) {
+    public InputEventsGestureListener(Events events, InputEvents owner) {
         this.events = events;
         this.owner = owner;
     }

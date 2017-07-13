@@ -10,12 +10,12 @@ import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
  * Component that makes entity repeat all movements of another entity.
  */
 public abstract class AttachmentComponent implements Component {
-    private Vec2Property<Component> masterPositionProp;
+    private Vec2Property masterPositionProp;
 
-    private FloatProperty<Component> masterRotationProp;
-    private Vec2Property<Component> slavePositionProp;
+    private FloatProperty masterRotationProp;
+    private Vec2Property slavePositionProp;
 
-    private FloatProperty<Component> slaveRotationProp;
+    private FloatProperty slaveRotationProp;
 
     private int positionSubIdx = -1, rotationSubIdx = -1;
 
@@ -23,22 +23,22 @@ public abstract class AttachmentComponent implements Component {
     public void onConnect(Entity entity) {
         Entity master = getMaster(entity);
 
-        masterPositionProp = master.events().event("position", Vec2Property.<Component>make());
+        masterPositionProp = master.events().event("position", Vec2Property.make());
         masterRotationProp = master.events().event("rotation", FloatProperty.<Component>make());
 
-        slavePositionProp = entity.events().event("position", Vec2Property.<Component>make());
+        slavePositionProp = entity.events().event("position", Vec2Property.make());
         slaveRotationProp = entity.events().event("rotation", FloatProperty.<Component>make());
 
-        positionSubIdx = masterPositionProp.subscribe(new EventListener<Component, Vec2Property<Component>>() {
+        positionSubIdx = masterPositionProp.subscribe(new EventListener<Vec2Property>() {
             @Override
-            public boolean onTriggered(Component component, Vec2Property<Component> event) {
-                return slavePositionProp.set(AttachmentComponent.this, event.ref());
+            public boolean onTriggered(Vec2Property event) {
+                return slavePositionProp.set(event.ref());
             }
         });
-        rotationSubIdx = masterRotationProp.subscribe(new EventListener<Component, FloatProperty<Component>>() {
+        rotationSubIdx = masterRotationProp.subscribe(new EventListener<FloatProperty>() {
             @Override
-            public boolean onTriggered(Component component, FloatProperty<Component> event) {
-                return slaveRotationProp.set(AttachmentComponent.this, event.get());
+            public boolean onTriggered(FloatProperty event) {
+                return slaveRotationProp.set(event.get());
             }
         });
     }

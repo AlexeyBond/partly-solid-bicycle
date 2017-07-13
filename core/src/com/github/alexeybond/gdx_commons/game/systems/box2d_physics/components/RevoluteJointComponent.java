@@ -15,30 +15,30 @@ public class RevoluteJointComponent extends BaseJointComponent<RevoluteJoint, Re
     private final Vector2 anchor;
     private final boolean isAnchorLocal;
 
-    private Subscription<Component, FloatProperty<Component>> motorSpeedSub
-            = new Subscription<Component, FloatProperty<Component>>() {
+    private Subscription<FloatProperty> motorSpeedSub
+            = new Subscription<FloatProperty>() {
         @Override
-        public boolean onTriggered(Component component, FloatProperty<Component> event) {
+        public boolean onTriggered(FloatProperty event) {
             joint().setMotorSpeed(event.get());
 
             return true;
         }
     };
 
-    private Subscription<Component, FloatProperty<Component>> maxMotorTorqueSub
-            = new Subscription<Component, FloatProperty<Component>>() {
+    private Subscription<FloatProperty> maxMotorTorqueSub
+            = new Subscription<FloatProperty>() {
         @Override
-        public boolean onTriggered(Component component, FloatProperty<Component> event) {
+        public boolean onTriggered(FloatProperty event) {
             joint().setMaxMotorTorque(event.get());
 
             return true;
         }
     };
 
-    private Subscription<Component, BooleanProperty<Component>> motorEnabledSub
-            = new Subscription<Component, BooleanProperty<Component>>() {
+    private Subscription<BooleanProperty> motorEnabledSub
+            = new Subscription<BooleanProperty>() {
         @Override
-        public boolean onTriggered(Component component, BooleanProperty<Component> event) {
+        public boolean onTriggered(BooleanProperty event) {
             joint().enableMotor(event.get());
 
             return true;
@@ -58,7 +58,7 @@ public class RevoluteJointComponent extends BaseJointComponent<RevoluteJoint, Re
     @Override
     public void onConnect(Entity entity) {
         motorEnabledSub.set(entity.events()
-                .event("motorEnabled", BooleanProperty.<Component>make(false)),
+                .event("motorEnabled", BooleanProperty.make(false)),
                 false);
         motorSpeedSub.set(entity.events()
                 .event("motorSpeed", FloatProperty.<Component>make(0f)),

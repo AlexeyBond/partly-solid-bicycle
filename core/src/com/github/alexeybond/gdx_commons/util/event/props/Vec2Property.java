@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 /**
  *
  */
-public class Vec2Property <TInitiator> extends Property<TInitiator> {
+public class Vec2Property extends Property {
     private final Vector2 vector;
 
     public Vec2Property(float x, float y) {
@@ -26,17 +26,17 @@ public class Vec2Property <TInitiator> extends Property<TInitiator> {
     }
 
     @Override
-    public void load(TInitiator initiator, String[] value) {
-        set(initiator, Float.valueOf(value[0]), Float.valueOf(value[1]));
+    public void load(String[] value) {
+        set(Float.valueOf(value[0]), Float.valueOf(value[1]));
     }
 
-    public boolean set(TInitiator initiator, float x, float y) {
+    public boolean set(float x, float y) {
         this.vector.set(x, y);
-        return trigger(initiator);
+        return trigger();
     }
 
-    public boolean set(TInitiator initiator, Vector2 value) {
-        return set(initiator, value.x, value.y);
+    public boolean set(Vector2 value) {
+        return set(value.x, value.y);
     }
 
     public void get(Vector2 out) {
@@ -47,15 +47,15 @@ public class Vec2Property <TInitiator> extends Property<TInitiator> {
         return vector;
     }
 
-    public static <T> Vec2Property<T> make(float x, float y) {
-        return new Vec2Property<T>(x, y);
+    public static Vec2Property make(float x, float y) {
+        return new Vec2Property(x, y);
     }
 
-    public static <T> Vec2Property<T> make(Vector2 value) {
-        return new Vec2Property<T>(value);
+    public static Vec2Property make(Vector2 value) {
+        return new Vec2Property(value);
     }
 
-    public static <T> Vec2Property<T> make() {
-        return new Vec2Property<T>();
+    public static Vec2Property make() {
+        return new Vec2Property();
     }
 }

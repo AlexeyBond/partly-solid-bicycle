@@ -7,7 +7,7 @@ import java.util.Arrays;
 /**
  *
  */
-public class ObjectProperty<T, TInitiator> extends Property<TInitiator> {
+public class ObjectProperty<T> extends Property {
     /**
      * Interface for a strategy converting serialized property value to object.
      */
@@ -43,9 +43,9 @@ public class ObjectProperty<T, TInitiator> extends Property<TInitiator> {
         this.value = value;
     }
 
-    public void set(TInitiator initiator, T value) {
+    public void set(T value) {
         if (setSilently(value)) {
-            trigger(initiator);
+            trigger();
         }
     }
 
@@ -63,15 +63,15 @@ public class ObjectProperty<T, TInitiator> extends Property<TInitiator> {
         return value;
     }
 
-    public static <T, TI> ObjectProperty<T, TI> make(T value) {
-        return new ObjectProperty<T, TI>(value);
+    public static <T> ObjectProperty<T> make(T value) {
+        return new ObjectProperty<T>(value);
     }
 
-    public static <T, TI> ObjectProperty<T, TI> make() {
+    public static <T> ObjectProperty<T> make() {
         return make(null);
     }
 
-    public ObjectProperty<T, TInitiator> use(Loader<T> loader) {
+    public ObjectProperty<T> use(Loader<T> loader) {
         this.loader = loader;
         return this;
     }
@@ -83,8 +83,8 @@ public class ObjectProperty<T, TInitiator> extends Property<TInitiator> {
     }
 
     @Override
-    public void load(TInitiator initiator, String[] value) {
-        set(initiator, loader.load(value));
+    public void load(String[] value) {
+        set(loader.load(value));
         serialValue = value;
     }
 }

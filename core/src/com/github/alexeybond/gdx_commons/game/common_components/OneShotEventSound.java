@@ -9,11 +9,11 @@ import com.github.alexeybond.gdx_commons.util.event.EventListener;
 /**
  *
  */
-public class OneShotEventSound implements Component, EventListener<Component, Event<Component>> {
+public class OneShotEventSound implements Component, EventListener<Event> {
     private final Sound sound;
     private final String eventName;
 
-    private Event<Component> event;
+    private Event event;
     private int eventSubIdx = -1;
 
     public OneShotEventSound(Sound sound, String eventName) {
@@ -33,7 +33,7 @@ public class OneShotEventSound implements Component, EventListener<Component, Ev
     }
 
     @Override
-    public boolean onTriggered(Component component, Event<Component> event) {
+    public boolean onTriggered(Event event) {
         sound.play();
         return false;
     }

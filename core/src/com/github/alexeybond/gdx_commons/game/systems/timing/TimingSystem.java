@@ -11,13 +11,13 @@ import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
 /**
  *
  */
-public class TimingSystem implements GameSystem, EventsOwner<TimingSystem> {
-    private Events<TimingSystem> events = new Events<TimingSystem>();
-    private FloatProperty<TimingSystem> timeProp
+public class TimingSystem implements GameSystem, EventsOwner {
+    private Events events = new Events();
+    private FloatProperty timeProp
             = events.event("time", FloatProperty.<TimingSystem>make(0));
-    private FloatProperty<TimingSystem> deltaTimeProp
+    private FloatProperty deltaTimeProp
             = events.event("deltaTime", FloatProperty.<TimingSystem>make(0));
-    private FloatProperty<TimingSystem> timeScaleProp
+    private FloatProperty timeScaleProp
             = events.event("timeScale", FloatProperty.<TimingSystem>make(1));
 
     @Override
@@ -31,24 +31,24 @@ public class TimingSystem implements GameSystem, EventsOwner<TimingSystem> {
     @Override
     public void update(float deltaTime) {
         float virtualDelta = deltaTime * timeScaleProp.get();
-        deltaTimeProp.set(this, virtualDelta);
-        timeProp.set(this, timeProp.get() + virtualDelta);
+        deltaTimeProp.set(virtualDelta);
+        timeProp.set(timeProp.get() + virtualDelta);
     }
 
     @Override
-    public Events<TimingSystem> events() {
+    public Events events() {
         return events;
     }
 
-    private static class ScheduleListener<T extends Event<TimingSystem>>
-            implements EventListener<TimingSystem, FloatProperty<TimingSystem>> {
+    private static class ScheduleListener<T extends Event>
+            implements EventListener<FloatProperty> {
         private int subId;
         private final float time;
         private final T slaveEvent;
 
         ScheduleListener(
                 float time,
-                FloatProperty<TimingSystem> timeEvent,
+                FloatProperty timeEvent,
                 T slaveEvent) {
             this.time = time;
             this.slaveEvent = slaveEvent;
@@ -56,22 +56,22 @@ public class TimingSystem implements GameSystem, EventsOwner<TimingSystem> {
         }
 
         @Override
-        public boolean onTriggered(TimingSystem timingSystem, FloatProperty<TimingSystem> event) {
+        public boolean onTriggered(FloatProperty event) {
             if (event.get() >= time) {
                 subId = event.unsubscribe(subId);
-                return slaveEvent.trigger(timingSystem);
+                return slaveEvent.trigger();
             }
 
             return false;
         }
     }
 
-    public <T extends Event<TimingSystem>> T scheduleAt(float time, T event) {
+    public <T extends Event> T scheduleAt(float time, T event) {
         new ScheduleListener<T>(time, timeProp, event);
         return event;
     }
 
-    public Event<TimingSystem> scheduleAt(float time) {
-        return scheduleAt(time, new Event<TimingSystem>());
+    public Event scheduleAt(float time) {
+        return scheduleAt(time, new Event());
     }
 }

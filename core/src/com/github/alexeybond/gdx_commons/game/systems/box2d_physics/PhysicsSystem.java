@@ -25,17 +25,17 @@ public class PhysicsSystem implements GameSystem, ContactListener, APhysicsSyste
 
     public static int RESERVE_COMPONENTS_CAPACITY = 32;
 
-    private final Events<APhysicsSystem> events = new Events<APhysicsSystem>();
-    private final FloatProperty<APhysicsSystem> autoTimeScale
+    private final Events events = new Events();
+    private final FloatProperty autoTimeScale
             = events.event("autoTimeScale", FloatProperty.<APhysicsSystem>make(1f));
-    private final FloatProperty<APhysicsSystem> timeAccumulator
+    private final FloatProperty timeAccumulator
             = events.event("timeAccumulator", FloatProperty.<APhysicsSystem>make(0));
-    private final FloatProperty<APhysicsSystem> simulationStep
+    private final FloatProperty simulationStep
             = events.event("simulationStep", FloatProperty.<APhysicsSystem>make(0.01f));
-    private final IntProperty<APhysicsSystem> positionIterations
-            = events.event("positionIterations", IntProperty.<APhysicsSystem>make(2));
-    private final IntProperty<APhysicsSystem> velocityIterations
-            = events.event("velocityIterations", IntProperty.<APhysicsSystem>make(6));
+    private final IntProperty positionIterations
+            = events.event("positionIterations", IntProperty.make(2));
+    private final IntProperty velocityIterations
+            = events.event("velocityIterations", IntProperty.make(6));
 
     private World world;
     private UpdateGroup<UpdatablePhysicsComponent> components
@@ -70,7 +70,7 @@ public class PhysicsSystem implements GameSystem, ContactListener, APhysicsSyste
             disposeQueue.removeFirst().dispose();
     }
 
-    public Events<APhysicsSystem> events() {
+    public Events events() {
         return events;
     }
 
@@ -83,7 +83,7 @@ public class PhysicsSystem implements GameSystem, ContactListener, APhysicsSyste
     public void onConnect(Game game) {
         world = new World(Vector2.Zero, true);
         world.setContactListener(this);
-        timeAccumulator.set(this, 0);
+        timeAccumulator.set(0);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class PhysicsSystem implements GameSystem, ContactListener, APhysicsSyste
             isUpdating = false;
         }
 
-        timeAccumulator.set(this, acc);
+        timeAccumulator.set(acc);
 
         executeEnqueued();
 

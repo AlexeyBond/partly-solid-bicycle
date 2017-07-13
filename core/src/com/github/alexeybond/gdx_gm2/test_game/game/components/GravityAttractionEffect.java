@@ -17,8 +17,8 @@ import com.github.alexeybond.gdx_commons.util.parts.exceptions.PartConnectReject
  */
 public class GravityAttractionEffect
         implements Component, UpdatablePhysicsComponent, DisposablePhysicsComponent {
-    private final Vec2Property<Component> ownerPositionProperty;
-    private final BooleanProperty<Component> enableEvent;
+    private final Vec2Property ownerPositionProperty;
+    private final BooleanProperty enableEvent;
     private final float massProduct;
 
     private APhysicsSystem system;
@@ -28,8 +28,8 @@ public class GravityAttractionEffect
     private Vector2 tmp = new Vector2();
 
     public GravityAttractionEffect(
-            Vec2Property<Component> ownerPositionProperty,
-            BooleanProperty<Component> enableEvent,
+            Vec2Property ownerPositionProperty,
+            BooleanProperty enableEvent,
             float massProduct) {
         this.ownerPositionProperty = ownerPositionProperty;
         this.enableEvent = enableEvent;

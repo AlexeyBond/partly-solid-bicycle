@@ -14,10 +14,10 @@ import java.util.NoSuchElementException;
  * event parameter if event has type of {@link ObjectProperty} (otherwise just triggers the event).
  */
 public class GenericTrigger
-        implements Component, EventListener<Component, ObjectProperty<CollisionData, Component>> {
+        implements Component, EventListener<ObjectProperty<CollisionData>> {
     private final String ownerCollisionEventName, targetEventName;
 
-    private ObjectProperty<CollisionData, Component> hitEvent;
+    private ObjectProperty<CollisionData> hitEvent;
     private int hitSubIdx = -1;
     private Entity entity;
 
@@ -30,7 +30,7 @@ public class GenericTrigger
     public void onConnect(Entity entity) {
         this.entity = entity;
         hitEvent = entity.events()
-                .event(ownerCollisionEventName, ObjectProperty.<CollisionData, Component>make());
+                .event(ownerCollisionEventName, ObjectProperty.<CollisionData>make());
         hitSubIdx = hitEvent.subscribe(this);
     }
 
@@ -40,10 +40,10 @@ public class GenericTrigger
     }
 
     @Override
-    public boolean onTriggered(Component component, ObjectProperty<CollisionData, Component> event) {
+    public boolean onTriggered(ObjectProperty<CollisionData> event) {
         Entity target = event.get().that.entity();
 
-        Event<Component> targetEvent;
+        Event targetEvent;
 
         try {
             targetEvent = target.events().event(targetEventName);
@@ -52,12 +52,12 @@ public class GenericTrigger
         }
 
         if (targetEvent instanceof ObjectProperty) {
-            ObjectProperty<Entity, Component> asObjectProperty = (ObjectProperty) targetEvent;
+            ObjectProperty<Entity> asObjectProperty = (ObjectProperty) targetEvent;
 
             asObjectProperty.setSilently(entity);
-            asObjectProperty.trigger(this);
+            asObjectProperty.trigger();
         } else {
-            targetEvent.trigger(this);
+            targetEvent.trigger();
         }
 
         return true;

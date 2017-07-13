@@ -1,6 +1,5 @@
 package com.github.alexeybond.gdx_commons.game.declarative.visitor.impl;
 
-import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.EntityDeclaration;
@@ -33,7 +32,7 @@ public class ApplyEntityDeclarationVisitor implements EntityDeclarationVisitor {
 
     @Override
     public void visitProperty(String propertyName, String[] propertyValue) {
-        entity.events().<Property<Component>>event(propertyName).load(null, propertyValue);
+        entity.events().<Property>event(propertyName).load(propertyValue);
     }
 
     @Override

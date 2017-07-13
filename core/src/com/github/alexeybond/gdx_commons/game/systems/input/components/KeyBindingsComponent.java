@@ -2,7 +2,6 @@ package com.github.alexeybond.gdx_commons.game.systems.input.components;
 
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
-import com.github.alexeybond.gdx_commons.input.InputEvents;
 import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
 import com.github.alexeybond.gdx_commons.util.event.props.BooleanProperty;
@@ -27,9 +26,9 @@ import java.util.Map;
 public class KeyBindingsComponent implements Component {
     private class Binding implements EventListener {
         private String keyName, propertyName;
-        private BooleanProperty<InputEvents> keyEvent;
-        private BooleanProperty<Component> entityEvent;
-        private ObjectProperty<String, Component> bindingProperty;
+        private BooleanProperty keyEvent;
+        private BooleanProperty entityEvent;
+        private ObjectProperty<String> bindingProperty;
         private int keySubIdx, bindSubIdx;
 
         Binding(String keyName, String propertyName) {
@@ -40,9 +39,9 @@ public class KeyBindingsComponent implements Component {
         /** Initialize binding on entity */
         void bind(Entity entity) {
             entityEvent = entity.events().event(
-                    propertyName, BooleanProperty.<Component>make());
+                    propertyName, BooleanProperty.make());
             bindingProperty = entity.events().event(
-                    propertyName + "Key", ObjectProperty.<String, Component>make(keyName));
+                    propertyName + "Key", ObjectProperty.<String>make(keyName));
             bindSubIdx = bindingProperty.subscribe(this);
 
             // If there already was a binding property - use it's original value
@@ -61,23 +60,23 @@ public class KeyBindingsComponent implements Component {
         }
 
         /** Subscribe to key event */
-        private void bind0(BooleanProperty<InputEvents> newKeyEvent) {
+        private void bind0(BooleanProperty newKeyEvent) {
             keyEvent = newKeyEvent;
             keySubIdx = keyEvent.subscribe(this);
-            entityEvent.set(KeyBindingsComponent.this, keyEvent.get());
+            entityEvent.set(keyEvent.get());
         }
 
         private void rebind(String keyName) {
-            BooleanProperty<InputEvents> newKeyEvent = inputSystem.input().keyEvent(keyName);
+            BooleanProperty newKeyEvent = inputSystem.input().keyEvent(keyName);
             unbind0();
             bind0(newKeyEvent);
             this.keyName = keyName;
         }
 
         @Override
-        public boolean onTriggered(Object o, Event event) {
+        public boolean onTriggered(Event event) {
             if (event == keyEvent) {
-                return entityEvent.set(KeyBindingsComponent.this, keyEvent.get());
+                return entityEvent.set(keyEvent.get());
             } else if (event == bindingProperty) {
                 rebind(bindingProperty.get());
                 return true;

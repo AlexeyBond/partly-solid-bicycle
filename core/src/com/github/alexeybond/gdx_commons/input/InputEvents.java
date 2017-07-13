@@ -7,12 +7,12 @@ import com.github.alexeybond.gdx_commons.util.event.props.BooleanProperty;
 /**
  *
  */
-public interface InputEvents extends EventsOwner<InputEvents> {
+public interface InputEvents extends EventsOwner {
     InputProcessor inputProcessor();
 
-    BooleanProperty<InputEvents> keyEvent(int code);
+    BooleanProperty keyEvent(int code);
 
-    BooleanProperty<InputEvents> keyEvent(String name);
+    BooleanProperty keyEvent(String name);
 
     void enable();
 

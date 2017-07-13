@@ -7,7 +7,7 @@ import com.github.alexeybond.gdx_commons.util.event.EventsOwner;
 /**
  * Interface of physics system.
  */
-public interface APhysicsSystem extends EventsOwner<APhysicsSystem>, GameSystem {
+public interface APhysicsSystem extends EventsOwner, GameSystem {
     /** The physical world. */
     World world();
 

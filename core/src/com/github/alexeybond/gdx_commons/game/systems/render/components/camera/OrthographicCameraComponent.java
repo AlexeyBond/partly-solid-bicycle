@@ -7,7 +7,6 @@ import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
 import com.github.alexeybond.gdx_commons.drawing.RenderTarget;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
-import com.github.alexeybond.gdx_commons.game.GameSystem;
 import com.github.alexeybond.gdx_commons.game.systems.render.interfaces.ZoomFunction;
 import com.github.alexeybond.gdx_commons.game.systems.render.components.BaseRenderComponent;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
@@ -21,10 +20,10 @@ public class OrthographicCameraComponent extends BaseRenderComponent {
     private final String globalAlias;
     private final OrthographicCamera camera;
 
-    private FloatProperty<Component> zoomProp;
-    private ObjectProperty<ZoomFunction, Component> zoomFunctionProp;
-    private Vec2Property<Component> axisScaleProp;
-    private ObjectProperty<Camera, GameSystem> aliasProp;
+    private FloatProperty zoomProp;
+    private ObjectProperty<ZoomFunction> zoomFunctionProp;
+    private Vec2Property axisScaleProp;
+    private ObjectProperty<Camera> aliasProp;
 
     private float actualZoom(float w, float h) {
         ZoomFunction zoomFunction = zoomFunctionProp.get();
@@ -74,12 +73,12 @@ public class OrthographicCameraComponent extends BaseRenderComponent {
 
         // Properties "zoom" and "axisScale" allow other components to control camera zoom
         zoomProp = entity.events().event("zoom", FloatProperty.<Component>make(1));
-        axisScaleProp = entity.events().event("axisScale", Vec2Property.<Component>make(1,1));
-        zoomFunctionProp = entity.events().event("zoomFunction", ObjectProperty.<ZoomFunction, Component>make());
+        axisScaleProp = entity.events().event("axisScale", Vec2Property.make(1,1));
+        zoomFunctionProp = entity.events().event("zoomFunction", ObjectProperty.<ZoomFunction>make());
 
         aliasProp = entity.game().events()
-                .event(globalAlias, ObjectProperty.<Camera, GameSystem>make());
-        aliasProp.set(system, camera);
+                .event(globalAlias, ObjectProperty.<Camera>make());
+        aliasProp.set(camera);
     }
 
     @Override
@@ -87,7 +86,7 @@ public class OrthographicCameraComponent extends BaseRenderComponent {
         super.onDisconnect(entity);
 
         if (aliasProp.get() == this.camera) {
-            aliasProp.set(system, null);
+            aliasProp.set(null);
         }
     }
 }

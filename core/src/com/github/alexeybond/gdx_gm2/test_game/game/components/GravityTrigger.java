@@ -13,14 +13,14 @@ import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
  * Component that gravitates all entities touching a trigger of owner entity.
  */
 public class GravityTrigger
-        implements Component, EventListener<Component, ObjectProperty<CollisionData, Component>> {
+        implements Component, EventListener<ObjectProperty<CollisionData>> {
     private final String hitBeginEventName, hitEndEventName, attractorName, enableEventName;
 
     private Entity entity;
 
-    private BooleanProperty<Component> enableEvent;
-    private ObjectProperty<CollisionData, Component> hitBeginEvent, hitEndEvent;
-    private Vec2Property<Component> ownerPosition;
+    private BooleanProperty enableEvent;
+    private ObjectProperty<CollisionData> hitBeginEvent, hitEndEvent;
+    private Vec2Property ownerPosition;
     private int hitBeginSubId, hitEndSubId;
 
     private Array<Entity> affectedEntities = new Array<Entity>();
@@ -40,13 +40,13 @@ public class GravityTrigger
     public void onConnect(Entity entity) {
         this.entity = entity;
         hitBeginEvent = entity.events()
-                .event(hitBeginEventName, ObjectProperty.<CollisionData, Component>make());
+                .event(hitBeginEventName, ObjectProperty.<CollisionData>make());
         hitEndEvent = entity.events()
-                .event(hitEndEventName, ObjectProperty.<CollisionData, Component>make());
+                .event(hitEndEventName, ObjectProperty.<CollisionData>make());
         ownerPosition = entity.events()
-                .event("position", Vec2Property.<Component>make());
+                .event("position", Vec2Property.make());
         enableEvent = entity.events()
-                .event(enableEventName, BooleanProperty.<Component>make(true));
+                .event(enableEventName, BooleanProperty.make(true));
         hitBeginSubId = hitBeginEvent.subscribe(this);
         hitEndSubId = hitEndEvent.subscribe(this);
     }
@@ -64,7 +64,7 @@ public class GravityTrigger
     }
 
     @Override
-    public boolean onTriggered(Component component, ObjectProperty<CollisionData, Component> event) {
+    public boolean onTriggered(ObjectProperty<CollisionData> event) {
         Entity affected = event.get().that.entity();
 
         if (affected == entity) return false;

@@ -1,9 +1,7 @@
 package com.github.alexeybond.gdx_gm2.test_game.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
@@ -14,11 +12,8 @@ import com.github.alexeybond.gdx_commons.application.Layer;
 import com.github.alexeybond.gdx_commons.application.Screen;
 import com.github.alexeybond.gdx_commons.application.impl.DefaultScreen;
 import com.github.alexeybond.gdx_commons.application.impl.layers.GameLayerWith2DPhysicalGame;
-import com.github.alexeybond.gdx_commons.application.impl.layers.MusicLayer;
 import com.github.alexeybond.gdx_commons.application.impl.layers.StageLayer;
 import com.github.alexeybond.gdx_commons.application.util.ScreenUtils;
-import com.github.alexeybond.gdx_commons.drawing.Drawable;
-import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
 import com.github.alexeybond.gdx_commons.drawing.Technique;
 import com.github.alexeybond.gdx_commons.drawing.rt.ScreenTarget;
 import com.github.alexeybond.gdx_commons.drawing.rt.ViewportTarget;
@@ -32,18 +27,13 @@ import com.github.alexeybond.gdx_commons.game.systems.input.InputSystem;
 import com.github.alexeybond.gdx_commons.game.systems.render.RenderSystem;
 import com.github.alexeybond.gdx_commons.game.systems.tagging.TaggingSystem;
 import com.github.alexeybond.gdx_commons.game.systems.timing.TimingSystem;
-import com.github.alexeybond.gdx_commons.input.InputEvents;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.ioc.modules.Modules;
 import com.github.alexeybond.gdx_commons.resource_management.modules.ResourcesListModule;
 import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
-import com.github.alexeybond.gdx_commons.util.event.props.BooleanProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
-import com.github.alexeybond.gdx_commons.util.event.props.ObjectProperty;
 import com.github.alexeybond.gdx_commons.util.parts.AParts;
-
-import java.util.regex.Pattern;
 
 /**
  *
@@ -105,9 +95,9 @@ public class GameScreen extends DefaultScreen {
 
         new ApplyGameDeclarationVisitor().doVisit(gameDeclaration, game);
 
-        game.events().event("lose").subscribe(new EventListener<GameSystem, Event<GameSystem>>() {
+        game.events().event("lose").subscribe(new EventListener<Event>() {
             @Override
-            public boolean onTriggered(GameSystem gameSystem, Event<GameSystem> event) {
+            public boolean onTriggered(Event event) {
                 next(new LoseScreen(game, scene()));
 
                 return true;
@@ -131,10 +121,10 @@ public class GameScreen extends DefaultScreen {
 
         //
 
-        taggingSystem.group("player").getOnly().events().<FloatProperty<Component>>event("fuel")
-                .subscribe(new EventListener<Component, FloatProperty<Component>>() {
+        taggingSystem.group("player").getOnly().events().<FloatProperty>event("fuel")
+                .subscribe(new EventListener<FloatProperty>() {
             @Override
-            public boolean onTriggered(Component component, FloatProperty<Component> event) {
+            public boolean onTriggered(FloatProperty event) {
                 progressBar.setValue(event.get());
                 return true;
             }

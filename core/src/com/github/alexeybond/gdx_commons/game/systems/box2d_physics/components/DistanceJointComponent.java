@@ -15,10 +15,10 @@ public class DistanceJointComponent extends BaseJointComponent<DistanceJoint, Di
     private final boolean isLocalA, isLocalB;
 
     // TODO:: Add properties for damping and frequency
-    private final Subscription<Component, FloatProperty<Component>> lengthSub
-            = new Subscription<Component, FloatProperty<Component>>() {
+    private final Subscription<FloatProperty> lengthSub
+            = new Subscription<FloatProperty>() {
         @Override
-        public boolean onTriggered(Component component, FloatProperty<Component> event) {
+        public boolean onTriggered(FloatProperty event) {
             joint().setLength(event.get());
             return true;
         }

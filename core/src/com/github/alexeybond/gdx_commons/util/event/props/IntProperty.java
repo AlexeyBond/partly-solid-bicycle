@@ -3,7 +3,7 @@ package com.github.alexeybond.gdx_commons.util.event.props;
 /**
  *
  */
-public class IntProperty<TInitiator> extends Property<TInitiator> {
+public class IntProperty extends Property {
     private int value;
 
     public IntProperty(int value) {
@@ -14,8 +14,8 @@ public class IntProperty<TInitiator> extends Property<TInitiator> {
         return value;
     }
 
-    public boolean set(TInitiator initiator, int value) {
-        return setSilently(value) && trigger(initiator);
+    public boolean set(int value) {
+        return setSilently(value) && trigger();
     }
 
     public boolean setSilently(int value) {
@@ -27,11 +27,11 @@ public class IntProperty<TInitiator> extends Property<TInitiator> {
         return false;
     }
 
-    public static <T> IntProperty<T> make(int value) {
-        return new IntProperty<T>(value);
+    public static IntProperty make(int value) {
+        return new IntProperty(value);
     }
 
-    public static <T> IntProperty<T> make() {
+    public static IntProperty make() {
         return make(0);
     }
 
@@ -41,7 +41,7 @@ public class IntProperty<TInitiator> extends Property<TInitiator> {
     }
 
     @Override
-    public void load(TInitiator initiator, String[] value) {
-        set(initiator, Integer.valueOf(value[0]));
+    public void load(String[] value) {
+        set(Integer.valueOf(value[0]));
     }
 }

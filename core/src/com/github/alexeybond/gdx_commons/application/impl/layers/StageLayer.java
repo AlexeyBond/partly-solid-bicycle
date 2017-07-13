@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.github.alexeybond.gdx_commons.application.Screen;
 import com.github.alexeybond.gdx_commons.drawing.Drawable;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
-import com.github.alexeybond.gdx_commons.input.InputEvents;
 import com.github.alexeybond.gdx_commons.util.event.props.BooleanProperty;
 
 /**
@@ -14,7 +13,7 @@ public class StageLayer extends LayerAdapter implements Drawable {
     private final String passName;
     private Stage stage;
 
-    private BooleanProperty<InputEvents> debugEnabledProp;
+    private BooleanProperty debugEnabledProp;
 
     public Stage stage() {
         return stage;
@@ -35,7 +34,7 @@ public class StageLayer extends LayerAdapter implements Drawable {
         screen.input().addSlaveProcessor(this.stage, true);
         screen.scene().getPass(passName).addDrawable(this);
         debugEnabledProp = screen.input().events()
-                .event("debugEnabled", BooleanProperty.<InputEvents>make(false));
+                .event("debugEnabled", BooleanProperty.make(false));
     }
 
     @Override

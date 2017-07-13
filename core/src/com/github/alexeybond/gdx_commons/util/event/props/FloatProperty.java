@@ -3,7 +3,7 @@ package com.github.alexeybond.gdx_commons.util.event.props;
 /**
  *
  */
-public class FloatProperty<TInitiator> extends Property<TInitiator> {
+public class FloatProperty extends Property {
     private float value;
 
     public FloatProperty(float value) {
@@ -14,10 +14,10 @@ public class FloatProperty<TInitiator> extends Property<TInitiator> {
         return value;
     }
 
-    public boolean set(TInitiator initiator, float value) {
+    public boolean set(float value) {
         // No change check as there is no sense comparing floats
         this.value = value;
-        return trigger(initiator);
+        return trigger();
     }
 
     public boolean setSilently(float value) {
@@ -25,11 +25,11 @@ public class FloatProperty<TInitiator> extends Property<TInitiator> {
         return true;
     }
 
-    public static <T> FloatProperty<T> make(float value) {
-        return new FloatProperty<T>(value);
+    public static <T> FloatProperty make(float value) {
+        return new FloatProperty(value);
     }
 
-    public static <T> FloatProperty<T> make() {
+    public static <T> FloatProperty make() {
         return make(0);
     }
 
@@ -39,7 +39,7 @@ public class FloatProperty<TInitiator> extends Property<TInitiator> {
     }
 
     @Override
-    public void load(TInitiator initiator, String[] value) {
-        set(initiator, Float.valueOf(value[0]));
+    public void load(String[] value) {
+        set(Float.valueOf(value[0]));
     }
 }

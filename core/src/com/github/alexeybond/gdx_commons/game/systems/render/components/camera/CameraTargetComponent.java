@@ -12,10 +12,10 @@ import com.github.alexeybond.gdx_commons.util.event.props.ObjectProperty;
 public class CameraTargetComponent implements Component {
     @Override
     public void onConnect(Entity entity) {
-        ObjectProperty<CameraState, Component> stateProp
-                = entity.events().event("cameraState", ObjectProperty.<CameraState, Component>make());
+        ObjectProperty<CameraState> stateProp
+                = entity.events().event("cameraState", ObjectProperty.<CameraState>make());
 
-        stateProp.set(this, new EntityCameraState(entity));
+        stateProp.set(new EntityCameraState(entity));
     }
 
     @Override

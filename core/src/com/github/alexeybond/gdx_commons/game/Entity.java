@@ -8,12 +8,12 @@ import com.github.alexeybond.gdx_commons.util.parts.Parts;
 /**
  *
  */
-public class Entity implements EventsOwner<Component> {
+public class Entity implements EventsOwner {
     private final Game game;
 
     private boolean isAlive = true;
 
-    private final Events<Component> events = new Events<Component>();
+    private final Events events = new Events();
     private final Parts<Entity, Component> components = new Parts<Entity, Component>(this);
 
     public Entity(Game game) {
@@ -25,7 +25,7 @@ public class Entity implements EventsOwner<Component> {
     }
 
     @Override
-    public Events<Component> events() {
+    public Events events() {
         return events;
     }
 

@@ -6,7 +6,6 @@ import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.systems.render.components.camera.state.EntityCameraState;
 import com.github.alexeybond.gdx_commons.game.systems.render.interfaces.CameraState;
 import com.github.alexeybond.gdx_commons.game.systems.render.components.camera.state.InterpolationState;
-import com.github.alexeybond.gdx_commons.game.systems.render.components.camera.state.VariableCameraState;
 import com.github.alexeybond.gdx_commons.game.systems.render.interfaces.ZoomFunction;
 import com.github.alexeybond.gdx_commons.game.systems.timing.TimingSystem;
 import com.github.alexeybond.gdx_commons.util.event.helpers.Subscription;
@@ -18,10 +17,10 @@ import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
  *
  */
 public class CameraController implements Component {
-    private final Subscription<TimingSystem, FloatProperty<TimingSystem>> deltaTimeSub
-            = new Subscription<TimingSystem, FloatProperty<TimingSystem>>() {
+    private final Subscription<FloatProperty> deltaTimeSub
+            = new Subscription<FloatProperty>() {
         @Override
-        public boolean onTriggered(TimingSystem timingSystem, FloatProperty<TimingSystem> dt) {
+        public boolean onTriggered(FloatProperty dt) {
             CameraState actualState = targetState;
 
             if (null != interpolationState) {
@@ -32,9 +31,9 @@ public class CameraController implements Component {
                 }
             }
 
-            positionProp.set(CameraController.this, actualState.position());
-            rotationProp.set(CameraController.this, actualState.rotation());
-            zoomFunctionProp.set(CameraController.this, actualState.zoomFunction());
+            positionProp.set(actualState.position());
+            rotationProp.set(actualState.rotation());
+            zoomFunctionProp.set(actualState.zoomFunction());
 
             return true;
         }
@@ -43,9 +42,9 @@ public class CameraController implements Component {
     private InterpolationState interpolationState;
     private CameraState targetState;
 
-    private Vec2Property<Component> positionProp;
-    private FloatProperty<Component> rotationProp;
-    private ObjectProperty<ZoomFunction, Component> zoomFunctionProp;
+    private Vec2Property positionProp;
+    private FloatProperty rotationProp;
+    private ObjectProperty<ZoomFunction> zoomFunctionProp;
 
     public CameraController() {
     }
@@ -53,11 +52,11 @@ public class CameraController implements Component {
     @Override
     public void onConnect(Entity entity) {
         deltaTimeSub.set(entity.game().systems().<TimingSystem>get("timing").events()
-                .<FloatProperty<TimingSystem>>event("deltaTime"));
+                .<FloatProperty>event("deltaTime"));
 
-        positionProp = entity.events().event("position", Vec2Property.<Component>make());
+        positionProp = entity.events().event("position", Vec2Property.make());
         rotationProp = entity.events().event("rotation", FloatProperty.<Component>make());
-        zoomFunctionProp = entity.events().event("zoomFunction", ObjectProperty.<ZoomFunction, Component>make());
+        zoomFunctionProp = entity.events().event("zoomFunction", ObjectProperty.<ZoomFunction>make());
 
         targetState = new EntityCameraState(entity);
     }

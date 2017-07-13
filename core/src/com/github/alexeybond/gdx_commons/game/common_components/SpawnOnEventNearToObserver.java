@@ -1,7 +1,6 @@
 package com.github.alexeybond.gdx_commons.game.common_components;
 
 import com.badlogic.gdx.math.Vector2;
-import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.declarative.EntityDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
@@ -38,7 +37,7 @@ public class SpawnOnEventNearToObserver extends SpawnOnEvent {
 
     @Override
     protected boolean checkSpawn() {
-        Vec2Property<Component> observerPosition = observerTagGroup.getOnly()
+        Vec2Property observerPosition = observerTagGroup.getOnly()
                 .events().event("position");
         return observerPosition.ref().dst2(entityPositionProp.ref()) <= maxObserverDistance2;
     }

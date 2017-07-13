@@ -10,11 +10,11 @@ import com.github.alexeybond.gdx_commons.util.event.props.BooleanProperty;
  * Plays a looping sound when a boolean property of owner is true.
  */
 public class ContinuousEventSound
-        implements Component, EventListener<Component, BooleanProperty<Component>> {
+        implements Component, EventListener<BooleanProperty> {
     private final Sound sound;
     private final String eventName;
 
-    private BooleanProperty<Component> event;
+    private BooleanProperty event;
     private int eventSubIdx = -1;
 
     private long soundPlayIdx = -1;
@@ -39,7 +39,7 @@ public class ContinuousEventSound
     }
 
     @Override
-    public boolean onTriggered(Component component, BooleanProperty<Component> event) {
+    public boolean onTriggered(BooleanProperty event) {
         if (event.get()) {
             start();
         } else {

@@ -18,19 +18,19 @@ public class CollisionEventFilter implements Component {
     private final String filterTag;
     private final boolean invert;
 
-    private final Subscription<Component, ObjectProperty<CollisionData, Component>> eventSub
-            = new Subscription<Component, ObjectProperty<CollisionData, Component>>() {
+    private final Subscription<ObjectProperty<CollisionData>> eventSub
+            = new Subscription<ObjectProperty<CollisionData>>() {
         @Override
-        public boolean onTriggered(Component component, ObjectProperty<CollisionData, Component> event) {
+        public boolean onTriggered(ObjectProperty<CollisionData> event) {
             if (filterTagGroup.contains(event.get().that.entity()) != invert) {
-                return filteredEvent.trigger(CollisionEventFilter.this);
+                return filteredEvent.trigger();
             }
 
             return false;
         }
     };
 
-    private Event<Component> filteredEvent;
+    private Event filteredEvent;
     private TagGroup filterTagGroup;
 
     public CollisionEventFilter(
@@ -43,7 +43,7 @@ public class CollisionEventFilter implements Component {
 
     @Override
     public void onConnect(Entity entity) {
-        eventSub.set(entity.events().event(rawEventName, ObjectProperty.<CollisionData, Component>make()));
+        eventSub.set(entity.events().event(rawEventName, ObjectProperty.<CollisionData>make()));
 
         filteredEvent = entity.events().event(filteredEventName, Event.<Component>make());
         filterTagGroup = entity.game().systems().<TaggingSystem>get("tagging").group(filterTag);

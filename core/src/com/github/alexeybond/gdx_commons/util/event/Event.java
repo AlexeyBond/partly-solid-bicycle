@@ -1,7 +1,5 @@
 package com.github.alexeybond.gdx_commons.util.event;
 
-import java.util.Arrays;
-
 /**
  *
  * <pre>{@code
@@ -17,10 +15,8 @@ import java.util.Arrays;
  *      // Trigger:
  *      event.trigger(initiator);
  * }</pre>
- *
- * @param <TInitiator> type of object initializing the event
  */
-public class Event<TInitiator> {
+public class Event {
     private EventListener[] listeners;
     private int freeSlotPointer, freeSlotCount;
 
@@ -36,7 +32,7 @@ public class Event<TInitiator> {
         this(DEFAULT_EVENT_SLOTS);
     }
 
-    public int subscribe(EventListener<TInitiator, ? extends Event<TInitiator>> listener) {
+    public int subscribe(EventListener<? extends Event> listener) {
         if (freeSlotCount <= 0) {
             if (listeners != null) {
                 final int oldLen = listeners.length;
@@ -76,7 +72,7 @@ public class Event<TInitiator> {
         return -1;
     }
 
-    public boolean trigger(TInitiator initiator) {
+    public boolean trigger() {
         if (null == listeners) return false;
 
         boolean processed = false;
@@ -85,7 +81,7 @@ public class Event<TInitiator> {
             EventListener listener = listeners[i];
 
             if (null != listener) {
-                boolean processedInt = listener.onTriggered(initiator, this);
+                boolean processedInt = listener.onTriggered(this);
                 processed = processed || processedInt;
             }
         }
@@ -93,7 +89,7 @@ public class Event<TInitiator> {
         return processed;
     }
 
-    public static <T> Event<T> make() {
-        return new Event<T>();
+    public static <T> Event make() {
+        return new Event();
     }
 }

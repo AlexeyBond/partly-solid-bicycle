@@ -1,7 +1,6 @@
 package com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components;
 
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.CollisionData;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.APhysicsSystem;
@@ -20,8 +19,8 @@ public abstract class BaseFixtureComponent
     private Fixture fixture;
     private final String collisionBeginEventName, collisionEndEventName;
 
-    private ObjectProperty<CollisionData, Component> collisionBeginEvent;
-    private ObjectProperty<CollisionData, Component> collisionEndEvent;
+    private ObjectProperty<CollisionData> collisionBeginEvent;
+    private ObjectProperty<CollisionData> collisionEndEvent;
 
     protected BaseFixtureComponent(
             String collisionBeginEventName, String collisionEndEventName) {
@@ -47,10 +46,10 @@ public abstract class BaseFixtureComponent
         bodyComponent = entity.components().get("body");
         collisionBeginEvent = entity.events().event(
                         collisionBeginEventName,
-                        ObjectProperty.<CollisionData, Component>make());
+                        ObjectProperty.<CollisionData>make());
         collisionEndEvent = entity.events().event(
                         collisionEndEventName,
-                        ObjectProperty.<CollisionData, Component>make());
+                        ObjectProperty.<CollisionData>make());
         fixture = createFixture();
         fixture.setUserData(this);
     }
@@ -77,13 +76,13 @@ public abstract class BaseFixtureComponent
     @Override
     public void onBeginCollision(CollisionData collision) {
         collisionBeginEvent.setSilently(collision);
-        collisionBeginEvent.trigger(this);
+        collisionBeginEvent.trigger();
     }
 
     @Override
     public void onEndCollision(CollisionData collision) {
         collisionEndEvent.setSilently(collision);
-        collisionEndEvent.trigger(this);
+        collisionEndEvent.trigger();
     }
 
     public BodyPhysicsComponent parent() {

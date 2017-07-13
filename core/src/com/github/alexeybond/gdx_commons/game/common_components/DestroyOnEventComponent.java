@@ -9,13 +9,13 @@ import com.github.alexeybond.gdx_commons.util.event.EventListener;
  * Component that destroys it's owner when some event is triggered.
  */
 public class DestroyOnEventComponent
-        implements Component, EventListener<Component, Event<Component>> {
+        implements Component, EventListener<Event> {
     private final String eventName;
     private final String preDestroyEventName;
     private final boolean initEvent;
 
-    private Event<Component> preDestroyEvent;
-    private Event<Component> event;
+    private Event preDestroyEvent;
+    private Event event;
     private Entity entity;
     private int eventSubIdx = -1;
 
@@ -29,7 +29,7 @@ public class DestroyOnEventComponent
     public void onConnect(Entity entity) {
         this.entity = entity;
         if (initEvent) {
-            event = entity.events().event(eventName, new Event<Component>());
+            event = entity.events().event(eventName, new Event());
         } else {
             event = entity.events().event(eventName);
         }
@@ -44,8 +44,8 @@ public class DestroyOnEventComponent
     }
 
     @Override
-    public boolean onTriggered(Component component, Event<Component> event) {
-        preDestroyEvent.trigger(this);
+    public boolean onTriggered(Event event) {
+        preDestroyEvent.trigger();
         entity.destroy();
         return true;
     }

@@ -17,8 +17,8 @@ import com.github.alexeybond.gdx_commons.game.systems.render.RenderSystem;
  * Subclasses should only define drawing method.
  */
 public abstract class BaseRenderComponent implements RenderComponent {
-    protected Vec2Property<Component> position;
-    protected FloatProperty<Component> rotation;
+    protected Vec2Property position;
+    protected FloatProperty rotation;
     protected RenderSystem system;
     private final String passName;
 
@@ -31,7 +31,7 @@ public abstract class BaseRenderComponent implements RenderComponent {
         system = entity.game().systems().get("render");
         system.addToPass(passName, this);
 
-        position = entity.events().event("position", Vec2Property.<Component>make());
+        position = entity.events().event("position", Vec2Property.make());
         rotation = entity.events().event("rotation", FloatProperty.<Component>make());
     }
 

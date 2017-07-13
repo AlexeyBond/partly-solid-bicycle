@@ -3,7 +3,7 @@ package com.github.alexeybond.gdx_commons.util.event.helpers;
 import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
 
-public abstract class Subscription <IT, ET extends Event<IT>> implements EventListener<IT, ET> {
+public abstract class Subscription <ET extends Event> implements EventListener<ET> {
     private ET event;
     private int subIdx = -1;
 

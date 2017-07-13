@@ -18,8 +18,8 @@ public class AnimatedSpriteComponent
         extends SpriteComponent {
     private final Animation animation;
     private AnimationInstance animationInstance;
-    private ObjectProperty<String, Component> animationProp;
-    private FloatProperty<TimingSystem> deltaTimeProp;
+    private ObjectProperty<String> animationProp;
+    private FloatProperty deltaTimeProp;
     private int animationPropSubIdx = -1, timeSubIdx = -1;
 
     public AnimatedSpriteComponent(
@@ -37,12 +37,12 @@ public class AnimatedSpriteComponent
     public void onConnect(Entity entity) {
         animationInstance = animation.<Component, Entity>bind(this, entity);
         animationProp = entity.events().event(
-                "animation", ObjectProperty.<String, Component>make(animation.defaultSequenceName()));
+                "animation", ObjectProperty.<String>make(animation.defaultSequenceName()));
 
         animationPropSubIdx = animationProp.subscribe(
-                new EventListener<Component, ObjectProperty<String, Component>>() {
+                new EventListener<ObjectProperty<String>>() {
             @Override
-            public boolean onTriggered(Component component, ObjectProperty<String, Component> event) {
+            public boolean onTriggered(ObjectProperty<String> event) {
                 animationInstance.setSequence(event.get());
                 return true;
             }
@@ -52,9 +52,9 @@ public class AnimatedSpriteComponent
         deltaTimeProp = timingSystem.events().event("deltaTime");
 
         timeSubIdx = deltaTimeProp.subscribe(
-                new EventListener<TimingSystem, FloatProperty<TimingSystem>>() {
+                new EventListener<FloatProperty>() {
             @Override
-            public boolean onTriggered(TimingSystem timingSystem, FloatProperty<TimingSystem> event) {
+            public boolean onTriggered(FloatProperty event) {
                 animationInstance.update(event.get());
                 return true;
             }

@@ -10,11 +10,11 @@ import com.github.alexeybond.gdx_commons.util.event.EventListener;
  *
  */
 public class SendEventToGame
-        implements Component, EventListener<Component, Event<Component>> {
+        implements Component, EventListener<Event> {
     private final String gameEventName, entityEventName;
 
-    private Event<Component> entityEvent;
-    private Event<GameSystem> gameEvent;
+    private Event entityEvent;
+    private Event gameEvent;
     private int entityEventSubIdx = -1;
 
     public SendEventToGame(String gameEventName, String entityEventName) {
@@ -36,7 +36,7 @@ public class SendEventToGame
     }
 
     @Override
-    public boolean onTriggered(Component component, Event<Component> event) {
-        return gameEvent.trigger(null);
+    public boolean onTriggered(Event event) {
+        return gameEvent.trigger();
     }
 }

@@ -26,18 +26,18 @@ import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
  *
  */
 public class InfiniteWorldGenerator
-        implements Component, EventListener<Component, Vec2Property<Component>>, RenderComponent {
+        implements Component, EventListener<Vec2Property>, RenderComponent {
     private final ApplyEntityDeclarationVisitor entityDeclarationVisitor = new ApplyEntityDeclarationVisitor();
 
     private final String observerTag, generatedTag;
     private final Array<EntityDeclaration> generateClasses;
     private final GameDeclaration gameDeclaration;
 
-    private IntProperty<Component> leaveZoneSizeProp;
-    private IntProperty<Component> keepZoneSizeProp;
-    private IntProperty<Component> generateZoneSizeProp;
-    private FloatProperty<Component> gridSizeProperty;
-    private Vec2Property<Component> observerPositionProp;
+    private IntProperty leaveZoneSizeProp;
+    private IntProperty keepZoneSizeProp;
+    private IntProperty generateZoneSizeProp;
+    private FloatProperty gridSizeProperty;
+    private Vec2Property observerPositionProp;
     private TagGroup observerGroup;
     private TagGroup generatedGroup;
     private Game game;
@@ -63,9 +63,9 @@ public class InfiniteWorldGenerator
 
     @Override
     public void onConnect(Entity entity) {
-        leaveZoneSizeProp = entity.events().event("leaveZone", IntProperty.<Component>make(1));
-        keepZoneSizeProp = entity.events().event("keepZone", IntProperty.<Component>make(2));
-        generateZoneSizeProp = entity.events().event("generateZone", IntProperty.<Component>make(1));
+        leaveZoneSizeProp = entity.events().event("leaveZone", IntProperty.make(1));
+        keepZoneSizeProp = entity.events().event("keepZone", IntProperty.make(2));
+        generateZoneSizeProp = entity.events().event("generateZone", IntProperty.make(1));
         gridSizeProperty = entity.events().event("gridSize", FloatProperty.<Component>make(100));
 
         game = entity.game();
@@ -90,7 +90,7 @@ public class InfiniteWorldGenerator
     }
 
     @Override
-    public boolean onTriggered(Component component, Vec2Property<Component> event) {
+    public boolean onTriggered(Vec2Property event) {
         if (!leaveZone.contains(event.ref())) {
             regenerate();
             return true;
@@ -104,7 +104,7 @@ public class InfiniteWorldGenerator
 
         for (int i = 0; i < allGenerated.size; i++) {
             Entity entity = allGenerated.get(i);
-            Vec2Property<Component> pos = entity.events().event("position");
+            Vec2Property pos = entity.events().event("position");
             if (!keepZone.contains(pos.ref()))
                 removeArray.add(entity);
         }
@@ -153,8 +153,8 @@ public class InfiniteWorldGenerator
                 float posY = MathUtils.random(startY, startY + gridSize);
 
                 Entity entity = generateEntity();
-                Vec2Property<Component> entityPos = entity.events().event("position");
-                entityPos.set(this, posX, posY);
+                Vec2Property entityPos = entity.events().event("position");
+                entityPos.set(posX, posY);
 
                 entity.components().add("generatedEntityTag",
                         new SingleTagComponent(generatedTag));

@@ -18,7 +18,7 @@ import java.util.Locale;
  *
  */
 public class InputEventsImpl implements InputEvents {
-    private Events<InputEvents> inputEvents = new Events<InputEvents>();
+    private Events inputEvents = new Events();
 
     private final InputMultiplexer inputMultiplexer;
 
@@ -60,7 +60,7 @@ public class InputEventsImpl implements InputEvents {
     }
 
     @Override
-    public Events<InputEvents> events() {
+    public Events events() {
         return inputEvents;
     }
 
@@ -70,21 +70,21 @@ public class InputEventsImpl implements InputEvents {
     }
 
     @Override
-    public BooleanProperty<InputEvents> keyEvent(int code) {
+    public BooleanProperty keyEvent(int code) {
         return keyEvent0(Input.Keys.toString(code), code);
     }
 
     @Override
-    public BooleanProperty<InputEvents> keyEvent(String name) {
+    public BooleanProperty keyEvent(String name) {
         return keyEvent0(name, Input.Keys.valueOf(name));
     }
 
-    private BooleanProperty<InputEvents> keyEvent0(String keyName, int code) {
+    private BooleanProperty keyEvent0(String keyName, int code) {
         if (null == keyName || -1 == code)
             throw new IllegalArgumentException(
                     String.format(Locale.getDefault(), "Illegal key code/name: %d/%s", code, keyName));
 
-        return inputEvents.event(keyName, BooleanProperty.<InputEvents>make(Gdx.input.isKeyPressed(code)));
+        return inputEvents.event(keyName, BooleanProperty.make(Gdx.input.isKeyPressed(code)));
     }
 
     @Override

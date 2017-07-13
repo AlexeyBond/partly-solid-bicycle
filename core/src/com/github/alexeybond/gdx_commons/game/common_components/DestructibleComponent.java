@@ -46,10 +46,10 @@ public class DestructibleComponent implements Component {
     private int lifeNumber = 0;
 
     private Entity entity;
-    private Event<Component> centerDestructionStartEvent, destructionEndEvent;
+    private Event centerDestructionStartEvent, destructionEndEvent;
     private int centerDestructionStartEventSubIdx = -1;
-    private Vec2Property<Component> entityPosition;
-    private FloatProperty<Component> entityRotation;
+    private Vec2Property entityPosition;
+    private FloatProperty entityRotation;
 
     private boolean destructionInProgress;
     private Destroyer destroyer;
@@ -84,7 +84,7 @@ public class DestructibleComponent implements Component {
     public void onConnect(Entity entity) {
         this.entity = entity;
 
-        entityPosition = entity.events().event("position", Vec2Property.<Component>make());
+        entityPosition = entity.events().event("position", Vec2Property.make());
         entityRotation = entity.events().event("rotation", FloatProperty.<Component>make());
         destructionEndEvent = entity.events().event(destructionEndEventName, Event.<Component>make());
 
@@ -92,9 +92,9 @@ public class DestructibleComponent implements Component {
             this.centerDestructionStartEvent = entity.events()
                     .event(centerDestructionStartEventName, Event.<Component>make());
             this.centerDestructionStartEventSubIdx = centerDestructionStartEvent.subscribe(
-                    new EventListener<Component, Event<Component>>() {
+                    new EventListener<Event>() {
                         @Override
-                        public boolean onTriggered(Component component, Event<Component> event) {
+                        public boolean onTriggered(Event event) {
                             startCenterDestruction();
                             return true;
                         }
@@ -175,7 +175,7 @@ public class DestructibleComponent implements Component {
         destroyerPool.free(destroyer);
         destroyer = null;
         destructionInProgress = false;
-        destructionEndEvent.trigger(this);
+        destructionEndEvent.trigger();
     }
 
     private void spawnPart(ArrayList<Vector2> shape, DestructionHelper destructionHelper) {
@@ -203,13 +203,13 @@ public class DestructibleComponent implements Component {
                         textureRegion.getTexture()
                 ));
 
-        Vec2Property<Component> partPosition = partEntity.events()
-                .event("position", Vec2Property.<Component>make());
-        FloatProperty<Component> partRotation = partEntity.events()
+        Vec2Property partPosition = partEntity.events()
+                .event("position", Vec2Property.make());
+        FloatProperty partRotation = partEntity.events()
                 .event("rotation", FloatProperty.<Component>make());
 
-        partRotation.set(this, entityRotation.get());
-        partPosition.set(this, partPosition.ref()
+        partRotation.set(entityRotation.get());
+        partPosition.set(partPosition.ref()
                 .set(destructionHelper.center()).rotate(entityRotation.get())
                 .add(entityPosition.ref()));
     }

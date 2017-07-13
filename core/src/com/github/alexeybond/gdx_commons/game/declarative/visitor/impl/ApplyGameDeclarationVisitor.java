@@ -2,7 +2,6 @@ package com.github.alexeybond.gdx_commons.game.declarative.visitor.impl;
 
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.Game;
-import com.github.alexeybond.gdx_commons.game.GameSystem;
 import com.github.alexeybond.gdx_commons.game.declarative.EntityDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.visitor.GameDeclarationVisitor;
@@ -71,7 +70,7 @@ public class ApplyGameDeclarationVisitor implements GameDeclarationVisitor {
 
     @Override
     public void visitProperty(String propertyName, String[] propertyValue) {
-        game.events().<Property<GameSystem>>event(propertyName).load(null, propertyValue);
+        game.events().<Property>event(propertyName).load(propertyValue);
     }
 
     public Game doVisit(GameDeclaration gameDeclaration, Game game) {

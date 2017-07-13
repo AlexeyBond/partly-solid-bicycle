@@ -18,19 +18,19 @@ import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
  *
  */
 public abstract class BaseBodyComponent
-        implements CollidablePhysicsComponent, EventListener<Component, Event<Component>>,
+        implements CollidablePhysicsComponent, EventListener<Event>,
         BodyPhysicsComponent, DisposablePhysicsComponent, CreatablePhysicsComponent,
         UpdatablePhysicsComponent {
     private boolean alive = false;
     private Entity entity;
 
-    protected Vec2Property<Component> positionProp;
-    protected FloatProperty<Component> rotationProp;
+    protected Vec2Property positionProp;
+    protected FloatProperty rotationProp;
 
     private int positionSubIdx, rotationSubIdx;
 
-    private ObjectProperty<CollisionData, Component> collisionBeginProp;
-    private ObjectProperty<CollisionData, Component> collisionEndProp;
+    private ObjectProperty<CollisionData> collisionBeginProp;
+    private ObjectProperty<CollisionData> collisionEndProp;
 
     private Body body;
 
@@ -42,10 +42,10 @@ public abstract class BaseBodyComponent
     public void update() {
         try {
             skipTransformChanges = 1; // Ignore one position update
-            positionProp.set(this, body.getPosition());
+            positionProp.set(body.getPosition());
 
             skipTransformChanges = 1; // Ignore one rotation update
-            rotationProp.set(this, MathUtils.radiansToDegrees * body.getAngle());
+            rotationProp.set(MathUtils.radiansToDegrees * body.getAngle());
         } finally {
             skipTransformChanges = 0;
         }
@@ -64,13 +64,13 @@ public abstract class BaseBodyComponent
     @Override
     public void onBeginCollision(CollisionData collision) {
         collisionBeginProp.setSilently(collision);
-        collisionBeginProp.trigger(this);
+        collisionBeginProp.trigger();
     }
 
     @Override
     public void onEndCollision(CollisionData collision) {
         collisionEndProp.setSilently(collision);
-        collisionEndProp.trigger(this);
+        collisionEndProp.trigger();
     }
 
     @Override
@@ -80,13 +80,13 @@ public abstract class BaseBodyComponent
         this.entity = entity;
         this.alive = true;
 
-        positionProp = entity.events().event("position", Vec2Property.<Component>make());
+        positionProp = entity.events().event("position", Vec2Property.make());
         rotationProp = entity.events().event("rotation", FloatProperty.<Component>make());
 
         collisionBeginProp = entity.events()
-                .event("collisionBegin", ObjectProperty.<CollisionData, Component>make());
+                .event("collisionBegin", ObjectProperty.<CollisionData>make());
         collisionEndProp = entity.events()
-                .event("collisionEnd", ObjectProperty.<CollisionData, Component>make());
+                .event("collisionEnd", ObjectProperty.<CollisionData>make());
 
         positionSubIdx = positionProp.subscribe(this);
         rotationSubIdx = rotationProp.subscribe(this);
@@ -125,7 +125,7 @@ public abstract class BaseBodyComponent
      * Called when entity transform is changed by this or another component.
      */
     @Override
-    public boolean onTriggered(Component o, Event<Component> event) {
+    public boolean onTriggered(Event event) {
         int skip = skipTransformChanges;
 
         if (skip > 0) {

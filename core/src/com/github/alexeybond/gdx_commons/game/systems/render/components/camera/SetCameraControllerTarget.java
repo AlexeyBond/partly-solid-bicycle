@@ -24,17 +24,17 @@ public class SetCameraControllerTarget implements Component {
     private Entity entity;
     private TagGroup targetTagGroup, cameraTagGroup;
 
-    private final Subscription<Component, Event<Component>> eventSubscription
-            = new Subscription<Component, Event<Component>>() {
+    private final Subscription<Event> eventSubscription
+            = new Subscription<Event>() {
         @Override
-        public boolean onTriggered(Component component, Event<Component> event) {
+        public boolean onTriggered(Event event) {
             Entity camera = (cameraTagGroup == null) ? entity : cameraTagGroup.getOnly();
             Entity target = (targetTagGroup == null) ? entity : targetTagGroup.getOnly();
 
             CameraState targetState;
 
             try {
-                targetState = target.events().<ObjectProperty<CameraState, Component>>event("cameraState").get();
+                targetState = target.events().<ObjectProperty<CameraState>>event("cameraState").get();
             } catch (NoSuchElementException e) {
                 Gdx.app.log("DEBUG",
                         "Entity with tag '" + targetTag + "' has no camera target component but used as camera target.",

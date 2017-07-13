@@ -7,7 +7,6 @@ import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.Game;
-import com.github.alexeybond.gdx_commons.game.GameSystem;
 import com.github.alexeybond.gdx_commons.game.declarative.ComponentDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.APhysicsSystem;
@@ -24,7 +23,7 @@ public class PhysicsDebuggerComponent implements Component, RenderComponent {
     private Box2DDebugRenderer debugRenderer;
     private RenderSystem renderSystem;
     private APhysicsSystem physicsSystem;
-    private ObjectProperty<Camera, GameSystem> cameraProperty;
+    private ObjectProperty<Camera> cameraProperty;
 
     private final Matrix4 tmp = new Matrix4();
 
@@ -39,7 +38,7 @@ public class PhysicsDebuggerComponent implements Component, RenderComponent {
         physicsSystem = entity.game().systems().get("physics");
 
         cameraProperty = entity.game().events()
-                .event(cameraName, ObjectProperty.<Camera, GameSystem>make());
+                .event(cameraName, ObjectProperty.<Camera>make());
 
         debugRenderer = new Box2DDebugRenderer();
 

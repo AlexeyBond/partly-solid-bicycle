@@ -53,11 +53,11 @@ public class Test2Screen extends DefaultScreen {
 
         game.systems().<PhysicsSystem>get("physics").world().setGravity(new Vector2(0, -100));
         game.systems().<APhysicsSystem>get("physics").events()
-                .<IntProperty<APhysicsSystem>>event("positionIterations").set(null, 4);
+                .<IntProperty>event("positionIterations").set(4);
         game.systems().<PhysicsSystem>get("physics").events()
-                .<IntProperty<APhysicsSystem>>event("velocityIterations").set(null, 6);
+                .<IntProperty>event("velocityIterations").set(6);
         game.systems().<PhysicsSystem>get("physics").events()
-                .<FloatProperty<APhysicsSystem>>event("simulationStep").set(null, 0.005f);
+                .<FloatProperty>event("simulationStep").set(0.005f);
 
         GameDeclaration gameDeclaration = IoC.resolve(
                 "load game declaration",
@@ -67,16 +67,16 @@ public class Test2Screen extends DefaultScreen {
 
         final Entity box = game.systems().<TaggingSystem>get("tagging").group("box").getOnly();
 
-        input().keyEvent("S").subscribe(new EventListener<InputEvents, Event<InputEvents>>() {
+        input().keyEvent("S").subscribe(new EventListener<Event>() {
             @Override
-            public boolean onTriggered(InputEvents inputEvents, Event<InputEvents> event) {
-                box.events().event("break").trigger(null);
+            public boolean onTriggered(Event event) {
+                box.events().event("break").trigger();
                 return true;
             }
         });
-        input().keyEvent("R").subscribe(new EventListener<InputEvents, Event<InputEvents>>() {
+        input().keyEvent("R").subscribe(new EventListener<Event>() {
             @Override
-            public boolean onTriggered(InputEvents inputEvents, Event<InputEvents> event) {
+            public boolean onTriggered(Event event) {
                 next(new Test2Screen());
                 return true;
             }
