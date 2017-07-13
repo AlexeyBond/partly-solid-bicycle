@@ -39,9 +39,12 @@ public class Event<TInitiator> {
     public int subscribe(EventListener<TInitiator, ? extends Event<TInitiator>> listener) {
         if (freeSlotCount <= 0) {
             if (listeners != null) {
-                int oldLen = listeners.length;
-                listeners = Arrays.copyOf(listeners, oldLen * 2);
-                freeSlotCount += oldLen;
+                final int oldLen = listeners.length;
+                final int newLen = listeners.length * 2;
+                EventListener[] newListeners = new EventListener[newLen];
+                System.arraycopy(listeners, 0, newListeners, 0, oldLen);
+                freeSlotCount += (newLen - oldLen);
+                listeners = newListeners;
             } else {
                 listeners = new EventListener[DEFAULT_EVENT_SLOTS];
                 freeSlotCount = DEFAULT_EVENT_SLOTS;

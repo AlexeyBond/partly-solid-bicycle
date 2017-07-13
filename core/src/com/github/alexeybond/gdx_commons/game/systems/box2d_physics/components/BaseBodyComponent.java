@@ -2,7 +2,7 @@ package com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Transform;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
@@ -36,12 +36,19 @@ public abstract class BaseBodyComponent
 
     private APhysicsSystem system;
 
+    private int skipTransformChanges = 0;
+
     @Override
     public void update() {
-        Transform transform = body.getTransform();
-        positionProp.set(this, transform.getPosition());
-        rotationProp.set(this, MathUtils.radiansToDegrees * transform.getRotation());
-        // TODO:: Use body.getAngle()?, seems to be more efficient
+        try {
+            skipTransformChanges = 1; // Ignore one position update
+            positionProp.set(this, body.getPosition());
+
+            skipTransformChanges = 1; // Ignore one rotation update
+            rotationProp.set(this, MathUtils.radiansToDegrees * body.getAngle());
+        } finally {
+            skipTransformChanges = 0;
+        }
     }
 
     @Override
@@ -102,7 +109,10 @@ public abstract class BaseBodyComponent
         body = createBody();
         body.setUserData(this);
 
-        system.registerComponent(this);
+        // Do not update static bodies.
+        if (body.getType() != BodyDef.BodyType.StaticBody) {
+            system.registerComponent(this);
+        }
     }
 
     @Override
@@ -116,7 +126,12 @@ public abstract class BaseBodyComponent
      */
     @Override
     public boolean onTriggered(Component o, Event<Component> event) {
-        if (o == this) return false; // Avoid loop
+        int skip = skipTransformChanges;
+
+        if (skip > 0) {
+            skipTransformChanges = skip - 1;
+            return false;
+        }
 
         body.setTransform(positionProp.ref(), MathUtils.degreesToRadians * rotationProp.get());
 

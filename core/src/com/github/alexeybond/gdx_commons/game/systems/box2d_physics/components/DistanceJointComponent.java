@@ -19,7 +19,6 @@ public class DistanceJointComponent extends BaseJointComponent<DistanceJoint, Di
             = new Subscription<Component, FloatProperty<Component>>() {
         @Override
         public boolean onTriggered(Component component, FloatProperty<Component> event) {
-            if (DistanceJointComponent.this == component) return false;
             joint().setLength(event.get());
             return true;
         }
