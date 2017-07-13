@@ -235,6 +235,19 @@
 
     {
       "components": {
+        "body": {"bodyType": "DynamicBody"},
+        "box fixture": {
+          "size": [100, 20],
+        },
+        "tag": {"tag": "platform_01"},
+      },
+      "properties": {
+        "position": ["552", "-10"],
+      }
+    },
+
+    {
+      "components": {
         "j1": {
           "type": "distance joint",
           "entity1": "static",
@@ -262,10 +275,23 @@
           "entity1": "platform_00",
           "entity2": "box_00",
           "relLength": 1.5,
-        }
+        },
+        "j4": {
+          "type": "revolute joint",
+          "entity1": "static",
+          "entity2": "platform_01",
+          "anchor": [500, -20],
+          "localAnchor": false,
+          "collideConnected": true,
+          "limits": [-30, 0],
+        },
       },
       "properties": {
         "jointLength": ["200"],
+
+        "motorSpeed": ["1"],
+        "maxMotorTorque": ["500000"],
+        "motorEnabled": ["true"],
       }
     },
 

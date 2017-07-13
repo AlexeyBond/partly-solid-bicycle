@@ -22,6 +22,7 @@ public class PhysicsComponentDeclarations implements Module {
         map.put("physics debugger", PhysicsDebuggerComponent.Decl.class);
         map.put("distance joint", DistanceJointDecl.class);
         map.put("rope joint", RopeJointDecl.class);
+        map.put("revolute joint", RevoluteJointDecl.class);
     }
 
     @Override
