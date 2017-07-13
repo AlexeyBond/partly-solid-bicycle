@@ -1,12 +1,32 @@
 package com.github.alexeybond.gdx_commons.util.event.props;
 
+import com.github.alexeybond.gdx_commons.util.event.EventFactory;
+import com.github.alexeybond.gdx_commons.util.event.EventFactoryProvider;
+
 /**
  *
  */
 public class IntProperty extends Property {
+    private static final class Factory implements EventFactory<IntProperty> {
+        private int value;
+
+        private Factory with(int value) {
+            this.value = value;
+            return this;
+        }
+
+        @Override
+        public IntProperty create() {
+            return new IntProperty(value);
+        }
+    }
+
+    private final static EventFactoryProvider<Factory> factoryProvider
+            = new EventFactoryProvider<Factory>(new Factory());
+
     private int value;
 
-    public IntProperty(int value) {
+    private IntProperty(int value) {
         this.value = value;
     }
 
@@ -27,11 +47,11 @@ public class IntProperty extends Property {
         return false;
     }
 
-    public static IntProperty make(int value) {
-        return new IntProperty(value);
+    public static EventFactory<IntProperty> make(int value) {
+        return factoryProvider.get().with(value);
     }
 
-    public static IntProperty make() {
+    public static EventFactory<IntProperty> make() {
         return make(0);
     }
 

@@ -34,8 +34,8 @@ public class ControlledAttractor implements Component {
 
         entity.events().event("attractorEnabled", BooleanProperty.make(false));
 
-        fuelProperty = entity.events().event("fuel", FloatProperty.<Component>make());
-        fuelConsumptionProperty = entity.events().event("attractorFuelConsumption", FloatProperty.<Component>make(2));
+        fuelProperty = entity.events().event("fuel", FloatProperty.make());
+        fuelConsumptionProperty = entity.events().event("attractorFuelConsumption", FloatProperty.make(2));
 
         deltaTime = entity.game().systems().<TimingSystem>get("timing").events().event("deltaTime");
 

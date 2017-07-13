@@ -55,7 +55,7 @@ public class CameraController implements Component {
                 .<FloatProperty>event("deltaTime"));
 
         positionProp = entity.events().event("position", Vec2Property.make());
-        rotationProp = entity.events().event("rotation", FloatProperty.<Component>make());
+        rotationProp = entity.events().event("rotation", FloatProperty.make());
         zoomFunctionProp = entity.events().event("zoomFunction", ObjectProperty.<ZoomFunction>make());
 
         targetState = new EntityCameraState(entity);

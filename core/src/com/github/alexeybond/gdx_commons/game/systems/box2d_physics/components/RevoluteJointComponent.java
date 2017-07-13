@@ -3,7 +3,6 @@ package com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
-import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.util.event.helpers.Subscription;
 import com.github.alexeybond.gdx_commons.util.event.props.BooleanProperty;
@@ -61,10 +60,10 @@ public class RevoluteJointComponent extends BaseJointComponent<RevoluteJoint, Re
                 .event("motorEnabled", BooleanProperty.make(false)),
                 false);
         motorSpeedSub.set(entity.events()
-                .event("motorSpeed", FloatProperty.<Component>make(0f)),
+                .event("motorSpeed", FloatProperty.make(0f)),
                 false);
         maxMotorTorqueSub.set(entity.events()
-                .event("maxMotorTorque", FloatProperty.<Component>make(0f)),
+                .event("maxMotorTorque", FloatProperty.make(0f)),
                 false);
 
         super.onConnect(entity);

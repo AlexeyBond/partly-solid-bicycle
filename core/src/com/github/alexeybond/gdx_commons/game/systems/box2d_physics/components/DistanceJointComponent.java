@@ -3,7 +3,6 @@ package com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
-import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.util.event.helpers.Subscription;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
@@ -38,7 +37,7 @@ public class DistanceJointComponent extends BaseJointComponent<DistanceJoint, Di
 
     @Override
     public void onConnect(Entity entity) {
-        lengthSub.set(entity.events().event("jointLength", FloatProperty.<Component>make()), false);
+        lengthSub.set(entity.events().event("jointLength", FloatProperty.make()), false);
 
         super.onConnect(entity);
     }

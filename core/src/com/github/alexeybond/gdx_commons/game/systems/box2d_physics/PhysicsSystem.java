@@ -27,11 +27,11 @@ public class PhysicsSystem implements GameSystem, ContactListener, APhysicsSyste
 
     private final Events events = new Events();
     private final FloatProperty autoTimeScale
-            = events.event("autoTimeScale", FloatProperty.<APhysicsSystem>make(1f));
+            = events.event("autoTimeScale", FloatProperty.make(1f));
     private final FloatProperty timeAccumulator
-            = events.event("timeAccumulator", FloatProperty.<APhysicsSystem>make(0));
+            = events.event("timeAccumulator", FloatProperty.make(0));
     private final FloatProperty simulationStep
-            = events.event("simulationStep", FloatProperty.<APhysicsSystem>make(0.01f));
+            = events.event("simulationStep", FloatProperty.make(0.01f));
     private final IntProperty positionIterations
             = events.event("positionIterations", IntProperty.make(2));
     private final IntProperty velocityIterations

@@ -18,11 +18,11 @@ public class SpaceshipFuelTank
     @Override
     public void onConnect(Entity entity) {
         capacityProp = entity.events()
-                .event("fuelCapacity", FloatProperty.<Component>make());
+                .event("fuelCapacity", FloatProperty.make());
         fuelProp = entity.events()
-                .event("fuel", FloatProperty.<Component>make());
+                .event("fuel", FloatProperty.make());
         fuelPickEvent = entity.events()
-                .event("fuelPicked", FloatProperty.<Component>make());
+                .event("fuelPicked", FloatProperty.make());
         fuelPickSubIdx = fuelPickEvent.subscribe(this);
     }
 

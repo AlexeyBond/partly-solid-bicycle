@@ -24,10 +24,10 @@ public abstract class AttachmentComponent implements Component {
         Entity master = getMaster(entity);
 
         masterPositionProp = master.events().event("position", Vec2Property.make());
-        masterRotationProp = master.events().event("rotation", FloatProperty.<Component>make());
+        masterRotationProp = master.events().event("rotation", FloatProperty.make());
 
         slavePositionProp = entity.events().event("position", Vec2Property.make());
-        slaveRotationProp = entity.events().event("rotation", FloatProperty.<Component>make());
+        slaveRotationProp = entity.events().event("rotation", FloatProperty.make());
 
         positionSubIdx = masterPositionProp.subscribe(new EventListener<Vec2Property>() {
             @Override

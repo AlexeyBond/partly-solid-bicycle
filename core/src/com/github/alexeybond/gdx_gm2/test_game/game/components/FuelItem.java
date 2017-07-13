@@ -27,7 +27,7 @@ public class FuelItem
         hitEvent = entity.events()
                 .event("playerCollect", ObjectProperty.<Entity>make());
         amountProp = entity.events()
-                .event("amount", FloatProperty.<Component>make(defaultAmount));
+                .event("amount", FloatProperty.make(defaultAmount));
         hitSubIdx = hitEvent.subscribe(this);
     }
 

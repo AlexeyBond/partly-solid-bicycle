@@ -45,7 +45,7 @@ public class CollisionEventFilter implements Component {
     public void onConnect(Entity entity) {
         eventSub.set(entity.events().event(rawEventName, ObjectProperty.<CollisionData>make()));
 
-        filteredEvent = entity.events().event(filteredEventName, Event.<Component>make());
+        filteredEvent = entity.events().event(filteredEventName, Event.makeEvent());
         filterTagGroup = entity.game().systems().<TaggingSystem>get("tagging").group(filterTag);
     }
 

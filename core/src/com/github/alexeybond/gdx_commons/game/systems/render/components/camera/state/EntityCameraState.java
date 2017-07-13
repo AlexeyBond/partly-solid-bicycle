@@ -1,7 +1,6 @@
 package com.github.alexeybond.gdx_commons.game.systems.render.components.camera.state;
 
 import com.badlogic.gdx.math.Vector2;
-import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.systems.render.interfaces.CameraState;
 import com.github.alexeybond.gdx_commons.game.systems.render.interfaces.ZoomFunction;
@@ -20,7 +19,7 @@ public class EntityCameraState implements CameraState {
 
     public EntityCameraState(Entity entity, ZoomFunction defaultZoomFunction) {
         positionProp = entity.events().event("position", Vec2Property.make());
-        rotationProp = entity.events().event("rotation", FloatProperty.<Component>make());
+        rotationProp = entity.events().event("rotation", FloatProperty.make());
         zoomFunctionProp = entity.events().event("zoomFunction",
                 ObjectProperty.<ZoomFunction>make(defaultZoomFunction));
     }

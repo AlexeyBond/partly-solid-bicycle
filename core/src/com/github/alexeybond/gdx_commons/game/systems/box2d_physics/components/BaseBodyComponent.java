@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.CollisionData;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.*;
@@ -81,7 +80,7 @@ public abstract class BaseBodyComponent
         this.alive = true;
 
         positionProp = entity.events().event("position", Vec2Property.make());
-        rotationProp = entity.events().event("rotation", FloatProperty.<Component>make());
+        rotationProp = entity.events().event("rotation", FloatProperty.make());
 
         collisionBeginProp = entity.events()
                 .event("collisionBegin", ObjectProperty.<CollisionData>make());

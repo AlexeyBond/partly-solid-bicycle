@@ -4,7 +4,6 @@ import com.github.alexeybond.gdx_commons.drawing.animation.AnimationInstance;
 import com.github.alexeybond.gdx_commons.drawing.animation.impl.Animation;
 import com.github.alexeybond.gdx_commons.drawing.sprite.SpriteInstance;
 import com.github.alexeybond.gdx_commons.drawing.sprite.SpriteTemplate;
-import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.systems.timing.TimingSystem;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
@@ -35,7 +34,7 @@ public class AnimatedSpriteComponent
 
     @Override
     public void onConnect(Entity entity) {
-        animationInstance = animation.<Component, Entity>bind(this, entity);
+        animationInstance = animation.<Entity>bind(entity);
         animationProp = entity.events().event(
                 "animation", ObjectProperty.<String>make(animation.defaultSequenceName()));
 

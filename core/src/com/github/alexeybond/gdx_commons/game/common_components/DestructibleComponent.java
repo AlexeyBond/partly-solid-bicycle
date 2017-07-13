@@ -85,12 +85,12 @@ public class DestructibleComponent implements Component {
         this.entity = entity;
 
         entityPosition = entity.events().event("position", Vec2Property.make());
-        entityRotation = entity.events().event("rotation", FloatProperty.<Component>make());
-        destructionEndEvent = entity.events().event(destructionEndEventName, Event.<Component>make());
+        entityRotation = entity.events().event("rotation", FloatProperty.make());
+        destructionEndEvent = entity.events().event(destructionEndEventName, Event.makeEvent());
 
         if (null != centerDestructionStartEventName) {
             this.centerDestructionStartEvent = entity.events()
-                    .event(centerDestructionStartEventName, Event.<Component>make());
+                    .event(centerDestructionStartEventName, Event.makeEvent());
             this.centerDestructionStartEventSubIdx = centerDestructionStartEvent.subscribe(
                     new EventListener<Event>() {
                         @Override
@@ -206,7 +206,7 @@ public class DestructibleComponent implements Component {
         Vec2Property partPosition = partEntity.events()
                 .event("position", Vec2Property.make());
         FloatProperty partRotation = partEntity.events()
-                .event("rotation", FloatProperty.<Component>make());
+                .event("rotation", FloatProperty.make());
 
         partRotation.set(entityRotation.get());
         partPosition.set(partPosition.ref()

@@ -66,7 +66,7 @@ public class InfiniteWorldGenerator
         leaveZoneSizeProp = entity.events().event("leaveZone", IntProperty.make(1));
         keepZoneSizeProp = entity.events().event("keepZone", IntProperty.make(2));
         generateZoneSizeProp = entity.events().event("generateZone", IntProperty.make(1));
-        gridSizeProperty = entity.events().event("gridSize", FloatProperty.<Component>make(100));
+        gridSizeProperty = entity.events().event("gridSize", FloatProperty.make(100));
 
         game = entity.game();
 

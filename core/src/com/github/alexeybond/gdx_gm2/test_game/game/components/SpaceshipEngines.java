@@ -60,10 +60,10 @@ public class SpaceshipEngines
         rightEngineEnabled = entity.events().event("rightEngineEnabled", BooleanProperty.make());
         leftEngineEnabled = entity.events().event("leftEngineEnabled", BooleanProperty.make());
 
-        engineImpulse = entity.events().event("engineImpulse", FloatProperty.<Component>make(1000));
-        engineOffset = entity.events().event("engineOffset", FloatProperty.<Component>make(50));
-        fuel = entity.events().event("fuel", FloatProperty.<Component>make());
-        fuelConsumption = entity.events().event("fuelConsumption", FloatProperty.<Component>make(1));
+        engineImpulse = entity.events().event("engineImpulse", FloatProperty.make(1000));
+        engineOffset = entity.events().event("engineOffset", FloatProperty.make(50));
+        fuel = entity.events().event("fuel", FloatProperty.make());
+        fuelConsumption = entity.events().event("fuelConsumption", FloatProperty.make(1));
 
         dtProperty = entity.game().systems().<TimingSystem>get("timing").events().event("deltaTime");
         dtSubId = dtProperty.subscribe(this);

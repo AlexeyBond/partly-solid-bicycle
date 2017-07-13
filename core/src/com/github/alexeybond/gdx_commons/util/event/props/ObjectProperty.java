@@ -1,6 +1,9 @@
 package com.github.alexeybond.gdx_commons.util.event.props;
 
 import com.github.alexeybond.gdx_commons.ioc.IoC;
+import com.github.alexeybond.gdx_commons.util.event.Event;
+import com.github.alexeybond.gdx_commons.util.event.EventFactory;
+import com.github.alexeybond.gdx_commons.util.event.EventFactoryProvider;
 
 import java.util.Arrays;
 
@@ -8,6 +11,23 @@ import java.util.Arrays;
  *
  */
 public class ObjectProperty<T> extends Property {
+    private final static class Factory implements EventFactory {
+        private Object value;
+
+        private <TT> EventFactory<ObjectProperty<TT>> with(TT value) {
+            this.value = value;
+            return this;
+        }
+
+        @Override
+        public Event create() {
+            return new ObjectProperty(value);
+        }
+    }
+
+    private static final EventFactoryProvider<Factory> factoryProvider
+            = new EventFactoryProvider<Factory>(new Factory());
+
     /**
      * Interface for a strategy converting serialized property value to object.
      */
@@ -39,7 +59,7 @@ public class ObjectProperty<T> extends Property {
     private String[] serialValue;
     private Loader<T> loader = iocLoader();
 
-    public ObjectProperty(T value) {
+    private ObjectProperty(T value) {
         this.value = value;
     }
 
@@ -63,11 +83,11 @@ public class ObjectProperty<T> extends Property {
         return value;
     }
 
-    public static <T> ObjectProperty<T> make(T value) {
-        return new ObjectProperty<T>(value);
+    public static <T> EventFactory<ObjectProperty<T>> make(T value) {
+        return factoryProvider.get().with(value);
     }
 
-    public static <T> ObjectProperty<T> make() {
+    public static <T> EventFactory<ObjectProperty<T>> make() {
         return make(null);
     }
 

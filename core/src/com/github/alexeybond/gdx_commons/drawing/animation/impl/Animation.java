@@ -48,8 +48,8 @@ public class Animation {
      * Create a animation instance that causes events on given event group when event is described in
      * keyframe declaration.
      */
-    public <I, E extends EventsOwner> BoundAnimationInstance<I> bind(I initiator, E events) {
-        return new BoundAnimationInstance<I>(this, initiator, events.events(), eventNames);
+    public <E extends EventsOwner> BoundAnimationInstance bind(E events) {
+        return new BoundAnimationInstance(this, events.events(), eventNames);
     }
 
     /**

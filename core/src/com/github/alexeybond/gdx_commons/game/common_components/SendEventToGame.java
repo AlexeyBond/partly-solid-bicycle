@@ -2,7 +2,6 @@ package com.github.alexeybond.gdx_commons.game.common_components;
 
 import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
-import com.github.alexeybond.gdx_commons.game.GameSystem;
 import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
 
@@ -24,8 +23,8 @@ public class SendEventToGame
 
     @Override
     public void onConnect(Entity entity) {
-        entityEvent = entity.events().event(entityEventName, Event.<Component>make());
-        gameEvent = entity.game().events().event(gameEventName, Event.<GameSystem>make());
+        entityEvent = entity.events().event(entityEventName, Event.makeEvent());
+        gameEvent = entity.game().events().event(gameEventName, Event.makeEvent());
 
         entityEventSubIdx = entityEvent.subscribe(this);
     }

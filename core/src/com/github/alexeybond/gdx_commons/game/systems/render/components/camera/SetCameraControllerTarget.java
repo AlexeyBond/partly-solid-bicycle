@@ -61,7 +61,7 @@ public class SetCameraControllerTarget implements Component {
     @Override
     public void onConnect(Entity entity) {
         this.entity = entity;
-        eventSubscription.set(entity.events().event(eventName, Event.<Component>make()));
+        eventSubscription.set(entity.events().event(eventName, Event.makeEvent()));
         TaggingSystem taggingSystem = entity.game().systems().get("tagging");
         if (null != targetTag) targetTagGroup = taggingSystem.group(targetTag);
         if (null != cameraTag) cameraTagGroup = taggingSystem.group(cameraTag);

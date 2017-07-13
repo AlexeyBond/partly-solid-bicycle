@@ -1,11 +1,31 @@
 package com.github.alexeybond.gdx_commons.util.event.props;
 
 import com.badlogic.gdx.math.Vector2;
+import com.github.alexeybond.gdx_commons.util.event.EventFactory;
+import com.github.alexeybond.gdx_commons.util.event.EventFactoryProvider;
 
 /**
  *
  */
 public class Vec2Property extends Property {
+    private static final class Factory implements EventFactory<Vec2Property> {
+        private float x, y;
+
+        private Factory with(float x, float y) {
+            this.x = x;
+            this.y = y;
+            return this;
+        }
+
+        @Override
+        public Vec2Property create() {
+            return new Vec2Property(x, y);
+        }
+    }
+
+    private final static EventFactoryProvider<Factory> factoryProvider
+            = new EventFactoryProvider<Factory>(new Factory());
+
     private final Vector2 vector;
 
     public Vec2Property(float x, float y) {
@@ -47,15 +67,15 @@ public class Vec2Property extends Property {
         return vector;
     }
 
-    public static Vec2Property make(float x, float y) {
-        return new Vec2Property(x, y);
+    public static EventFactory<Vec2Property> make(float x, float y) {
+        return factoryProvider.get().with(x, y);
     }
 
-    public static Vec2Property make(Vector2 value) {
-        return new Vec2Property(value);
+    public static EventFactory<Vec2Property> make(Vector2 value) {
+        return factoryProvider.get().with(value.x, value.y);
     }
 
-    public static Vec2Property make() {
-        return new Vec2Property();
+    public static EventFactory<Vec2Property> make() {
+        return factoryProvider.get().with(0, 0);
     }
 }

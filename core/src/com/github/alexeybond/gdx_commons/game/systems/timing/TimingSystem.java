@@ -14,11 +14,11 @@ import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
 public class TimingSystem implements GameSystem, EventsOwner {
     private Events events = new Events();
     private FloatProperty timeProp
-            = events.event("time", FloatProperty.<TimingSystem>make(0));
+            = events.event("time", FloatProperty.make(0));
     private FloatProperty deltaTimeProp
-            = events.event("deltaTime", FloatProperty.<TimingSystem>make(0));
+            = events.event("deltaTime", FloatProperty.make(0));
     private FloatProperty timeScaleProp
-            = events.event("timeScale", FloatProperty.<TimingSystem>make(1));
+            = events.event("timeScale", FloatProperty.make(1));
 
     @Override
     public void onConnect(Game game) {
@@ -72,6 +72,6 @@ public class TimingSystem implements GameSystem, EventsOwner {
     }
 
     public Event scheduleAt(float time) {
-        return scheduleAt(time, new Event());
+        return scheduleAt(time, Event.makeEvent().create());
     }
 }

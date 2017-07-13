@@ -29,13 +29,13 @@ public class DestroyOnEventComponent
     public void onConnect(Entity entity) {
         this.entity = entity;
         if (initEvent) {
-            event = entity.events().event(eventName, new Event());
+            event = entity.events().event(eventName, Event.makeEvent());
         } else {
             event = entity.events().event(eventName);
         }
         eventSubIdx = event.subscribe(this);
 
-        preDestroyEvent = entity.events().event(preDestroyEventName, Event.<Component>make());
+        preDestroyEvent = entity.events().event(preDestroyEventName, Event.makeEvent());
     }
 
     @Override

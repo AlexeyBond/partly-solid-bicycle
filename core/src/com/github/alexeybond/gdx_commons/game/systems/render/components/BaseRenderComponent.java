@@ -1,6 +1,5 @@
 package com.github.alexeybond.gdx_commons.game.systems.render.components;
 
-import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
 import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
@@ -32,7 +31,7 @@ public abstract class BaseRenderComponent implements RenderComponent {
         system.addToPass(passName, this);
 
         position = entity.events().event("position", Vec2Property.make());
-        rotation = entity.events().event("rotation", FloatProperty.<Component>make());
+        rotation = entity.events().event("rotation", FloatProperty.make());
     }
 
     @Override

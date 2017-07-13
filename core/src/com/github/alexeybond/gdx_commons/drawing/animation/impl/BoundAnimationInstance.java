@@ -7,19 +7,16 @@ import com.github.alexeybond.gdx_commons.util.event.Events;
 /**
  *
  */
-public class BoundAnimationInstance<I> extends BasicAnimationInstance {
-    private final I initiator;
+public class BoundAnimationInstance extends BasicAnimationInstance {
     private final Array<Event> events;
 
-    public BoundAnimationInstance(Animation animation, I initiator, Events events, Array<String> eventNames) {
+    public BoundAnimationInstance(Animation animation, Events events, Array<String> eventNames) {
         super(animation);
-
-        this.initiator = initiator;
 
         this.events = new Array<Event>(true, eventNames.size);
 
         for (int i = 0; i < eventNames.size; i++) {
-            this.events.add(events.event(eventNames.get(i), Event.<I>make()));
+            this.events.add(events.event(eventNames.get(i), Event.makeEvent()));
         }
     }
 

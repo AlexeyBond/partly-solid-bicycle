@@ -22,13 +22,21 @@ public class Event {
 
     public static int DEFAULT_EVENT_SLOTS = 4;
 
-    public Event(int initialSlots) {
+    private static final EventFactoryProvider<EventFactory<Event>> factoryProvider
+            = new EventFactoryProvider<EventFactory<Event>>(new EventFactory<Event>() {
+        @Override
+        public Event create() {
+            return new Event(DEFAULT_EVENT_SLOTS);
+        }
+    });
+
+    protected Event(int initialSlots) {
         listeners = initialSlots == 0 ? null : new EventListener[initialSlots];
         freeSlotPointer = 0;
         freeSlotCount = initialSlots;
     }
 
-    public Event() {
+    protected Event() {
         this(DEFAULT_EVENT_SLOTS);
     }
 
@@ -89,7 +97,7 @@ public class Event {
         return processed;
     }
 
-    public static <T> Event make() {
-        return new Event();
+    public static EventFactory<Event> makeEvent() {
+        return factoryProvider.get();
     }
 }

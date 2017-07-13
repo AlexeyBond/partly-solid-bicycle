@@ -53,7 +53,7 @@ public class SpawnOnEvent
         eventSubIdx = event.subscribe(this);
 
         entityPositionProp = entity.events().event("position", Vec2Property.make());
-        entityRotationProp = entity.events().event("rotation", FloatProperty.<Component>make());
+        entityRotationProp = entity.events().event("rotation", FloatProperty.make());
     }
 
     @Override
@@ -73,7 +73,7 @@ public class SpawnOnEvent
         Vec2Property spawnedPositionProp = spawned.events()
                 .event("position", Vec2Property.make());
         FloatProperty spawnedRotationProp = spawned.events()
-                .event("rotation", FloatProperty.<Component>make());
+                .event("rotation", FloatProperty.make());
 
         spawnedPositionProp.ref().set(tmp);
         spawnedRotationProp.setSilently(rotation + entityRotationProp.get());

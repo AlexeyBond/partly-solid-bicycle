@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector3;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
-import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.util.event.props.FloatProperty;
 import com.github.alexeybond.gdx_commons.game.systems.render.interfaces.RenderComponent;
@@ -53,9 +52,9 @@ public abstract class BackgroundLoopComponent implements RenderComponent {
         system.addToPass(passName, this);
 
         imageScaleProp = entity.events().event(
-                "backgroundImageScale", FloatProperty.<Component>make(1f));
+                "backgroundImageScale", FloatProperty.make(1f));
         positionScaleProp = entity.events().event(
-                "backgroundPositionScale", FloatProperty.<Component>make(1f));
+                "backgroundPositionScale", FloatProperty.make(1f));
     }
 
     @Override

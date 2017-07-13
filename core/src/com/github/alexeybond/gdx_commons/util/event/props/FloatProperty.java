@@ -1,12 +1,32 @@
 package com.github.alexeybond.gdx_commons.util.event.props;
 
+import com.github.alexeybond.gdx_commons.util.event.EventFactory;
+import com.github.alexeybond.gdx_commons.util.event.EventFactoryProvider;
+
 /**
  *
  */
 public class FloatProperty extends Property {
+    private final static class Factory implements EventFactory<FloatProperty> {
+        private float value;
+
+        private Factory with(float value) {
+            this.value = value;
+            return this;
+        }
+
+        @Override
+        public FloatProperty create() {
+            return new FloatProperty(value);
+        }
+    }
+
+    private final static EventFactoryProvider<Factory> factoryProvider
+            = new EventFactoryProvider<Factory>(new Factory());
+
     private float value;
 
-    public FloatProperty(float value) {
+    private FloatProperty(float value) {
         this.value = value;
     }
 
@@ -25,11 +45,11 @@ public class FloatProperty extends Property {
         return true;
     }
 
-    public static <T> FloatProperty make(float value) {
-        return new FloatProperty(value);
+    public static EventFactory<FloatProperty> make(float value) {
+        return factoryProvider.get().with(value);
     }
 
-    public static <T> FloatProperty make() {
+    public static EventFactory<FloatProperty> make() {
         return make(0);
     }
 

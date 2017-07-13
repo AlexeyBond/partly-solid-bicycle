@@ -1,12 +1,32 @@
 package com.github.alexeybond.gdx_commons.util.event.props;
 
+import com.github.alexeybond.gdx_commons.util.event.EventFactory;
+import com.github.alexeybond.gdx_commons.util.event.EventFactoryProvider;
+
 /**
  *
  */
 public class BooleanProperty extends Property {
+    private final static class Factory implements EventFactory<BooleanProperty> {
+        private boolean value;
+
+        private Factory with(boolean value) {
+            this.value = value;
+            return this;
+        }
+
+        @Override
+        public BooleanProperty create() {
+            return new BooleanProperty(value);
+        }
+    }
+
+    private final static EventFactoryProvider<Factory> factoryProvider
+            = new EventFactoryProvider<Factory>(new Factory());
+
     private boolean value;
 
-    public BooleanProperty(boolean value) {
+    private BooleanProperty(boolean value) {
         this.value = value;
     }
 
@@ -27,11 +47,11 @@ public class BooleanProperty extends Property {
         return false;
     }
 
-    public static BooleanProperty make(boolean value) {
-        return new BooleanProperty(value);
+    public static EventFactory<BooleanProperty> make(boolean value) {
+        return factoryProvider.get().with(value);
     }
 
-    public static BooleanProperty make() {
+    public static EventFactory<BooleanProperty> make() {
         return make(false);
     }
 

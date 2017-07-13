@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
 import com.github.alexeybond.gdx_commons.drawing.RenderTarget;
-import com.github.alexeybond.gdx_commons.game.Component;
 import com.github.alexeybond.gdx_commons.game.Entity;
 import com.github.alexeybond.gdx_commons.game.systems.render.interfaces.ZoomFunction;
 import com.github.alexeybond.gdx_commons.game.systems.render.components.BaseRenderComponent;
@@ -72,7 +71,7 @@ public class OrthographicCameraComponent extends BaseRenderComponent {
         super.onConnect(entity);
 
         // Properties "zoom" and "axisScale" allow other components to control camera zoom
-        zoomProp = entity.events().event("zoom", FloatProperty.<Component>make(1));
+        zoomProp = entity.events().event("zoom", FloatProperty.make(1));
         axisScaleProp = entity.events().event("axisScale", Vec2Property.make(1,1));
         zoomFunctionProp = entity.events().event("zoomFunction", ObjectProperty.<ZoomFunction>make());
 
