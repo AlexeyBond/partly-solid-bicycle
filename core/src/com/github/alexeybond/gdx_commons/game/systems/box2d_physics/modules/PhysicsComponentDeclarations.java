@@ -1,5 +1,6 @@
 package com.github.alexeybond.gdx_commons.game.systems.box2d_physics.modules;
 
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.MouseJointComponent;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.PhysicsDebuggerComponent;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.components.decl.*;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
@@ -20,6 +21,7 @@ public class PhysicsComponentDeclarations implements Module {
         map.put("circle fixture", CircleFixtureDecl.class);
         map.put("generic trigger", GenericTriggerDecl.class);
         map.put("physics debugger", PhysicsDebuggerComponent.Decl.class);
+        map.put("mouse joint", MouseJointComponent.Decl.class);
         map.put("distance joint", DistanceJointDecl.class);
         map.put("rope joint", RopeJointDecl.class);
         map.put("revolute joint", RevoluteJointDecl.class);

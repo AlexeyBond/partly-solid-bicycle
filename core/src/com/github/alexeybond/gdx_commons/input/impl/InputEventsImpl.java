@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.alexeybond.gdx_commons.input.InputEvents;
@@ -54,8 +55,10 @@ public class InputEventsImpl implements InputEvents {
         screenCoordinates.scl(
                 1f / (float) screenViewport.getScreenWidth(),
                 1f / (float) screenViewport.getScreenHeight());
-        screenCoordinates.clamp(0f, 1f);
-        screenCoordinates.scl(screenViewport.getWorldWidth(), screenViewport.getWorldHeight());
+        screenCoordinates.set(
+                MathUtils.clamp(screenCoordinates.x, 0, 1),
+                MathUtils.clamp(screenCoordinates.y, 0, 1));
+//        screenCoordinates.scl(screenViewport.getWorldWidth(), screenViewport.getWorldHeight());
         return screenCoordinates;
     }
 

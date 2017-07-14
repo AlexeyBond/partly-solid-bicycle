@@ -17,6 +17,7 @@ class InputEventsInputProcessor implements InputProcessor {
 
     private final Vec2Property mousePos;
     private final IntProperty scroll;
+    private final BooleanProperty mouseDown;
 
     public InputEventsInputProcessor(Events events, InputEventsImpl owner) {
         this.events = events;
@@ -26,6 +27,8 @@ class InputEventsInputProcessor implements InputProcessor {
                 Vec2Property.make(Gdx.input.getX(), Gdx.input.getY()));
         scroll = events.event("scroll",
                 IntProperty.make(0));
+        mouseDown = events.event("mouseDown",
+                BooleanProperty.make(Gdx.input.isButtonPressed(Input.Buttons.LEFT)));
     }
 
     @Override
@@ -50,16 +53,28 @@ class InputEventsInputProcessor implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (pointer == 0 && button == Input.Buttons.LEFT) {
+            return mouseDown.set(true);
+        }
+
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (pointer == 0 && button == Input.Buttons.LEFT) {
+            return mouseDown.set(false);
+        }
+
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if (pointer == 0) {
+            if (mouseMoved(screenX, screenY)) return true;
+        }
+
         return false;
     }
 

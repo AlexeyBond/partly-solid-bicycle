@@ -87,8 +87,11 @@
       "components": {
         "physics debugger": {
           "camera": "mainCamera",
-        }
-      }
+        },
+        "mouse joint": {
+          "tolerance": 10,
+        },
+      },
     },
     { // STATIC ENVIRONMENT
       "components": {
