@@ -1,5 +1,6 @@
 package com.github.alexeybond.gdx_commons.game.modules;
 
+import com.github.alexeybond.gdx_commons.game.common_components.SideViewFluid;
 import com.github.alexeybond.gdx_commons.game.common_components.decl.*;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.ioc.modules.Module;
@@ -22,6 +23,7 @@ public class CommonComponents implements Module {
         map.put("send event to game", SendEventToGameDecl.class);
         map.put("destructible", DestructibleDecl.class);
         map.put("collision event filter", CollisionEventFilterDecl.class);
+        map.put("side view fluid", SideViewFluid.Decl.class);
     }
 
     @Override

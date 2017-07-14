@@ -66,6 +66,15 @@
           ],
         }
       }
+    },
+
+    "coin": {
+      "components": {
+        "body": {"bodyType": "DynamicBody"},
+        "box fixture": {
+          "size": [20, 80],
+        },
+      },
     }
   },
   "entities": [
@@ -137,9 +146,10 @@
         },
         "f7": {
           "type": "box fixture",
-          "size": [1000, 20],
-          "center": [500, -100],
-          "restitution": 2,
+          "size": [2000, 20],
+          "center": [500, -200],
+          "restitution": 0,
+//          "restitution": 2,
         }
       }
     }, // END STATIC ENVIRONMENT
@@ -157,6 +167,20 @@
 //      }
 //    },
 
+    {
+      "inherit": ["mini-trigger"],
+      "components": {
+        "set camera target": {
+          "event": "trigger",
+          "cameraTag": "camera",
+          "targetTag": "target_002",
+          "time": 0.0,
+        }
+      },
+      "properties": {
+        "position": ["0", "50"],
+      }
+    },
     {
       "inherit": ["mini-trigger"],
       "components": {
@@ -204,7 +228,7 @@
       },
       "properties": {
         "position": ["800", "0"],
-        "rotation": ["-30"],
+//        "rotation": ["-30"],
         "zoomFunction": ["fixed diagonal zoom function", "2500"],
       }
     },
@@ -294,8 +318,59 @@
 
         "motorSpeed": ["1"],
         "maxMotorTorque": ["500000"],
-        "motorEnabled": ["true"],
+        "motorEnabled": ["false"],
+//        "motorEnabled": ["true"],
       }
+    },
+
+    {
+      "components": {
+        "body": {"bodyType": "StaticBody"},
+        "box fixture": {
+          "size": [1000, 170],
+          "sensor": true,
+          "density": 0.016,
+        },
+        "side view fluid": {
+          "fluidFixture": "box fixture",
+          "debugPass": "game-debug",
+        },
+      },
+      "properties": {
+        "position": ["1000", "-110"],
+      }
+    },
+
+    {
+      "inherit": ["coin"],
+      "properties": {
+        "position": ["1100", "100"],
+      },
+    },
+    {
+      "inherit": ["coin"],
+      "properties": {
+        "position": ["1200", "100"],
+        "rotation": ["45"],
+      },
+    },
+    {
+//      "inherit": ["coin"],
+      "components": {
+        "body": {"bodyType": "DynamicBody"},
+        "polygon fixture": {
+          "vertices": [
+            -50, 50,
+            50, 50,
+            50, -100,
+            -50, -50,
+          ]
+        }
+      },
+      "properties": {
+        "position": ["1300", "100"],
+//        "rotation": ["90"],
+      },
     },
 
     {

@@ -1,6 +1,7 @@
 package com.github.alexeybond.gdx_commons.game.systems.box2d_physics;
 
 import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.CollidablePhysicsComponent;
 
 /**
@@ -15,4 +16,8 @@ public class CollisionData {
     public Contact contact;
 
     public boolean isContactB;
+
+    public Fixture otherFixture() {
+        return isContactB ? contact.getFixtureA() : contact.getFixtureB();
+    }
 }
