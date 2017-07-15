@@ -338,6 +338,7 @@
       },
       "properties": {
         "position": ["1000", "-110"],
+//        "flowVelocity": ["-100", "0"],
       }
     },
 

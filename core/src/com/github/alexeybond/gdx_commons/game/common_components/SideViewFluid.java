@@ -38,6 +38,8 @@ public class SideViewFluid implements Component {
     private PhysicsSystem physicsSystem;
     private RenderSystem renderSystem;
 
+    private Vec2Property flowVelocityProp;
+
     private final static Vector2 tmp = new Vector2(), tmp2 = new Vector2();
 
     private final Subscription<ObjectProperty<CollisionData>> collisionBeginSub
@@ -113,6 +115,8 @@ public class SideViewFluid implements Component {
                 .event(collisionEndEvent, ObjectProperty.<CollisionData>make()));
         positionSub.set(entity.events().event("position", Vec2Property.make()));
         rotationSub.set(entity.events().event("rotation", FloatProperty.make()));
+
+        flowVelocityProp = entity.events().event("flowVelocity", Vec2Property.make());
 
         physicsSystem = entity.game().systems().get("physics");
 
@@ -197,6 +201,9 @@ public class SideViewFluid implements Component {
             Vector2 centroid = GeometryUtils.polygonCentroid(pv, 0, pv.length, tmp);
             float area = Math.abs(GeometryUtils.polygonArea(pv, 0, pv.length));
             float fluidDensity = fluidFixture.fixture().getDensity();
+            Body fluidBody = fluidFixture.fixture().getBody();
+            boolean respectFluidVelocity = fluidBody.getType() != BodyDef.BodyType.StaticBody;
+            boolean dynamicFluid = fluidBody.getType() == BodyDef.BodyType.DynamicBody;
 
             float displacedMass = area * fluidDensity;
 
@@ -205,6 +212,8 @@ public class SideViewFluid implements Component {
                     centroid, true);
 
 //            leadingEdges.clear();
+
+            Vector2 flow = flowVelocityProp.ref();
 
             for (int i = 0; i < pv.length; i += 2) {
                 float x1 = pv[i], y1 = pv[i+1];
@@ -221,8 +230,12 @@ public class SideViewFluid implements Component {
                 float xm = .5f * (x1 + x2), ym = .5f * (y1 + y2);
                 float ex = x2 - x1, ey = y2 - y1;
 
-                // TODO:: Use velocity relative to fluid body if it's dynamic
-                Vector2 linVel = ownerBody.getLinearVelocityFromWorldPoint(tmp2.set(xm, ym));
+                Vector2 linVel = ownerBody.getLinearVelocityFromWorldPoint(tmp2.set(xm, ym)).sub(flow);
+
+                if (respectFluidVelocity) {
+                    linVel = linVel.sub(fluidBody.getLinearVelocityFromLocalPoint(tmp2));
+                }
+
                 float velMod = linVel.len();
                 float eMod = (float) Math.sqrt(ex * ex + ey * ey);
 
@@ -233,11 +246,13 @@ public class SideViewFluid implements Component {
                 float kDrag = fluidDensity * d;
                 float kLift = fluidDensity * d * (linVel.x * ex + linVel.y * ey) / (velMod * eMod);
 
-                // TODO:: Apply force to fluid body if it's dynamic
-                ownerBody.applyForce(
-                        -linVel.x * kDrag + linVel.y * kLift,
-                        -linVel.y * kDrag + linVel.x * kLift,
-                        xm, ym, true);
+                float fx = -linVel.x * kDrag + linVel.y * kLift;
+                float fy = -linVel.y * kDrag + linVel.x * kLift;
+                ownerBody.applyForce(fx, fy, xm, ym, true);
+
+                if (dynamicFluid) {
+                    fluidBody.applyForce(-fx, -fy, xm, ym, true);
+                }
 
 //                leadingEdges.addAll(x1, y1, x2, y2);
             }
