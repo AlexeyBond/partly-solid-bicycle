@@ -1,0 +1,83 @@
+{
+  "entities": [
+    {
+      "components": {
+        "camera": {
+          "pass": "setup-main-camera",
+          "globalAlias": "mainCamera"
+        },
+      },
+      "properties": {
+        "zoomFunction": ["fixed diagonal zoom function", "2000"],
+      },
+    },
+    {
+      "components": {
+        "physics debugger": {
+          "camera": "mainCamera",
+        }
+      }
+    },
+
+    {
+      "components": {
+        "s:main": {
+          "type": "sprite",
+          "pass": "game-objects",
+          "sprite": "test/wall",
+        },
+        "s:normal": {
+          "type": "sprite",
+          "pass": "game-normals",
+          "sprite": "test/wall__norm",
+        },
+      }
+    },
+
+    {
+      "components": {
+        "s:light": {
+          "type": "sprite",
+          "pass": "game-light",
+          "sprite": "test/light/light0__l",
+          "scale": 3,
+        },
+        "com.github.alexeybond.gdx_gm2.test_game.test4.components.LightMovement$Decl": {
+          "v": -310,
+        },
+      },
+    },
+    {
+      "components": {
+        "s:light": {
+          "type": "sprite",
+          "pass": "game-light",
+          "sprite": "test/light/light0__l",
+          "scale": 3,
+        },
+        "com.github.alexeybond.gdx_gm2.test_game.test4.components.LightMovement$Decl": {
+          "v": -280,
+        },
+      },
+      "properties": {
+        "position": ["300", "-60"]
+      },
+    },
+    {
+      "components": {
+        "s:light": {
+          "type": "sprite",
+          "pass": "game-light",
+          "sprite": "test/light/light0__l",
+          "scale": 3,
+        },
+        "com.github.alexeybond.gdx_gm2.test_game.test4.components.LightMovement$Decl": {
+          "v": -300,
+        },
+      },
+      "properties": {
+        "position": ["-500", "90"]
+      },
+    },
+  ]
+}

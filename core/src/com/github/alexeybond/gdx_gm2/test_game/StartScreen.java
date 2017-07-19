@@ -20,6 +20,7 @@ import com.github.alexeybond.gdx_commons.util.parts.AParts;
 import com.github.alexeybond.gdx_gm2.test_game.game.GameScreen;
 import com.github.alexeybond.gdx_gm2.test_game.test2.Test2Screen;
 import com.github.alexeybond.gdx_gm2.test_game.test3.Test3Screen;
+import com.github.alexeybond.gdx_gm2.test_game.test4.Test4Screen;
 
 /**
  *
@@ -62,6 +63,14 @@ public class StartScreen extends DefaultScreen {
             }
         });
 
+        TextButton textButton26 = new TextButton("TEST 4", skin);
+        textButton26.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                next(new Test4Screen());
+            }
+        });
+
         TextButton textButton3 = new TextButton("EXIT", skin);
         textButton3.addListener(new ChangeListener() {
             @Override
@@ -75,6 +84,7 @@ public class StartScreen extends DefaultScreen {
         group.addActor(textButton1);
         group.addActor(textButton2);
         group.addActor(textButton25);
+        group.addActor(textButton26);
         group.addActor(textButton3);
 
         group.setFillParent(true);
