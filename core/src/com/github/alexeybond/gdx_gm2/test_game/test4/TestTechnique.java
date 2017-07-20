@@ -16,7 +16,7 @@ public class TestTechnique extends PlainTechnique {
     private final static int NORMALS_SAMPLER_ID = 1;
     private final static int LIGHT_SAMPLER_ID = 1;
 
-    private ShaderProgram lightShader, objectsShader;
+    private ShaderProgram lightShader, objectsShader, normalShader;
 
     private TargetSlot normalSlot;
     private TargetSlot lightSlot;
@@ -42,6 +42,10 @@ public class TestTechnique extends PlainTechnique {
                 "test/shaders/objects_pass_vs.glsl",
                 "test/shaders/objects_pass_ps.glsl"
         );
+        normalShader = IoC.resolve("load shader from files",
+                "test/shaders/normal_pass_vs.glsl",
+                "test/shaders/normal_pass_ps.glsl"
+        );
     }
 
     @Override
@@ -51,7 +55,9 @@ public class TestTechnique extends PlainTechnique {
 
         toTarget(normalSlot);
         doPass(cameraPass);
+        withShader(normalShader);
         doPass(normalsPass);
+        withShader(null);
 
         toTarget(lightSlot);
         normalSlot.get().asColorTexture().getTexture().bind(NORMALS_SAMPLER_ID);
@@ -84,5 +90,9 @@ public class TestTechnique extends PlainTechnique {
 
         doPass(debugPass);
         doPass(uiPass);
+
+        if (Test4Screen.show_n) {
+            screenQuad(normalSlot.get().asColorTexture(), false);
+        }
     }
 }

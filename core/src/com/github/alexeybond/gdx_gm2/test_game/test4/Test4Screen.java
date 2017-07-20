@@ -13,12 +13,17 @@ import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.visitor.impl.ApplyGameDeclarationVisitor;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
+import com.github.alexeybond.gdx_commons.util.event.Event;
+import com.github.alexeybond.gdx_commons.util.event.EventListener;
+import com.github.alexeybond.gdx_commons.util.event.props.BooleanProperty;
 import com.github.alexeybond.gdx_commons.util.parts.AParts;
 
 /**
  *
  */
 public class Test4Screen extends DefaultScreen {
+    public static boolean show_n = false;
+
     @Override
     protected Technique createTechnique() {
         return new TestTechnique();
@@ -37,5 +42,23 @@ public class Test4Screen extends DefaultScreen {
                 Gdx.files.internal("test/game.lighting.test.json"));
 
         game = new ApplyGameDeclarationVisitor().doVisit(gameDeclaration, game);
+
+        input().keyEvent("R").subscribe(new EventListener<BooleanProperty>() {
+            @Override
+            public boolean onTriggered(BooleanProperty event) {
+                if (!event.get()) return false;
+                next(new Test4Screen());
+                return true;
+            }
+        });
+
+        input().keyEvent("N").subscribe(new EventListener<BooleanProperty>() {
+            @Override
+            public boolean onTriggered(BooleanProperty event) {
+                if (event.get()) return false;
+                show_n = !show_n;
+                return true;
+            }
+        });
     }
 }
