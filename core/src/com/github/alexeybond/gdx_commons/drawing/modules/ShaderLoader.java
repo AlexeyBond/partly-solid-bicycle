@@ -1,6 +1,7 @@
 package com.github.alexeybond.gdx_commons.drawing.modules;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.ioc.IoCStrategy;
@@ -34,9 +35,11 @@ public class ShaderLoader implements Module {
                     );
 
                     if (!program.isCompiled()) {
+                        Gdx.app.log("SHADERS", program.getVertexShaderSource());
+                        Gdx.app.log("SHADERS", program.getFragmentShaderSource());
                         Gdx.app.log("SHADERS", program.getLog());
                         program.dispose();
-                        throw new RuntimeException("Could not load/compile shader.");
+                        throw new RuntimeException("Could not load/compile shader from '" + vsFileName + "' and '" + psFileName +"'.");
                     }
 
                     shaders.put(key, program);

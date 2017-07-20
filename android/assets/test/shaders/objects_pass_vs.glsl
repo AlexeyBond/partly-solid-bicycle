@@ -11,7 +11,7 @@ varying vec2 v_screenCoords;
 void main() {
     vec4 pos = u_projTrans * a_position;
     gl_Position = pos;
-    v_screenCoords = 0.5f * (pos.xy + vec2(1));
+    v_screenCoords = 0.5 * (pos.xy + vec2(1));
 
     v_color = a_color;
     v_texCoords = a_texCoord0;

@@ -9,7 +9,7 @@ uniform sampler2D u_texture;
 uniform sampler2D u_normalTexture;
 
 vec3 decodeNormal(vec4 color) {
-    return 2.0f * (color.xyz - vec3(0.5f));
+    return 2.0 * (color.xyz - vec3(0.5));
 }
 
 void main() {
@@ -19,7 +19,7 @@ void main() {
     vec3 objectNormal = decodeNormal(normalSample);
     vec3 lightNormal = decodeNormal(lightTextureSample);
 
-    float kDiff = max(0, dot(objectNormal, lightNormal * vec3(-1,1,1)));
+    float kDiff = max(0.0, dot(objectNormal, lightNormal * vec3(-1,1,1)));
 
     gl_FragColor = v_color * lightTextureSample.a * kDiff;
 }
