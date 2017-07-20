@@ -16,10 +16,14 @@ void main() {
     vec4 lightTextureSample = texture2D(u_texture, v_texCoords);
     vec4 normalSample = texture2D(u_normalTexture, v_screenCoords);
 
-    vec3 objectNormal = decodeNormal(normalSample);
+    vec3 objectNormal = decodeNormal(normalSample) * vec3(-1,1,1);
     vec3 lightNormal = decodeNormal(lightTextureSample);
+    vec3 viewDir = vec3(0,0,-1);
 
-    float kDiff = max(0.0, dot(objectNormal * vec3(-1,1,1), lightNormal));
+    float kDiff = max(0.0, dot(objectNormal, lightNormal));
 
-    gl_FragColor = v_color * lightTextureSample.a * kDiff;
+    vec3 reflectDir = reflect(viewDir, objectNormal);
+    float kSpec = pow(max(0.0, dot(reflectDir, lightNormal)), 10);
+
+    gl_FragColor = v_color * lightTextureSample.a * (kDiff + kSpec);
 }
