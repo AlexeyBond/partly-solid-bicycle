@@ -32,6 +32,7 @@ public class StandardSpriteInstance implements SpriteInstance {
         if (rotation != sprite.getRotation()) sprite.setRotation(rotation);
         sprite.setPosition(position.x - sprite.getOriginX(), position.y - sprite.getOriginY());
 
+        sprite.setColor(batch.getPackedColor());
         sprite.draw(batch);
     }
 }

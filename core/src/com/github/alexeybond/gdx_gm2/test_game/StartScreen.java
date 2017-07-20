@@ -108,6 +108,7 @@ public class StartScreen extends DefaultScreen {
         });
 
 //        goToGame();
+        next(new Test4Screen());
     }
 
     private void goToGame() {

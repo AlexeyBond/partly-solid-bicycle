@@ -18,36 +18,53 @@ public class ShaderLoader implements Module {
 
     @Override
     public void init() {
-        IoC.register("load shader from files", new IoCStrategy() {
-            @Override
-            public Object resolve(Object... args) {
-                String vsFileName = (String) args[0];
-                String psFileName = (String) args[1];
+        if ("true".equals(System.getProperty("noShaderCache"))) {
+            IoC.register("load shader from files", new IoCStrategy() {
+                @Override
+                public Object resolve(Object... args) {
+                    String vsFileName = (String) args[0];
+                    String psFileName = (String) args[1];
+                    return loadShader(vsFileName, psFileName);
+                }
+            });
+        } else {
+            IoC.register("load shader from files", new IoCStrategy() {
+                @Override
+                public Object resolve(Object... args) {
+                    String vsFileName = (String) args[0];
+                    String psFileName = (String) args[1];
 
-                String key = vsFileName + "\\/" + psFileName;
+                    String key = vsFileName + "\\/" + psFileName;
 
-                ShaderProgram program = shaders.get(key);
+                    ShaderProgram program = shaders.get(key);
 
-                if (null == program) {
-                    program = new ShaderProgram(
-                            Gdx.files.internal(vsFileName),
-                            Gdx.files.internal(psFileName)
-                    );
+                    if (null == program) {
+                        program = loadShader(vsFileName, psFileName);
 
-                    if (!program.isCompiled()) {
-                        Gdx.app.log("SHADERS", program.getVertexShaderSource());
-                        Gdx.app.log("SHADERS", program.getFragmentShaderSource());
-                        Gdx.app.log("SHADERS", program.getLog());
-                        program.dispose();
-                        throw new RuntimeException("Could not load/compile shader from '" + vsFileName + "' and '" + psFileName +"'.");
+                        shaders.put(key, program);
                     }
 
-                    shaders.put(key, program);
+                    return program;
                 }
+            });
+        }
+    }
 
-                return program;
-            }
-        });
+    private ShaderProgram loadShader(String vsFileName, String psFileName) {
+        ShaderProgram program = new ShaderProgram(
+                Gdx.files.internal(vsFileName),
+                Gdx.files.internal(psFileName)
+        );
+
+        if (!program.isCompiled()) {
+            Gdx.app.log("SHADERS", program.getVertexShaderSource());
+            Gdx.app.log("SHADERS", program.getFragmentShaderSource());
+            Gdx.app.log("SHADERS", program.getLog());
+            program.dispose();
+            throw new RuntimeException("Could not load/compile shader from '" + vsFileName + "' and '" + psFileName +"'.");
+        }
+
+        return program;
     }
 
     @Override

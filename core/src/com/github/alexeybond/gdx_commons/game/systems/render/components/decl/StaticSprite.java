@@ -28,9 +28,16 @@ public class StaticSprite implements ComponentDeclaration {
 
     @Override
     public Component create(GameDeclaration gameDeclaration, Game game) {
-        if (null == region) region = IoC.resolve("get texture region", sprite);
+        SpriteInstance spriteInst = resolveInstance();
+        return new StaticSpriteComponent(pass, spriteInst, resolveRegion(), scale);
+    }
 
-        SpriteInstance spriteInst = accurate ? new AccurateSpriteInstance() : new StandardSpriteInstance();
-        return new StaticSpriteComponent(pass, spriteInst, region, scale);
+    protected TextureRegion resolveRegion() {
+        if (null == region) region = IoC.resolve("get texture region", sprite);
+        return region;
+    }
+
+    protected SpriteInstance resolveInstance() {
+        return accurate ? new AccurateSpriteInstance() : new StandardSpriteInstance();
     }
 }

@@ -92,7 +92,7 @@ public class TestTechnique extends PlainTechnique {
         doPass(uiPass);
 
         if (Test4Screen.show_n) {
-            screenQuad(normalSlot.get().asColorTexture(), false);
+            screenQuad(normalSlot.get().asColorTexture(), true);
         }
     }
 }

@@ -19,7 +19,7 @@ void main() {
     vec3 objectNormal = decodeNormal(normalSample);
     vec3 lightNormal = decodeNormal(lightTextureSample);
 
-    float kDiff = max(0.0, dot(objectNormal, lightNormal * vec3(-1,-1,1)));
+    float kDiff = max(0.0, dot(objectNormal * vec3(-1,1,1), lightNormal));
 
     gl_FragColor = v_color * lightTextureSample.a * kDiff;
 }

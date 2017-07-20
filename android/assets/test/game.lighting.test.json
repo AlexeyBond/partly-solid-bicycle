@@ -8,7 +8,7 @@
         },
       },
       "properties": {
-        "zoomFunction": ["fixed diagonal zoom function", "1000"],
+        "zoomFunction": ["fixed diagonal zoom function", "2000"],
       },
     },
     {
@@ -24,20 +24,41 @@
         "s:main": {
           "type": "sprite",
           "pass": "game-objects",
-          "sprite": "test/wall1",
+          "sprite": "test/wall",
+//          "sprite": "test/white",
         },
         "s:normal": {
-          "type": "sprite",
+          "type": "com.github.alexeybond.gdx_gm2.test_game.test4.components.NormalSprite$Decl",
           "pass": "game-normals",
-          "sprite": "test/wall00__norm",
-          "accurate": true,
+          "sprite": "test/wall__norm",
+//          "sprite": "test/wall00__norm",
+          "accurate": false,
         },
       },
       "properties": {
-//        "rotation": ["45"],
+        "rotation": ["247"],
         "position": ["50", "50"],
       },
     },
+//    {
+//      "components": {
+//        "s:main": {
+//          "type": "sprite",
+//          "pass": "game-objects",
+////          "sprite": "test/wall1",
+//          "sprite": "test/white",
+//        },
+//        "s:normal": {
+//          "type": "com.github.alexeybond.gdx_gm2.test_game.test4.components.NormalSprite$Decl",
+//          "pass": "game-normals",
+//          "sprite": "test/wall00__norm",
+//          "accurate": false,
+//        },
+//      },
+//      "properties": {
+//        "position": ["-462", "50"],
+//      },
+//    },
 
     {
       "components": {
