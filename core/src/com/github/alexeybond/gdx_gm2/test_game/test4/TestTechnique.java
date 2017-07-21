@@ -21,6 +21,7 @@ public class TestTechnique extends PlainTechnique {
     private TargetSlot normalSlot;
     private TargetSlot lightSlot;
     private Pass cameraPass, normalsPass, lightsPass, objectsPass, debugPass, uiPass;
+    private Pass particelsPass;
 
     @Override
     protected void setup() {
@@ -32,6 +33,7 @@ public class TestTechnique extends PlainTechnique {
         lightsPass = newPass("game-light");
         objectsPass = newPass("game-objects");
         debugPass = newPass("game-debug");
+        particelsPass = newPass("game-particles");
         uiPass = newPass("ui");
 
         lightShader = IoC.resolve("load shader from files",
@@ -87,6 +89,8 @@ public class TestTechnique extends PlainTechnique {
         gl.glActiveTexture(GL20.GL_TEXTURE1);
         gl.glBindTexture(GL20.GL_TEXTURE_2D, 0);
         gl.glActiveTexture(GL20.GL_TEXTURE0);
+
+        doPass(particelsPass);
 
         doPass(debugPass);
         doPass(uiPass);

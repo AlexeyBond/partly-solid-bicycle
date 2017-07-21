@@ -12,10 +12,12 @@ import com.github.alexeybond.gdx_commons.game.Game;
 import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.visitor.impl.ApplyGameDeclarationVisitor;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
+import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.APhysicsSystem;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
 import com.github.alexeybond.gdx_commons.util.event.props.BooleanProperty;
+import com.github.alexeybond.gdx_commons.util.event.props.Vec2Property;
 import com.github.alexeybond.gdx_commons.util.parts.AParts;
 
 /**
@@ -42,6 +44,9 @@ public class Test4Screen extends DefaultScreen {
                 Gdx.files.internal("test/game.lighting.test.json"));
 
         game = new ApplyGameDeclarationVisitor().doVisit(gameDeclaration, game);
+
+        APhysicsSystem physicsSystem = game.systems().get("physics");
+        physicsSystem.world().setGravity(new Vector2(0, -100));
 
         input().keyEvent("R").subscribe(new EventListener<BooleanProperty>() {
             @Override

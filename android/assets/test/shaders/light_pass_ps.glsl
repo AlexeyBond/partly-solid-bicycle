@@ -23,7 +23,7 @@ void main() {
     float kDiff = max(0.0, dot(objectNormal, lightNormal));
 
     vec3 reflectDir = reflect(viewDir, objectNormal);
-    float kSpec = pow(max(0.0, dot(reflectDir, lightNormal)), 10);
+    float kSpec = pow(max(0.0, dot(reflectDir, lightNormal)), 10.0);
 
     gl_FragColor = v_color * lightTextureSample.a * (kDiff + kSpec);
 }

@@ -36,7 +36,7 @@
         },
       },
       "properties": {
-        "rotation": ["30"],
+//        "rotation": ["30"],
         "position": ["50", "50"],
       },
     },
@@ -60,53 +60,89 @@
 //      },
 //    },
 
+//    {
+//      "components": {
+//        "s:light": {
+//          "type": "sprite",
+//          "pass": "game-light",
+//          "sprite": "test/light/light0__l",
+//          "scale": 3,
+//        },
+//        "com.github.alexeybond.gdx_gm2.test_game.test4.components.LightMovement$Decl": {
+//          "v": -50,
+//        },
+//      },
+//      "properties": {
+////        "position": ["0", "64"],
+//      }
+//    },
+//    {
+//      "components": {
+//        "s:light": {
+//          "type": "sprite",
+//          "pass": "game-light",
+//          "sprite": "test/light/light0__l",
+//          "scale": 3,
+//        },
+//        "com.github.alexeybond.gdx_gm2.test_game.test4.components.LightMovement$Decl": {
+//          "v": -280,
+//        },
+//      },
+//      "properties": {
+//        "position": ["300", "-60"]
+//      },
+//    },
+//    {
+//      "components": {
+//        "s:light": {
+//          "type": "sprite",
+//          "pass": "game-light",
+//          "sprite": "test/light/light0__l",
+//          "scale": 3,
+//        },
+//        "com.github.alexeybond.gdx_gm2.test_game.test4.components.LightMovement$Decl": {
+//          "v": -300,
+//        },
+//      },
+//      "properties": {
+//        "position": ["-500", "90"]
+//      },
+//    },
+
     {
       "components": {
-        "s:light": {
-          "type": "sprite",
+        "particles:main": {
+          "type": "particles",
+          "pass": "game-particles",
+          "effect": "test/particles/fire-main.p",
+          "rotate": -90,
+        },
+        "particles:light": {
+          "type": "particles",
           "pass": "game-light",
-          "sprite": "test/light/light0__l",
-          "scale": 3,
+          "effect": "test/particles/fire-light.p",
+          "rotate": -90,
         },
-        "com.github.alexeybond.gdx_gm2.test_game.test4.components.LightMovement$Decl": {
-          "v": -50,
-        },
+        "body": {"bodyType": "DynamicBody",},
+        "box fixture": {"size": [20, 20],},
+        "tag": {"tag": "torch_00",}
       },
       "properties": {
-//        "position": ["0", "64"],
       }
     },
     {
       "components": {
-        "s:light": {
-          "type": "sprite",
-          "pass": "game-light",
-          "sprite": "test/light/light0__l",
-          "scale": 3,
-        },
-        "com.github.alexeybond.gdx_gm2.test_game.test4.components.LightMovement$Decl": {
-          "v": -280,
-        },
-      },
-      "properties": {
-        "position": ["300", "-60"]
-      },
-    },
-    {
-      "components": {
-        "s:light": {
-          "type": "sprite",
-          "pass": "game-light",
-          "sprite": "test/light/light0__l",
-          "scale": 3,
-        },
-        "com.github.alexeybond.gdx_gm2.test_game.test4.components.LightMovement$Decl": {
-          "v": -300,
-        },
-      },
-      "properties": {
-        "position": ["-500", "90"]
-      },
+        "body": {"bodyType": "StaticBody",},
+        "tag": {"tag": "static_00"},
+
+        "distance joint": {
+          "entity2": "torch_00",
+          "anchor2": [0, 10],
+          "local2": true,
+
+          "anchor1": [100, 200],
+        }
+      }
     },
   ]
 }
