@@ -3,17 +3,21 @@ package com.github.alexeybond.gdx_commons.drawing.tech;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.github.alexeybond.gdx_commons.drawing.*;
 import com.github.alexeybond.gdx_commons.drawing.rt.FboTarget;
+import com.github.alexeybond.gdx_commons.ioc.IoC;
 
 /**
  *
  */
 public abstract class PlainTechnique implements Technique, Runnable {
+    protected final GL20 gl = Gdx.gl20;
+
     private Scene scene;
 
     @Override
@@ -61,7 +65,7 @@ public abstract class PlainTechnique implements Technique, Runnable {
     }
 
     protected void clear(int bits) {
-        Gdx.gl.glClear(bits);
+        gl.glClear(bits);
     }
 
     protected void clear() {
@@ -107,5 +111,25 @@ public abstract class PlainTechnique implements Technique, Runnable {
         } else {
             batch.draw(texture, -1, -1, 2, 2);
         }
+    }
+
+    protected final void bindTexture(int sampler, Texture texture) {
+        if (sampler != 0) {
+            gl.glActiveTexture(GL20.GL_TEXTURE0 + sampler);
+        }
+
+        if (null != texture) {
+            texture.bind(GL20.GL_TEXTURE0 + sampler);
+        } else {
+            gl.glBindTexture(GL20.GL_TEXTURE_2D, 0);
+        }
+
+        if (sampler != 0) {
+            gl.glActiveTexture(GL20.GL_TEXTURE0);
+        }
+    }
+
+    protected ShaderProgram loadShader(String vsFile, String psFile) {
+        return IoC.resolve("load shader from files", vsFile, psFile);
     }
 }
