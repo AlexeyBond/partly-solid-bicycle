@@ -140,7 +140,7 @@
         "f6": {
           "type": "box fixture",
           "size": [400, 20],
-          "center": [-470, 200],
+          "center": [-470, 300],
           "angle": -90,
           "friction": 1,
         },
@@ -371,6 +371,30 @@
       "properties": {
         "position": ["1300", "100"],
 //        "rotation": ["90"],
+      },
+    },
+
+    {
+      "components": {
+        "rope": {
+          "startEntity": "static",
+          "startAnchor": [-100, 200],
+          "startLocal": false,
+
+          "segmentLength": 10,
+          "segmentCount": 15,
+          "width": 5,
+
+          "segmentAngleLimit": 45,
+
+          "density": 0.005,
+          "friction": 0,
+        },
+        "rope sprite": {
+          "sprite": "test/rope",
+          "width": 5,
+          "segmentScale": 0.5,
+        },
       },
     },
 

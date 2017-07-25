@@ -14,7 +14,7 @@ import com.github.alexeybond.gdx_commons.util.event.props.ObjectProperty;
  */
 public abstract class BaseFixtureComponent
         implements FixturePhysicsComponent, DisposablePhysicsComponent {
-    private BodyPhysicsComponent bodyComponent;
+    private BaseBodyComponent bodyComponent;
     private Entity entity;
     private Fixture fixture;
     private final String collisionBeginEventName, collisionEndEventName;
@@ -85,7 +85,7 @@ public abstract class BaseFixtureComponent
         collisionEndEvent.trigger();
     }
 
-    public BodyPhysicsComponent parent() {
+    public BaseBodyComponent parent() {
         return bodyComponent;
     }
 

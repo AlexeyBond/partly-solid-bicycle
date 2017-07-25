@@ -34,4 +34,8 @@ public abstract class Subscription <ET extends Event> implements EventListener<E
     public final void disable() {
         subIdx = event.unsubscribe(subIdx);
     }
+
+    public ET event() {
+        return event;
+    }
 }

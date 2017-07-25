@@ -4,10 +4,7 @@ import com.github.alexeybond.gdx_commons.game.systems.render.components.camera.d
 import com.github.alexeybond.gdx_commons.game.systems.render.components.camera.decl.CameraTargetDecl;
 import com.github.alexeybond.gdx_commons.game.systems.render.components.camera.decl.OrthographicCameraDecl;
 import com.github.alexeybond.gdx_commons.game.systems.render.components.camera.decl.SetCameraTargetDecl;
-import com.github.alexeybond.gdx_commons.game.systems.render.components.decl.AnimatedSprite;
-import com.github.alexeybond.gdx_commons.game.systems.render.components.decl.AttachedParticleEffect;
-import com.github.alexeybond.gdx_commons.game.systems.render.components.decl.BackgroundLoop;
-import com.github.alexeybond.gdx_commons.game.systems.render.components.decl.StaticSprite;
+import com.github.alexeybond.gdx_commons.game.systems.render.components.decl.*;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.ioc.modules.Module;
 
@@ -29,6 +26,8 @@ public class RenderComponentsDeclarations implements Module {
         map.put("camera controller", CameraControllerDecl.class);
         map.put("camera target", CameraTargetDecl.class);
         map.put("set camera target", SetCameraTargetDecl.class);
+
+        map.put("rope sprite", MasterRopeSprite.class);
     }
 
     @Override
