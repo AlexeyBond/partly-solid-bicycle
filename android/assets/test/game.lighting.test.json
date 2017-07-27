@@ -161,6 +161,10 @@
           "animationEntity": "monster",
           "scale": 0.5,
         },
+        "slave spriter animation": {
+          "pass": "game-normals-stub",
+          "master": "spriter animation",
+        },
       },
       "properties": {
         "position": ["200", "-100"],

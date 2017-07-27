@@ -16,6 +16,7 @@ public class TestTechnique extends PlainTechnique {
     private final static int LIGHT_SAMPLER_ID = 1;
 
     private ShaderProgram lightShader, objectsShader, normalShader, finalShader;
+    private ShaderProgram normalStubShader;
 
     private TargetSlot normalSlot;
     private TargetSlot lightSlot;
@@ -24,6 +25,7 @@ public class TestTechnique extends PlainTechnique {
     private Pass cameraPass, normalsPass, lightsPass, objectsPass, debugPass, uiPass;
     private Pass particlesPass;
     private Pass refractionPass;
+    private Pass normalStubPass;
 
     @Override
     protected void setup() {
@@ -34,6 +36,7 @@ public class TestTechnique extends PlainTechnique {
 
         cameraPass = newPass("setup-main-camera");
         normalsPass = newPass("game-normals");
+        normalStubPass = newPass("game-normals-stub");
         lightsPass = newPass("game-light");
         objectsPass = newPass("game-objects");
         debugPass = newPass("game-debug");
@@ -57,6 +60,10 @@ public class TestTechnique extends PlainTechnique {
                 "test/shaders/final_pass_vs.glsl",
                 "test/shaders/final_pass_ps.glsl"
         );
+        normalStubShader = loadShader(
+                "test/shaders/normal_pass_vs.glsl",
+                "test/shaders/normal_pass_stub_ps.glsl"
+        );
     }
 
     private final Vector3 tmp = new Vector3();
@@ -72,6 +79,8 @@ public class TestTechnique extends PlainTechnique {
         doPass(cameraPass);
         withShader(normalShader);
         doPass(normalsPass);
+        withShader(normalStubShader);
+        doPass(normalStubPass);
         withShader(null);
 
         toTarget(lightSlot);

@@ -1,9 +1,7 @@
-package com.github.alexeybond.gdx_commons.game.utils.spriter_animation;
+package com.github.alexeybond.gdx_commons.game.utils.spriter_animation.components;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.brashmonkey.spriter.Data;
-import com.brashmonkey.spriter.Loader;
 import com.brashmonkey.spriter.Player;
 import com.github.alexeybond.gdx_commons.drawing.DrawingContext;
 import com.github.alexeybond.gdx_commons.game.Component;
@@ -34,6 +32,7 @@ import java.io.File;
 public class SpriterAnimationComponent implements RenderComponent {
     private final String passName;
 
+    private final LoaderImpl loader;
     private final Player player;
     private final DrawerImpl drawer;
 
@@ -54,8 +53,9 @@ public class SpriterAnimationComponent implements RenderComponent {
 
     private float lastUpdTime;
 
-    public SpriterAnimationComponent(String passName, Player player, DrawerImpl drawer) {
+    public SpriterAnimationComponent(String passName, LoaderImpl loader, Player player, DrawerImpl drawer) {
         this.passName = passName;
+        this.loader = loader;
         this.player = player;
         this.drawer = drawer;
     }
@@ -106,6 +106,18 @@ public class SpriterAnimationComponent implements RenderComponent {
         renderSystem.removeFromPass(passName, this);
     }
 
+    public Data data() {
+        return loader.data();
+    }
+
+    public LoaderImpl loader() {
+        return loader;
+    }
+
+    public Player player() {
+        return player;
+    }
+
     public static class Decl implements ComponentDeclaration {
         public String pass = "game-objects";
 
@@ -121,7 +133,7 @@ public class SpriterAnimationComponent implements RenderComponent {
         @Override
         public Component create(GameDeclaration gameDeclaration, Game game) {
             Data data = IoC.resolve("load spriter animation", animation);
-            Loader<Sprite> loader = new LoaderImpl(data, regionPrefix, regionSuffix);
+            LoaderImpl loader = new LoaderImpl(data, regionPrefix, regionSuffix);
             loader.load(new File(animation).getParent()
                     .replace('\\', '/') // Fix for Window$, AssetManager hangs without this
                     + "/");
@@ -134,7 +146,7 @@ public class SpriterAnimationComponent implements RenderComponent {
 
             return new SpriterAnimationComponent(
                     pass,
-                    player,
+                    loader, player,
                     drawer
             );
         }

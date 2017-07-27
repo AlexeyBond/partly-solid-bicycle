@@ -30,4 +30,12 @@ public class LoaderImpl extends Loader<Sprite> {
 
         return new Sprite(region);
     }
+
+    public String root() {
+        return root;
+    }
+
+    public Data data() {
+        return data;
+    }
 }

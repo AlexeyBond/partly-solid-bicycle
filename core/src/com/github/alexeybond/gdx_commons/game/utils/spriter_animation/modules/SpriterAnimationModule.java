@@ -3,7 +3,8 @@ package com.github.alexeybond.gdx_commons.game.utils.spriter_animation.modules;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.brashmonkey.spriter.SCMLReader;
-import com.github.alexeybond.gdx_commons.game.utils.spriter_animation.SpriterAnimationComponent;
+import com.github.alexeybond.gdx_commons.game.utils.spriter_animation.components.SlaveSpriterAnimationComponent;
+import com.github.alexeybond.gdx_commons.game.utils.spriter_animation.components.SpriterAnimationComponent;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
 import com.github.alexeybond.gdx_commons.ioc.IoCStrategy;
 import com.github.alexeybond.gdx_commons.ioc.modules.Module;
@@ -28,6 +29,7 @@ public class SpriterAnimationModule implements Module {
         // Register component type
         Map<String, Class> componentTypeMap = IoC.resolve("component type aliases");
         componentTypeMap.put("spriter animation", SpriterAnimationComponent.Decl.class);
+        componentTypeMap.put("slave spriter animation", SlaveSpriterAnimationComponent.Decl.class);
     }
 
     @Override
