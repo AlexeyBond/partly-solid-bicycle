@@ -5,6 +5,9 @@ sourceCompatibility = 1.6
 
 sourceSets.main.java.srcDirs = [ "src/" ]
 
+dependencies {
+    compile project(':spriter')
+}
 
 eclipse.project {
     name = appName + "-core"

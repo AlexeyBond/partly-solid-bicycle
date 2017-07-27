@@ -153,5 +153,20 @@
         }
       }
     },
+
+    {
+      "components": {
+        "spriter animation": {
+          "animation": "test/spriter-animation/monster/basic.scml",
+          "animationEntity": "monster",
+          "scale": 0.5,
+        },
+      },
+      "properties": {
+        "position": ["200", "-100"],
+        "timeScale": ["1"],
+        "animation": ["run"],
+      }
+    }
   ]
 }

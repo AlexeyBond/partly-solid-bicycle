@@ -1,3 +1,4 @@
+include 'spriter'
 include 'desktop', 'android', 'html', 'core', 'ios'
 include 'tools'
 

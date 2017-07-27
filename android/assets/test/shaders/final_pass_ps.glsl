@@ -8,7 +8,7 @@ uniform sampler2D u_refractionMap;
 uniform vec2 u_targetSizeInv;
 uniform float u_pxPerUnit;
 
-const float MAX_DISTORTION_UNITS = 100;
+const float MAX_DISTORTION_UNITS = 100.0;
 
 void main() {
     vec4 refract1  = texture2D(u_refractionMap, v_texCoords + u_targetSizeInv * vec2(+1,+1) * 10.0);

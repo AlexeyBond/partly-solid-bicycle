@@ -13,7 +13,9 @@ import com.github.alexeybond.gdx_commons.game.declarative.GameDeclaration;
 import com.github.alexeybond.gdx_commons.game.declarative.visitor.impl.ApplyGameDeclarationVisitor;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.PhysicsSystem;
 import com.github.alexeybond.gdx_commons.game.systems.box2d_physics.interfaces.APhysicsSystem;
+import com.github.alexeybond.gdx_commons.game.utils.spriter_animation.modules.SpriterAnimationModule;
 import com.github.alexeybond.gdx_commons.ioc.IoC;
+import com.github.alexeybond.gdx_commons.ioc.modules.Modules;
 import com.github.alexeybond.gdx_commons.util.event.Event;
 import com.github.alexeybond.gdx_commons.util.event.EventListener;
 import com.github.alexeybond.gdx_commons.util.event.props.BooleanProperty;
@@ -29,6 +31,12 @@ public class Test4Screen extends DefaultScreen {
     @Override
     protected Technique createTechnique() {
         return new TestTechnique();
+    }
+
+    @Override
+    protected void createModules(Modules modules) {
+        super.createModules(modules);
+        modules.add(new SpriterAnimationModule());
     }
 
     @Override
