@@ -1,3 +1,3 @@
-[submodule "spriter"]
-	path = spriter
+[submodule "3rd_party/spriter"]
+	path = 3rd_party/spriter
 	url = https://github.com/trixt0r/spriter

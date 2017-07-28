@@ -1,6 +1,7 @@
 include 'core'
-include 'spriter'
 include 'tools'
+
+include '3rd_party:spriter'
 
 include 'ext:spriter_animation'
 include 'ext:destruction'

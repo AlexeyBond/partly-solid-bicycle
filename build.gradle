@@ -43,7 +43,7 @@ project(":core") {
     }
 }
 
-project(":spriter") {
+project(":3rd_party:spriter") {
     apply plugin: 'java'
     targetCompatibility = '1.6'
     sourceCompatibility = '1.6'
