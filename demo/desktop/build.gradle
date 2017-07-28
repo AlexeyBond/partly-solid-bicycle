@@ -11,7 +11,7 @@ dependencies {
 sourceCompatibility = 1.6
 sourceSets.main.java.srcDirs = [ "src/" ]
 
-project.ext.mainClassName = "DesktopLauncher"
+project.ext.mainClassName = "com.github.alexeybond.partly_solid_bicycle.demos.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../android/assets");
 
 task run(dependsOn: classes, type: JavaExec) {

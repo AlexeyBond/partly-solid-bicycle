@@ -47,7 +47,7 @@ public class StartScreen extends DefaultScreen {
             }
         });
 
-        TextButton textButton2 = new TextButton("TEST 2", skin);
+        TextButton textButton2 = new TextButton("DESTRUCTION", skin);
         textButton2.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -55,7 +55,7 @@ public class StartScreen extends DefaultScreen {
             }
         });
 
-        TextButton textButton25 = new TextButton("TEST 3", skin);
+        TextButton textButton25 = new TextButton("PHYSICS & PLATFORMER CONTROLS", skin);
         textButton25.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -63,7 +63,7 @@ public class StartScreen extends DefaultScreen {
             }
         });
 
-        TextButton textButton26 = new TextButton("TEST 4", skin);
+        TextButton textButton26 = new TextButton("LIGHTING & ANIMATION", skin);
         textButton26.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

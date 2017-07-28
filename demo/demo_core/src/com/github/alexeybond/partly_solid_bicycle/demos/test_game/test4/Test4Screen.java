@@ -12,7 +12,7 @@ import com.github.alexeybond.partly_solid_bicycle.game.Game;
 import com.github.alexeybond.partly_solid_bicycle.game.declarative.GameDeclaration;
 import com.github.alexeybond.partly_solid_bicycle.game.declarative.visitor.impl.ApplyGameDeclarationVisitor;
 import com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.interfaces.APhysicsSystem;
-import com.github.alexeybond.partly_solid_bicycle.game.utils.spriter_animation.modules.SpriterAnimationModule;
+import com.github.alexeybond.partly_solid_bicycle.ext.spriter_animation.modules.SpriterAnimationModule;
 import com.github.alexeybond.partly_solid_bicycle.ioc.IoC;
 import com.github.alexeybond.partly_solid_bicycle.ioc.modules.Modules;
 import com.github.alexeybond.partly_solid_bicycle.util.event.EventListener;

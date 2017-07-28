@@ -1,4 +1,6 @@
-#version 120
+#ifdef GL_ES
+    precision mediump float;
+#endif
 
 varying vec2 v_texCoords;
 uniform sampler2D u_texture;
