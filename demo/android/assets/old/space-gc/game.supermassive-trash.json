@@ -1,0 +1,100 @@
+{
+  "classes": {
+    "supermassive-trash-base": {
+      "components": {
+        "body": { "bodyType": "StaticBody" },
+        "gravityTriggerFixture": {
+          "type": "circle fixture",
+          "radius": 1500,
+          "collisionBeginEvent": "gravityTriggerHitStart",
+          "collisionEndEvent": "gravityTriggerHitEnd",
+          "sensor": true,
+          "collisionGroup": "-triggers",
+        },
+        "gravityTrigger": {
+          "type": "com.github.alexeybond.partly_solid_bicycle.demos.test_game.game.components.decl.GravityTriggerDecl",
+          "hitBeginEvent": "gravityTriggerHitStart",
+          "hitEndEvent": "gravityTriggerHitEnd",
+          "attractorName": "trashAttractor"
+        },
+        "deathTriggerFixture": {
+          "type": "circle fixture",
+          "radius": 380,
+          "collisionBeginEvent": "deathTriggerHitStart",
+          "collisionEndEvent": "deathTriggerHitEnd",
+          "sensor": true,
+          "collisionGroup": "-triggers",
+        },
+        "deathTrigger": {
+          "type": "generic trigger",
+          "ownerEvent": "deathTriggerHitStart",
+          "targetEvent": "hitPlanet",
+        },
+        "minimapSprite": {
+          "type": "sprite",
+          "sprite": "old/space-gc/minimap-planet",
+          "pass": "minimap-objects",
+          "scale": 10
+        },
+      }
+    },
+    "supermassive-trash-generator": {
+      "components": {
+        "infinite world generator": {
+          "observerTag": "camera",
+          "generateTag": "planet",
+          "generateClasses": [
+            "supermassive-trash-1",
+            "supermassive-trash-2",
+            "supermassive-trash-3",
+            "supermassive-trash-4",
+            "supermassive-trash-5",
+            "supermassive-trash-6",
+          ]
+        }
+      },
+    },
+    "supermassive-trash-1": {
+      "inherit": ["supermassive-trash-base"],
+      "components": {
+        "sprite": { "sprite": "old/space-gc/supermassive-trash1", "scale": 0.5 },
+        "circle fixture": { "radius": 350 },
+      },
+    },
+    "supermassive-trash-2": {
+      "inherit": ["supermassive-trash-base"],
+      "components": {
+        "sprite": { "sprite": "old/space-gc/supermassive-trash2", "scale": 0.5 },
+        "circle fixture": { "radius": 350 },
+      },
+    },
+    "supermassive-trash-3": {
+      "inherit": ["supermassive-trash-base"],
+      "components": {
+        "sprite": { "sprite": "old/space-gc/supermassive-trash3", "scale": 0.5 },
+        "circle fixture": { "radius": 350 },
+      },
+    },
+    "supermassive-trash-4": {
+      "inherit": ["supermassive-trash-base"],
+      "components": {
+        "sprite": { "sprite": "old/space-gc/supermassive-trash4", "scale": 0.5 },
+        "circle fixture": { "radius": 350 },
+      },
+    },
+    "supermassive-trash-5": {
+      "inherit": ["supermassive-trash-base"],
+      "components": {
+        "sprite": { "sprite": "old/space-gc/supermassive-trash5", "scale": 0.5 },
+        "circle fixture": { "radius": 350 },
+      },
+    },
+    "supermassive-trash-6": {
+      "inherit": ["supermassive-trash-base"],
+      "components": {
+        "sprite": { "sprite": "old/space-gc/supermassive-trash6", "scale": 0.5 },
+        "circle fixture": { "radius": 350 },
+      }
+    },
+  }
+}

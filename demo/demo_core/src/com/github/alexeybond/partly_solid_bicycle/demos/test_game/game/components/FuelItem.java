@@ -1,0 +1,51 @@
+package com.github.alexeybond.partly_solid_bicycle.demos.test_game.game.components;
+
+import com.github.alexeybond.partly_solid_bicycle.game.Component;
+import com.github.alexeybond.partly_solid_bicycle.game.Entity;
+import com.github.alexeybond.partly_solid_bicycle.util.event.EventListener;
+import com.github.alexeybond.partly_solid_bicycle.util.event.props.FloatProperty;
+import com.github.alexeybond.partly_solid_bicycle.util.event.props.ObjectProperty;
+
+/**
+ *
+ */
+public class FuelItem
+        implements Component, EventListener<ObjectProperty<Entity>> {
+    private final float defaultAmount;
+    private int hitSubIdx = -1;
+    private Entity entity;
+    private ObjectProperty<Entity> hitEvent;
+    private FloatProperty amountProp;
+
+    public FuelItem(float defaultAmount) {
+        this.defaultAmount = defaultAmount;
+    }
+
+    @Override
+    public void onConnect(Entity entity) {
+        this.entity = entity;
+        hitEvent = entity.events()
+                .event("playerCollect", ObjectProperty.<Entity>make());
+        amountProp = entity.events()
+                .event("amount", FloatProperty.make(defaultAmount));
+        hitSubIdx = hitEvent.subscribe(this);
+    }
+
+    @Override
+    public void onDisconnect(Entity entity) {
+        hitSubIdx = hitEvent.unsubscribe(hitSubIdx);
+    }
+
+    @Override
+    public boolean onTriggered(ObjectProperty<Entity> event) {
+        FloatProperty pickEvent = event.get().events().event("fuelPicked");
+
+        pickEvent.setSilently(amountProp.get());
+        pickEvent.trigger();
+        amountProp.set(0);
+
+        entity.destroy();
+
+        return true;
+    }
+}

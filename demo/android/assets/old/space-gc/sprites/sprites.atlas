@@ -1,0 +1,209 @@
+
+sprites.png
+size: 2048,2048
+format: RGBA8888
+filter: MipMapLinearLinear,MipMapLinearLinear
+repeat: none
+old/space-gc/256x256spaceship
+  rotate: false
+  xy: 1455, 1768
+  size: 256, 263
+  orig: 256, 263
+  offset: 0, 0
+  index: 1
+old/space-gc/256x256spaceship
+  rotate: false
+  xy: 2, 185
+  size: 256, 263
+  orig: 256, 263
+  offset: 0, 0
+  index: 2
+old/space-gc/256x256spaceship
+  rotate: false
+  xy: 1455, 1503
+  size: 256, 263
+  orig: 256, 263
+  offset: 0, 0
+  index: 3
+old/space-gc/256x256thrusterExhaust_left
+  rotate: false
+  xy: 1713, 1768
+  size: 256, 263
+  orig: 256, 263
+  offset: 0, 0
+  index: 1
+old/space-gc/256x256thrusterExhaust_left
+  rotate: false
+  xy: 1455, 1238
+  size: 256, 263
+  orig: 256, 263
+  offset: 0, 0
+  index: 2
+old/space-gc/supermassive-trash3
+  rotate: false
+  xy: 2, 580
+  size: 1451, 1451
+  orig: 1451, 1451
+  offset: 0, 0
+  index: -1
+old/space-gc/trash1
+  rotate: false
+  xy: 2, 2
+  size: 181, 181
+  orig: 181, 181
+  offset: 0, 0
+  index: -1
+old/space-gc/trash10
+  rotate: false
+  xy: 1455, 1055
+  size: 181, 181
+  orig: 181, 181
+  offset: 0, 0
+  index: -1
+old/space-gc/trash11
+  rotate: false
+  xy: 1713, 1402
+  size: 181, 181
+  orig: 181, 181
+  offset: 0, 0
+  index: -1
+old/space-gc/trash2
+  rotate: false
+  xy: 516, 425
+  size: 123, 153
+  orig: 123, 153
+  offset: 0, 0
+  index: -1
+old/space-gc/trash3
+  rotate: false
+  xy: 1713, 1219
+  size: 137, 181
+  orig: 137, 181
+  offset: 0, 0
+  index: -1
+old/space-gc/trash6
+  rotate: false
+  xy: 1455, 878
+  size: 181, 175
+  orig: 181, 175
+  offset: 0, 0
+  index: -1
+old/space-gc/trash7
+  rotate: false
+  xy: 1455, 709
+  size: 181, 167
+  orig: 181, 167
+  offset: 0, 0
+  index: -1
+old/space-gc/trash8
+  rotate: false
+  xy: 260, 267
+  size: 181, 181
+  orig: 181, 181
+  offset: 0, 0
+  index: -1
+old/space-gc/trash9
+  rotate: false
+  xy: 1713, 1585
+  size: 181, 181
+  orig: 181, 181
+  offset: 0, 0
+  index: -1
+old/space-gc/wasted
+  rotate: false
+  xy: 2, 450
+  size: 512, 128
+  orig: 512, 128
+  offset: 0, 0
+  index: -1
+
+sprites2.png
+size: 2048,2048
+format: RGBA8888
+filter: MipMapLinearLinear,MipMapLinearLinear
+repeat: none
+old/space-gc/supermassive-trash4
+  rotate: false
+  xy: 2, 2
+  size: 1451, 1451
+  orig: 1451, 1451
+  offset: 0, 0
+  index: -1
+
+sprites3.png
+size: 2048,2048
+format: RGBA8888
+filter: MipMapLinearLinear,MipMapLinearLinear
+repeat: none
+old/space-gc/supermassive-trash5
+  rotate: false
+  xy: 2, 2
+  size: 1451, 1451
+  orig: 1451, 1451
+  offset: 0, 0
+  index: -1
+
+sprites4.png
+size: 2048,2048
+format: RGBA8888
+filter: MipMapLinearLinear,MipMapLinearLinear
+repeat: none
+old/space-gc/trash12
+  rotate: false
+  xy: 2, 2
+  size: 1451, 1451
+  orig: 1451, 1451
+  offset: 0, 0
+  index: -1
+
+sprites5.png
+size: 2048,2048
+format: RGBA8888
+filter: MipMapLinearLinear,MipMapLinearLinear
+repeat: none
+old/space-gc/supermassive-trash2
+  rotate: false
+  xy: 2, 2
+  size: 1415, 1416
+  orig: 1415, 1416
+  offset: 0, 0
+  index: -1
+
+sprites6.png
+size: 2048,2048
+format: RGBA8888
+filter: MipMapLinearLinear,MipMapLinearLinear
+repeat: none
+old/space-gc/supermassive-trash1
+  rotate: false
+  xy: 2, 2
+  size: 1351, 1428
+  orig: 1351, 1428
+  offset: 0, 0
+  index: -1
+
+sprites7.png
+size: 2048,2048
+format: RGBA8888
+filter: MipMapLinearLinear,MipMapLinearLinear
+repeat: none
+old/space-gc/supermassive-trash6
+  rotate: false
+  xy: 2, 2
+  size: 1367, 1396
+  orig: 1367, 1396
+  offset: 0, 0
+  index: -1
+
+sprites8.png
+size: 2048,2048
+format: RGBA8888
+filter: MipMapLinearLinear,MipMapLinearLinear
+repeat: none
+old/space-gc/teleport
+  rotate: false
+  xy: 2, 2
+  size: 1200, 1200
+  orig: 1200, 1200
+  offset: 0, 0
+  index: -1

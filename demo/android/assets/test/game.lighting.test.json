@@ -1,0 +1,176 @@
+{
+  "entities": [
+    {
+      "components": {
+        "camera": {
+          "pass": "setup-main-camera",
+          "globalAlias": "mainCamera"
+        },
+      },
+      "properties": {
+        "zoomFunction": ["fixed diagonal zoom function", "2000"],
+      },
+    },
+    {
+      "components": {
+        "physics debugger": {
+          "camera": "mainCamera",
+        },
+        "mouse joint": {
+          "tolerance": 10,
+        },
+      }
+    },
+
+    {
+      "components": {
+        "s:main": {
+          "type": "sprite",
+          "pass": "game-objects",
+          "sprite": "test/wall",
+//          "sprite": "test/white",
+        },
+        "s:normal": {
+          "type": "com.github.alexeybond.partly_solid_bicycle.demos.test_game.test4.components.NormalSprite$Decl",
+          "pass": "game-normals",
+          "sprite": "test/wall__norm",
+//          "sprite": "test/wall00__norm",
+          "accurate": false,
+        },
+      },
+      "properties": {
+//        "rotation": ["30"],
+        "position": ["50", "50"],
+      },
+    },
+//    {
+//      "components": {
+//        "s:main": {
+//          "type": "sprite",
+//          "pass": "game-objects",
+////          "sprite": "test/wall1",
+//          "sprite": "test/white",
+//        },
+//        "s:normal": {
+//          "type": "com.github.alexeybond.partly_solid_bicycle.demos.test_game.test4.components.NormalSprite$Decl",
+//          "pass": "game-normals",
+//          "sprite": "test/wall00__norm",
+//          "accurate": false,
+//        },
+//      },
+//      "properties": {
+//        "position": ["-462", "50"],
+//      },
+//    },
+
+//    {
+//      "components": {
+//        "s:light": {
+//          "type": "sprite",
+//          "pass": "game-light",
+//          "sprite": "test/light/light0__l",
+//          "scale": 3,
+//        },
+//        "com.github.alexeybond.partly_solid_bicycle.demos.test_game.test4.components.LightMovement$Decl": {
+//          "v": -50,
+//        },
+//      },
+//      "properties": {
+////        "position": ["0", "64"],
+//      }
+//    },
+//    {
+//      "components": {
+//        "s:light": {
+//          "type": "sprite",
+//          "pass": "game-light",
+//          "sprite": "test/light/light0__l",
+//          "scale": 3,
+//        },
+//        "com.github.alexeybond.partly_solid_bicycle.demos.test_game.test4.components.LightMovement$Decl": {
+//          "v": -280,
+//        },
+//      },
+//      "properties": {
+//        "position": ["300", "-60"]
+//      },
+//    },
+    {
+      "components": {
+        "s:light": {
+          "type": "sprite",
+          "pass": "game-light",
+          "sprite": "test/light/light0__l",
+          "scale": 3,
+        },
+        "com.github.alexeybond.partly_solid_bicycle.demos.test_game.test4.components.LightMovement$Decl": {
+          "v": -300,
+        },
+      },
+      "properties": {
+        "position": ["-500", "90"]
+      },
+    },
+
+    {
+      "components": {
+        "particles:main": {
+          "type": "particles",
+          "pass": "game-particles",
+          "effect": "test/particles/fire-main.p",
+          "rotate": -90,
+        },
+        "particles:light": {
+          "type": "particles",
+          "pass": "game-light",
+          "effect": "test/particles/fire-light.p",
+          "rotate": -90,
+        },
+        "particles:refract": {
+          "type": "particles",
+          "pass": "game-refraction",
+          "effect": "test/particles/fire-refract.p",
+          "rotate": -90,
+        },
+        "body": {"bodyType": "DynamicBody",},
+        "box fixture": {"size": [20, 20],},
+        "tag": {"tag": "torch_00",}
+      },
+      "properties": {
+      }
+    },
+    {
+      "components": {
+        "body": {"bodyType": "StaticBody",},
+        "tag": {"tag": "static_00"},
+
+        "distance joint": {
+          "entity2": "torch_00",
+          "anchor2": [0, 10],
+          "local2": true,
+
+          "anchor1": [100, 200],
+        }
+      }
+    },
+
+    {
+      "components": {
+        "spriter animation": {
+          "animation": "test/spriter-animation/monster/basic.scml",
+          "animationEntity": "monster",
+          "scale": 0.5,
+        },
+        "slave spriter animation": {
+          "pass": "game-normals-stub",
+          "master": "spriter animation",
+        },
+      },
+      "properties": {
+        "position": ["200", "-100"],
+        "timeScale": ["1"],
+        "animation": ["run"],
+      }
+    }
+  ]
+}

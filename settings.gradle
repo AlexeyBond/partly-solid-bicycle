@@ -1,4 +1,9 @@
+include 'core'
 include 'spriter'
-include 'desktop', 'android', 'html', 'core', 'ios'
 include 'tools'
 
+include ':demo:demo_core'
+include ':demo:desktop'
+include ':demo:android'
+include ':demo:html'
+include ':demo:ios'

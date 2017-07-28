@@ -1,0 +1,119 @@
+{
+  "classes": {
+    "trash-destruction-effects": {
+      "components": {
+        "particles": {
+          "effect": "particles/explosion.p",
+          "masterProperty": "particles"
+        },
+        "one shot sound": {
+          "event": "position",
+          "sound": "old/space-gc/sound/destroy.wav",
+        },
+        // This way world generator will destroy all effects player has gone away from far enough
+        "tag": { "tag": "trash" },
+      },
+    },
+    "trash-base": {
+      "components": {
+        "body": { "bodyType": "DynamicBody" },
+        "com.github.alexeybond.partly_solid_bicycle.demos.test_game.game.components.decl.FuelItemDecl": {},
+        "destroy on event": {
+          "event": "hitPlanet",
+          "initEvent": true,
+          "preDestroyEvent": "preDestroy"
+        },
+        "spawn on event": {
+          "classes": ["trash-destruction-effects"],
+          "event": "preDestroy",
+          "observerTag": "camera",
+          "maxObserverDistance": 2000,
+        },
+      }
+    },
+    "trash-generator": {
+      "components": {
+        "infinite world generator": {
+          "observerTag": "player",
+          "generateTag": "trash",
+          "generateClasses": [
+            "trash-1", "trash-2", "trash-3",
+            "trash-6", "trash-7", "trash-8",
+            "trash-9", "trash-10", "trash-11",
+            "trash-12",
+          ]
+        }
+      },
+    },
+    "trash-1": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [100, 120] },
+        "sprite": { "sprite": "old/space-gc/trash1" }
+      }
+    },
+    "trash-2": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "width": 120, "height": 150 },
+        "sprite": { "sprite": "old/space-gc/trash2" }
+      }
+    },
+    "trash-3": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [130, 180] },
+        "sprite": { "sprite": "old/space-gc/trash3" }
+      }
+    },
+    "trash-6": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [60, 240], "angle": 45 },
+        "sprite": { "sprite": "old/space-gc/trash6" }
+      }
+    },
+    "trash-7": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [60, 220], "angle": -40 },
+        "sprite": { "sprite": "old/space-gc/trash7" }
+      },
+    },
+    "trash-8": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [60, 220], "angle": 45 },
+        "sprite": { "sprite": "old/space-gc/trash8" }
+      },
+    },
+    "trash-9": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [60, 220], "angle": 45 },
+        "sprite": { "sprite": "old/space-gc/trash9" }
+      },
+    },
+    "trash-10": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [180, 180] },
+        "sprite": { "sprite": "old/space-gc/trash10" }
+      },
+    },
+    "trash-11": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [180, 180] },
+        "sprite": { "sprite": "old/space-gc/trash11" }
+      },
+    },
+    "trash-12": {
+      "inherit": ["trash-base"],
+      "components": {
+        "box fixture": { "size": [280, 280] },
+        "sprite": { "sprite": "old/space-gc/trash12", "scale": 0.2 }
+      },
+    },
+  }
+}

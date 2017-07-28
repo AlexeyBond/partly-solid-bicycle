@@ -1,0 +1,76 @@
+{
+  "classes": {
+    "box-peace": {
+      "components": {
+        "body": {
+          "bodyType": "DynamicBody",
+        },
+      },
+    },
+  },
+  "entities": [
+    {
+      "components": {
+        "camera": {
+          "pass": "setup-main-camera",
+          "globalAlias": "mainCamera"
+        },
+      }
+    },
+    {
+      "components": {
+        "physics debugger": {
+          "camera": "mainCamera",
+        }
+      }
+    },
+    {
+      "components": {
+        "body": { "bodyType": "StaticBody" },
+        "box fixture": { "size": [1000, 30] },
+      },
+      "properties": {
+        "position": ["0", "-320"],
+      }
+    },
+    {
+      "components": {
+        "body": { "bodyType": "StaticBody" },
+        "box fixture": { "size": [80, 80] },
+      },
+      "properties": {
+        "position": ["0", "-320"],
+        "rotation": ["45"],
+      }
+    },
+    {
+      "components": {
+        "body": { "bodyType": "StaticBody" },
+        "box fixture": { "size": [512, 512] },
+        "tag": { "tag": "box" },
+        "sprite": { "sprite": "test/box" },
+        "destructible": {
+          "centerDestructionEvent": "break",
+          "destructionEndEvent": "destructionEnd",
+          "partClass": "box-peace",
+          "fromFixture": "box fixture",
+          "texture": "test/box",
+          "destroyerConfig": {
+            "crackLengthMin": 50,
+            "crackLengthMax": 60,
+            "minTriArea": 1,
+            "forkRaysMin": 2,
+            "forkRaysMax": 2,
+            "forkAngleRange": 80,
+            "forkAngleRestrictRangeFraction": 0.1,
+          }
+        },
+        "destroy on event": { "event": "destructionEnd" },
+      },
+      "properties": {
+        "position": ["60", "100"],
+        "rotation": ["45"],
+      }
+    }
+  ]
+}

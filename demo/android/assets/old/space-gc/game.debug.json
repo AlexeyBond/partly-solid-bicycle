@@ -1,0 +1,11 @@
+{
+  "entities": [
+    {
+      "components": {
+        "physics debugger": {
+          "camera": "mainCamera",
+        }
+      }
+    },
+  ]
+}
