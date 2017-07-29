@@ -8,11 +8,15 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.github.alexeybond.partly_solid_bicycle.game.Component;
 import com.github.alexeybond.partly_solid_bicycle.game.Entity;
+import com.github.alexeybond.partly_solid_bicycle.game.declarative.EntityDeclaration;
+import com.github.alexeybond.partly_solid_bicycle.game.declarative.GameDeclaration;
+import com.github.alexeybond.partly_solid_bicycle.game.declarative.visitor.impl.ApplyEntityDeclarationVisitor;
 import com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.CollisionData;
 import com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.helpers.BodyAnchorsHelper;
 import com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.interfaces.*;
 import com.github.alexeybond.partly_solid_bicycle.game.systems.tagging.TaggingSystem;
 import com.github.alexeybond.partly_solid_bicycle.util.event.props.ObjectProperty;
+import com.github.alexeybond.partly_solid_bicycle.util.event.props.Vec2Property;
 
 /**
  *
@@ -33,6 +37,11 @@ public class RopeComponent implements Component, UpdatablePhysicsComponent {
     private final Vector2 startAnchor;
     private final boolean startLocal;
 
+    private final ApplyEntityDeclarationVisitor entityDeclarationVisitor = new ApplyEntityDeclarationVisitor();
+
+    private final GameDeclaration gameDeclaration;
+    private final EntityDeclaration endSpawnDeclaration;
+
     private final Array<RopeSegmentComponent> segments = new Array<RopeSegmentComponent>();
     private APhysicsSystem physicsSystem;
     private Entity entity;
@@ -40,7 +49,7 @@ public class RopeComponent implements Component, UpdatablePhysicsComponent {
     private boolean alive;
     private ObjectProperty<FloatArray> segmentPositionsProp;
 
-    public RopeComponent(float segmentLength, float width, float segmentAngleLimit, float segmentDensity, float segmentFriction, float segmentRestitution, int segmentCount, String entityTag, Vector2 startAnchor, boolean startLocal) {
+    public RopeComponent(float segmentLength, float width, float segmentAngleLimit, float segmentDensity, float segmentFriction, float segmentRestitution, int segmentCount, String entityTag, Vector2 startAnchor, boolean startLocal, GameDeclaration gameDeclaration, EntityDeclaration endSpawnDeclaration) {
         this.segmentLength = segmentLength;
         this.width = width;
         this.segmentAngleLimit = segmentAngleLimit;
@@ -51,6 +60,8 @@ public class RopeComponent implements Component, UpdatablePhysicsComponent {
         this.entityTag = entityTag;
         this.startAnchor = startAnchor;
         this.startLocal = startLocal;
+        this.gameDeclaration = gameDeclaration;
+        this.endSpawnDeclaration = endSpawnDeclaration;
     }
 
     private float[] prepareShapeVertices() {
@@ -139,6 +150,25 @@ public class RopeComponent implements Component, UpdatablePhysicsComponent {
 
             connectBody = jointDef.bodyB;
             connectPoint.set(0, -segmentLength);
+        }
+
+        if (null != endSpawnDeclaration) {
+            Entity endEntity = entityDeclarationVisitor
+                    .doVisit(endSpawnDeclaration, gameDeclaration, new Entity(entity.game()));
+
+            endEntity.events().event("position", Vec2Property.make())
+                    .set(centerPoint);
+
+            BodyPhysicsComponent bodyComponent = endEntity.components().get("body");
+
+            jointDef.bodyA = connectBody;
+            jointDef.localAnchorA.set(connectPoint);
+            jointDef.bodyB = bodyComponent.body();
+            jointDef.localAnchorB.set(0, 0);
+            jointDef.collideConnected = false;
+            jointDef.enableLimit = false;
+
+            physicsSystem.world().createJoint(jointDef);
         }
 
         segmentPositionsProp = entity.events()
