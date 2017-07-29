@@ -1,4 +1,4 @@
-include 'core'
+include 'engine_core'
 include 'tools'
 
 include '3rd_party:spriter'

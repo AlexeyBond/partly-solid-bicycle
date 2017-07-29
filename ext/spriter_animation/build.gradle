@@ -7,7 +7,7 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 
 dependencies {
     compile project(":3rd_party:spriter")
-    compile project(":core")
+    compile project(":engine_core")
 }
 
 eclipse.project {

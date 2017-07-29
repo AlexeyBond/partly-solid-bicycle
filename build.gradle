@@ -34,7 +34,7 @@ allprojects {
     }
 }
 
-project(":core") {
+project(":engine_core") {
     apply plugin: "java"
 
     dependencies {
