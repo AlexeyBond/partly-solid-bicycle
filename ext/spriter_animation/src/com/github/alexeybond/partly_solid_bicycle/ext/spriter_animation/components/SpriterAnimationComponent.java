@@ -9,6 +9,7 @@ import com.github.alexeybond.partly_solid_bicycle.game.Entity;
 import com.github.alexeybond.partly_solid_bicycle.game.Game;
 import com.github.alexeybond.partly_solid_bicycle.game.declarative.ComponentDeclaration;
 import com.github.alexeybond.partly_solid_bicycle.game.declarative.GameDeclaration;
+import com.github.alexeybond.partly_solid_bicycle.game.declarative.util.DeclUtils;
 import com.github.alexeybond.partly_solid_bicycle.game.systems.render.RenderSystem;
 import com.github.alexeybond.partly_solid_bicycle.game.systems.render.interfaces.RenderComponent;
 import com.github.alexeybond.partly_solid_bicycle.game.systems.timing.TimingSystem;
@@ -36,6 +37,11 @@ public class SpriterAnimationComponent implements RenderComponent {
     private final Player player;
     private final DrawerImpl drawer;
 
+    private final float angle;
+    private final Vector2 offset;
+
+    private final Vector2 tmp = new Vector2();
+
     private final Subscription<ObjectProperty<String>> animationSub
             = new Subscription<ObjectProperty<String>>() {
         @Override
@@ -53,11 +59,13 @@ public class SpriterAnimationComponent implements RenderComponent {
 
     private float lastUpdTime;
 
-    public SpriterAnimationComponent(String passName, LoaderImpl loader, Player player, DrawerImpl drawer) {
+    public SpriterAnimationComponent(String passName, LoaderImpl loader, Player player, DrawerImpl drawer, float angle, Vector2 offset) {
         this.passName = passName;
         this.loader = loader;
         this.player = player;
         this.drawer = drawer;
+        this.angle = angle;
+        this.offset = offset;
     }
 
     @Override
@@ -78,9 +86,9 @@ public class SpriterAnimationComponent implements RenderComponent {
 
         player.update();
 
-        Vector2 pos = positionProp.ref();
+        Vector2 pos = tmp.set(offset).rotate(rotationProp.get()).add(positionProp.ref());
         player.setPosition(pos.x, pos.y);
-        player.setAngle(rotationProp.get());
+        player.setAngle(rotationProp.get() + angle);
         drawer.draw(player, context.state());
     }
 
@@ -130,6 +138,13 @@ public class SpriterAnimationComponent implements RenderComponent {
 
         public float scale = 1;
 
+        public float angle = 0;
+
+        public float x = 0, y = 0;
+        public float[] offset;
+
+        private transient Vector2 offsetV = null;
+
         @Override
         public Component create(GameDeclaration gameDeclaration, Game game) {
             Data data = IoC.resolve("load spriter animation", animation);
@@ -147,7 +162,9 @@ public class SpriterAnimationComponent implements RenderComponent {
             return new SpriterAnimationComponent(
                     pass,
                     loader, player,
-                    drawer
+                    drawer,
+                    angle,
+                    offsetV = DeclUtils.readVector(offsetV, offset, x, y)
             );
         }
     }
