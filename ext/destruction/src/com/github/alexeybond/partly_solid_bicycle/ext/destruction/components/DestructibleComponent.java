@@ -17,6 +17,7 @@ import com.github.alexeybond.partly_solid_bicycle.game.systems.render.components
 import com.github.alexeybond.partly_solid_bicycle.ext.destruction.Destroyer;
 import com.github.alexeybond.partly_solid_bicycle.ext.destruction.DestroyerConfig;
 import com.github.alexeybond.partly_solid_bicycle.ext.destruction.DestructionHelper;
+import com.github.alexeybond.partly_solid_bicycle.game.systems.render.components.decl.PolySpriteComponentDecl;
 import com.github.alexeybond.partly_solid_bicycle.util.event.Event;
 import com.github.alexeybond.partly_solid_bicycle.util.event.EventListener;
 import com.github.alexeybond.partly_solid_bicycle.util.event.props.FloatProperty;
@@ -29,6 +30,13 @@ import java.util.List;
  *
  */
 public class DestructibleComponent implements Component {
+    private final static String[] SPRITE_NAMES = {
+            "sprite",
+            "sprite-0",
+            "sprite-1",
+            "sprite-2",
+    };
+
     private final ApplyEntityDeclarationVisitor entityDeclarationVisitor = new ApplyEntityDeclarationVisitor();
 
     private final String destructionEndEventName;
@@ -38,6 +46,8 @@ public class DestructibleComponent implements Component {
     private final GameDeclaration gameDeclaration;
     private final float partDensity, partRestitution, partFriction;
     private final TextureRegion textureRegion;
+    private final String regionName;
+    private final PolySpriteComponentDecl[] spriteDeclarations;
     private final float[] texturePlacement;
     private final String partPass;
     private final DestroyerConfig destroyerConfig;
@@ -62,7 +72,7 @@ public class DestructibleComponent implements Component {
             GameDeclaration gameDeclaration,
             float partDensity, float partRestitution, float partFriction,
             TextureRegion textureRegion,
-            float[] texturePlacement,
+            String regionName, PolySpriteComponentDecl[] spriteDeclarations, float[] texturePlacement,
             String partPass, DestroyerConfig destroyerConfig,
             Pool<Destroyer> destroyerPool) {
         this.destructionEndEventName = destructionEndEventName;
@@ -74,6 +84,8 @@ public class DestructibleComponent implements Component {
         this.partRestitution = partRestitution;
         this.partFriction = partFriction;
         this.textureRegion = textureRegion;
+        this.regionName = regionName;
+        this.spriteDeclarations = spriteDeclarations;
         this.texturePlacement = texturePlacement;
         this.partPass = partPass;
         this.destroyerConfig = destroyerConfig;
@@ -156,7 +168,7 @@ public class DestructibleComponent implements Component {
     }
 
     protected boolean shouldRunAsync() {
-        return false;
+        return true;
     }
 
     private void processDestructionResult(ArrayList<ArrayList<Vector2>> parts) {
@@ -195,13 +207,20 @@ public class DestructibleComponent implements Component {
                     new FixtureDefFixtureComponent(fd));
         }
 
-        partEntity.components().add("sprite",
-                new PolySpriteComponent(
-                        partPass,
-                        destructionHelper.partRenderVertices(),
-                        destructionHelper.partRenderIndices(),
-                        textureRegion.getTexture()
-                ));
+        float[] vertices = destructionHelper.partRenderVertices();
+        short[] triangles = destructionHelper.partRenderIndices();
+
+        for (int i = 0; i < spriteDeclarations.length; i++) {
+            spriteDeclarations[i].vertices = vertices;
+            spriteDeclarations[i].triangles = triangles;
+            String origTexture = spriteDeclarations[i].texture;
+            if (null == origTexture) {
+                spriteDeclarations[i].texture = regionName;
+            }
+            partEntity.components().add(SPRITE_NAMES[i],
+                    spriteDeclarations[i].create(gameDeclaration, entity.game()));
+            spriteDeclarations[i].texture = origTexture;
+        }
 
         Vec2Property partPosition = partEntity.events()
                 .event("position", Vec2Property.make());

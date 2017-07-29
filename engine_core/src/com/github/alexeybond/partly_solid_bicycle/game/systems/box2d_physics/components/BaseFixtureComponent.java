@@ -3,17 +3,14 @@ package com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.co
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.github.alexeybond.partly_solid_bicycle.game.Entity;
 import com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.CollisionData;
-import com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.interfaces.APhysicsSystem;
-import com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.interfaces.BodyPhysicsComponent;
-import com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.interfaces.DisposablePhysicsComponent;
-import com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.interfaces.FixturePhysicsComponent;
+import com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.interfaces.*;
 import com.github.alexeybond.partly_solid_bicycle.util.event.props.ObjectProperty;
 
 /**
  *
  */
 public abstract class BaseFixtureComponent
-        implements FixturePhysicsComponent, DisposablePhysicsComponent {
+        implements FixturePhysicsComponent, DisposablePhysicsComponent, CreatablePhysicsComponent {
     private BaseBodyComponent bodyComponent;
     private Entity entity;
     private Fixture fixture;
@@ -50,13 +47,18 @@ public abstract class BaseFixtureComponent
         collisionEndEvent = entity.events().event(
                         collisionEndEventName,
                         ObjectProperty.<CollisionData>make());
-        fixture = createFixture();
-        fixture.setUserData(this);
+        entity.game().systems().<APhysicsSystem>get("physics").createComponent(this);
     }
 
     @Override
     public void onDisconnect(Entity entity) {
         entity.game().systems().<APhysicsSystem>get("physics").disposeComponent(this);
+    }
+
+    @Override
+    public void create() {
+        fixture = createFixture();
+        fixture.setUserData(this);
     }
 
     @Override

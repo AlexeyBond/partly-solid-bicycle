@@ -10,6 +10,7 @@ import com.github.alexeybond.partly_solid_bicycle.game.declarative.ComponentDecl
 import com.github.alexeybond.partly_solid_bicycle.game.declarative.GameDeclaration;
 import com.github.alexeybond.partly_solid_bicycle.ext.destruction.Destroyer;
 import com.github.alexeybond.partly_solid_bicycle.ext.destruction.DestroyerConfig;
+import com.github.alexeybond.partly_solid_bicycle.game.systems.render.components.decl.PolySpriteComponentDecl;
 import com.github.alexeybond.partly_solid_bicycle.ioc.IoC;
 
 import java.util.ArrayList;
@@ -63,6 +64,8 @@ public class DestructibleDecl implements ComponentDeclaration {
     public float restitution = 0;
     public float friction = 0.2f;
 
+    public PolySpriteComponentDecl[] sprites = new PolySpriteComponentDecl[] {new PolySpriteComponentDecl()};
+
     @Override
     public Component create(GameDeclaration gameDeclaration, Game game) {
         return new DestructibleComponent(
@@ -73,7 +76,7 @@ public class DestructibleDecl implements ComponentDeclaration {
                 gameDeclaration,
                 density, restitution, friction,
                 IoC.<TextureRegion>resolve("get texture region", texture),
-                texturePlacement,
+                texture, sprites, texturePlacement,
                 partPass,
                 destroyerConfig,
                 IoC.<Pool<Destroyer>>resolve("destroyers pool")
