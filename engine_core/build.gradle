@@ -1,13 +1,15 @@
 apply plugin: "java"
 
+dependencies {
+    compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+}
+
 sourceCompatibility = 1.6
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 sourceSets.main.java.srcDirs = [ "src/" ]
 
-dependencies {
-}
-
 eclipse.project {
-    name = appName + "-core"
+    name = "engine-core"
 }
