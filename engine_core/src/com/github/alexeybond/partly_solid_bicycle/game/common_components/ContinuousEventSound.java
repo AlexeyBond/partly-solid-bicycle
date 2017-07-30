@@ -26,7 +26,7 @@ public class ContinuousEventSound
 
     @Override
     public void onConnect(Entity entity) {
-        event = entity.events().event(eventName);
+        event = entity.events().event(eventName, BooleanProperty.make(false));
         eventSubIdx = event.subscribe(this);
 
         if (event.get()) start();
