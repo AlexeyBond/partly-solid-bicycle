@@ -87,9 +87,6 @@ public abstract class BaseBodyComponent
         collisionEndProp = entity.events()
                 .event("collisionEnd", ObjectProperty.<CollisionData>make());
 
-        positionSubIdx = positionProp.subscribe(this);
-        rotationSubIdx = rotationProp.subscribe(this);
-
         system.createComponent(this);
     }
 
@@ -112,6 +109,11 @@ public abstract class BaseBodyComponent
         if (body.getType() != BodyDef.BodyType.StaticBody) {
             system.registerComponent(this);
         }
+
+        body.setTransform(positionProp.ref(), rotationProp.get() * MathUtils.degreesToRadians);
+
+        positionSubIdx = positionProp.subscribe(this);
+        rotationSubIdx = rotationProp.subscribe(this);
     }
 
     @Override

@@ -168,7 +168,7 @@ public class DestructibleComponent implements Component {
     }
 
     protected boolean shouldRunAsync() {
-        return true;
+        return false;
     }
 
     private void processDestructionResult(ArrayList<ArrayList<Vector2>> parts) {

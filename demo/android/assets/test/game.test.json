@@ -45,12 +45,12 @@
     },
     {
       "components": {
-        "body": { "bodyType": "StaticBody" },
+        "body": { "bodyType": "DynamicBody" },
         "box fixture": { "size": [512, 512] },
         "tag": { "tag": "box" },
         "sprite": { "sprite": "test/box" },
         "destructible": {
-          "centerDestructionEvent": "break",
+          "centerDestructionEvent": "collisionBegin",
           "destructionEndEvent": "destructionEnd",
           "partClass": "box-peace",
           "fromFixture": "box fixture",
