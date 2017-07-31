@@ -14,7 +14,7 @@ import com.github.alexeybond.partly_solid_bicycle.util.interfaces.Creatable;
 import com.github.alexeybond.partly_solid_bicycle.util.number_allocator.IncrementalSequenceNumberAllocator;
 import com.github.alexeybond.partly_solid_bicycle.util.number_allocator.NamedNumberAllocator;
 import com.github.alexeybond.partly_solid_bicycle.util.number_allocator.PowerOfTwoSequenceNumberAllocator;
-import com.github.alexeybond.partly_solid_bicycle.util.updatable.UnorederedUpdateGroup;
+import com.github.alexeybond.partly_solid_bicycle.util.updatable.UnorderedUpdateGroup;
 import com.github.alexeybond.partly_solid_bicycle.util.updatable.UpdateGroup;
 
 /**
@@ -41,7 +41,7 @@ public class PhysicsSystem implements GameSystem, ContactListener, APhysicsSyste
 
     private World world;
     private UpdateGroup<UpdatablePhysicsComponent> components
-            = new UnorederedUpdateGroup<UpdatablePhysicsComponent>(RESERVE_COMPONENTS_CAPACITY);
+            = new UnorderedUpdateGroup<UpdatablePhysicsComponent>(RESERVE_COMPONENTS_CAPACITY);
 
     private boolean isUpdating = false;
     private Queue<Disposable> disposeQueue = new Queue<Disposable>(16);

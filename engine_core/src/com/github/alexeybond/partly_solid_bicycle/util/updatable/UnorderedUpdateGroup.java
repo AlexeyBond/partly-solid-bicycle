@@ -5,10 +5,10 @@ import com.badlogic.gdx.utils.Array;
 /**
  *
  */
-public class UnorederedUpdateGroup<T extends Updatable> implements UpdateGroup<T> {
+public class UnorderedUpdateGroup<T extends Updatable> implements UpdateGroup<T> {
     private final Array<T> items;
 
-    public UnorederedUpdateGroup(int reserve) {
+    public UnorderedUpdateGroup(int reserve) {
         items = new Array<T>(false, reserve);
     }
 
