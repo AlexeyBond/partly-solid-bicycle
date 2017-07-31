@@ -8,10 +8,9 @@ import com.github.alexeybond.partly_solid_bicycle.game.systems.render.interfaces
 import com.github.alexeybond.partly_solid_bicycle.game.systems.tagging.TagGroup;
 import com.github.alexeybond.partly_solid_bicycle.game.systems.tagging.TaggingSystem;
 import com.github.alexeybond.partly_solid_bicycle.util.event.Event;
+import com.github.alexeybond.partly_solid_bicycle.util.event.exception.NoSuchEventException;
 import com.github.alexeybond.partly_solid_bicycle.util.event.helpers.Subscription;
 import com.github.alexeybond.partly_solid_bicycle.util.event.props.ObjectProperty;
-
-import java.util.NoSuchElementException;
 
 /**
  *
@@ -35,7 +34,7 @@ public class SetCameraControllerTarget implements Component {
 
             try {
                 targetState = target.events().<ObjectProperty<CameraState>>event("cameraState").get();
-            } catch (NoSuchElementException e) {
+            } catch (NoSuchEventException e) {
                 Gdx.app.log("DEBUG",
                         "Entity with tag '" + targetTag + "' has no camera target component but used as camera target.",
                         e);

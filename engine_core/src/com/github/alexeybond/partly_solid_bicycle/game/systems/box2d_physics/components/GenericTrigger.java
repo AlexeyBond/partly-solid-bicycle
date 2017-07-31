@@ -5,9 +5,8 @@ import com.github.alexeybond.partly_solid_bicycle.game.Entity;
 import com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.CollisionData;
 import com.github.alexeybond.partly_solid_bicycle.util.event.Event;
 import com.github.alexeybond.partly_solid_bicycle.util.event.EventListener;
+import com.github.alexeybond.partly_solid_bicycle.util.event.exception.NoSuchEventException;
 import com.github.alexeybond.partly_solid_bicycle.util.event.props.ObjectProperty;
-
-import java.util.NoSuchElementException;
 
 /**
  * Component that triggers an event on entity colliding component's owner passing owner entity as
@@ -47,7 +46,7 @@ public class GenericTrigger
 
         try {
             targetEvent = target.events().event(targetEventName);
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchEventException e) {
             return false;
         }
 
