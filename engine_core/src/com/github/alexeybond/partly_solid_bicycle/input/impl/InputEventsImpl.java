@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.alexeybond.partly_solid_bicycle.input.InputEvents;
 import com.github.alexeybond.partly_solid_bicycle.util.event.Events;
+import com.github.alexeybond.partly_solid_bicycle.util.event.DefaultEvents;
 import com.github.alexeybond.partly_solid_bicycle.util.event.props.BooleanProperty;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.Locale;
  *
  */
 public class InputEventsImpl implements InputEvents {
-    private Events inputEvents = new Events();
+    private Events inputEvents = new DefaultEvents();
 
     private final InputMultiplexer inputMultiplexer;
 

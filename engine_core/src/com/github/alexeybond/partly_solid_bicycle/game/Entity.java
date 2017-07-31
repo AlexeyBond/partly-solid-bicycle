@@ -1,6 +1,7 @@
 package com.github.alexeybond.partly_solid_bicycle.game;
 
 import com.github.alexeybond.partly_solid_bicycle.util.event.Events;
+import com.github.alexeybond.partly_solid_bicycle.util.event.DefaultEvents;
 import com.github.alexeybond.partly_solid_bicycle.util.event.EventsOwner;
 import com.github.alexeybond.partly_solid_bicycle.util.parts.AParts;
 import com.github.alexeybond.partly_solid_bicycle.util.parts.Parts;
@@ -13,7 +14,7 @@ public class Entity implements EventsOwner {
 
     private boolean isAlive = true;
 
-    private final Events events = new Events();
+    private final Events events = new DefaultEvents();
     private final Parts<Entity, Component> components = new Parts<Entity, Component>(this);
 
     public Entity(Game game) {

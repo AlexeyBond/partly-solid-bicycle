@@ -8,6 +8,7 @@ import com.github.alexeybond.partly_solid_bicycle.game.Game;
 import com.github.alexeybond.partly_solid_bicycle.game.GameSystem;
 import com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.interfaces.*;
 import com.github.alexeybond.partly_solid_bicycle.util.event.Events;
+import com.github.alexeybond.partly_solid_bicycle.util.event.DefaultEvents;
 import com.github.alexeybond.partly_solid_bicycle.util.event.props.FloatProperty;
 import com.github.alexeybond.partly_solid_bicycle.util.event.props.IntProperty;
 import com.github.alexeybond.partly_solid_bicycle.util.interfaces.Creatable;
@@ -27,7 +28,7 @@ public class PhysicsSystem implements GameSystem, ContactListener, APhysicsSyste
 
     public static int RESERVE_COMPONENTS_CAPACITY = 32;
 
-    private final Events events = new Events();
+    private final Events events = new DefaultEvents();
     private final FloatProperty autoTimeScale
             = events.event("autoTimeScale", FloatProperty.make(1f));
     private final FloatProperty timeAccumulator

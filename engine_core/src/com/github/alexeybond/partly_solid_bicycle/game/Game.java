@@ -3,6 +3,7 @@ package com.github.alexeybond.partly_solid_bicycle.game;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.alexeybond.partly_solid_bicycle.util.event.Events;
+import com.github.alexeybond.partly_solid_bicycle.util.event.DefaultEvents;
 import com.github.alexeybond.partly_solid_bicycle.util.event.EventsOwner;
 import com.github.alexeybond.partly_solid_bicycle.util.parts.AParts;
 import com.github.alexeybond.partly_solid_bicycle.util.parts.IterableParts;
@@ -12,7 +13,7 @@ import com.github.alexeybond.partly_solid_bicycle.util.parts.Parts;
  *
  */
 public class Game implements EventsOwner, Disposable {
-    private final Events events = new Events();
+    private final Events events = new DefaultEvents();
     private final IterableParts<Game, GameSystem> systems
             = new IterableParts<Game, GameSystem>(new Parts<Game, GameSystem>(this));
 

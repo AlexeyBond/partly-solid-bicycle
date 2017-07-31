@@ -1,8 +1,8 @@
 package com.github.alexeybond.partly_solid_bicycle.drawing.animation.impl;
 
 import com.badlogic.gdx.utils.Array;
-import com.github.alexeybond.partly_solid_bicycle.util.event.Event;
 import com.github.alexeybond.partly_solid_bicycle.util.event.Events;
+import com.github.alexeybond.partly_solid_bicycle.util.event.Event;
 
 /**
  *

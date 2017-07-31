@@ -2,17 +2,14 @@ package com.github.alexeybond.partly_solid_bicycle.game.systems.timing;
 
 import com.github.alexeybond.partly_solid_bicycle.game.Game;
 import com.github.alexeybond.partly_solid_bicycle.game.GameSystem;
-import com.github.alexeybond.partly_solid_bicycle.util.event.Event;
-import com.github.alexeybond.partly_solid_bicycle.util.event.EventListener;
-import com.github.alexeybond.partly_solid_bicycle.util.event.Events;
-import com.github.alexeybond.partly_solid_bicycle.util.event.EventsOwner;
+import com.github.alexeybond.partly_solid_bicycle.util.event.*;
 import com.github.alexeybond.partly_solid_bicycle.util.event.props.FloatProperty;
 
 /**
  *
  */
 public class TimingSystem implements GameSystem, EventsOwner {
-    private Events events = new Events();
+    private Events events = new DefaultEvents();
     private FloatProperty timeProp
             = events.event("time", FloatProperty.make(0));
     private FloatProperty deltaTimeProp
