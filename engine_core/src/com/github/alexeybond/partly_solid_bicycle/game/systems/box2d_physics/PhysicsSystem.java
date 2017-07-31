@@ -2,6 +2,7 @@ package com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Queue;
 import com.github.alexeybond.partly_solid_bicycle.game.Game;
 import com.github.alexeybond.partly_solid_bicycle.game.GameSystem;
@@ -9,6 +10,7 @@ import com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.int
 import com.github.alexeybond.partly_solid_bicycle.util.event.Events;
 import com.github.alexeybond.partly_solid_bicycle.util.event.props.FloatProperty;
 import com.github.alexeybond.partly_solid_bicycle.util.event.props.IntProperty;
+import com.github.alexeybond.partly_solid_bicycle.util.interfaces.Creatable;
 import com.github.alexeybond.partly_solid_bicycle.util.number_allocator.IncrementalSequenceNumberAllocator;
 import com.github.alexeybond.partly_solid_bicycle.util.number_allocator.NamedNumberAllocator;
 import com.github.alexeybond.partly_solid_bicycle.util.number_allocator.PowerOfTwoSequenceNumberAllocator;
@@ -42,8 +44,8 @@ public class PhysicsSystem implements GameSystem, ContactListener, APhysicsSyste
             = new UnorederedUpdateGroup<UpdatablePhysicsComponent>(RESERVE_COMPONENTS_CAPACITY);
 
     private boolean isUpdating = false;
-    private Queue<DisposablePhysicsComponent> disposeQueue = new Queue<DisposablePhysicsComponent>(16);
-    private Queue<CreatablePhysicsComponent> createQueue = new Queue<CreatablePhysicsComponent>(16);
+    private Queue<Disposable> disposeQueue = new Queue<Disposable>(16);
+    private Queue<Creatable> createQueue = new Queue<Creatable>(16);
 
     private final NamedNumberAllocator categoryAllocator = new PowerOfTwoSequenceNumberAllocator(Short.MAX_VALUE);
     {categoryAllocator.resolve("default");}
@@ -179,10 +181,8 @@ public class PhysicsSystem implements GameSystem, ContactListener, APhysicsSyste
         components.addItem(component);
     }
 
-    /**
-     * Calls {@link DisposablePhysicsComponent#dispose()} immediately or later if world update is in progress.
-     */
-    public void disposeComponent(DisposablePhysicsComponent component) {
+    @Override
+    public void enqueueDisposable(Disposable component) {
         if (isUpdating) {
             disposeQueue.addLast(component);
         } else {
@@ -190,11 +190,22 @@ public class PhysicsSystem implements GameSystem, ContactListener, APhysicsSyste
         }
     }
 
+    @Override
+    public void disposeComponent(DisposablePhysicsComponent component) {
+        enqueueDisposable(component);
+    }
+
+    @Override
     public void createComponent(CreatablePhysicsComponent component) {
+        enqueueCreatable(component);
+    }
+
+    @Override
+    public void enqueueCreatable(Creatable creatable) {
         if (isUpdating) {
-            createQueue.addLast(component);
+            createQueue.addLast(creatable);
         } else {
-            component.create();
+            creatable.create();
         }
     }
 }

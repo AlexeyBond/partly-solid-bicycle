@@ -5,15 +5,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 import com.github.alexeybond.partly_solid_bicycle.game.Component;
 import com.github.alexeybond.partly_solid_bicycle.game.Entity;
 import com.github.alexeybond.partly_solid_bicycle.game.declarative.EntityDeclaration;
 import com.github.alexeybond.partly_solid_bicycle.game.declarative.GameDeclaration;
 import com.github.alexeybond.partly_solid_bicycle.game.declarative.visitor.impl.ApplyEntityDeclarationVisitor;
+import com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.interfaces.APhysicsSystem;
 import com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.interfaces.FixturePhysicsComponent;
 import com.github.alexeybond.partly_solid_bicycle.game.systems.box2d_physics.components.FixtureDefFixtureComponent;
-import com.github.alexeybond.partly_solid_bicycle.game.systems.render.components.PolySpriteComponent;
 import com.github.alexeybond.partly_solid_bicycle.ext.destruction.Destroyer;
 import com.github.alexeybond.partly_solid_bicycle.ext.destruction.DestroyerConfig;
 import com.github.alexeybond.partly_solid_bicycle.ext.destruction.DestructionHelper;
@@ -22,6 +23,7 @@ import com.github.alexeybond.partly_solid_bicycle.util.event.Event;
 import com.github.alexeybond.partly_solid_bicycle.util.event.EventListener;
 import com.github.alexeybond.partly_solid_bicycle.util.event.props.FloatProperty;
 import com.github.alexeybond.partly_solid_bicycle.util.event.props.Vec2Property;
+import com.github.alexeybond.partly_solid_bicycle.util.interfaces.Creatable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +57,7 @@ public class DestructibleComponent implements Component {
 
     private int lifeNumber = 0;
 
+    private APhysicsSystem physicsSystem;
     private Entity entity;
     private Event centerDestructionStartEvent, destructionEndEvent;
     private int centerDestructionStartEventSubIdx = -1;
@@ -95,6 +98,8 @@ public class DestructibleComponent implements Component {
     @Override
     public void onConnect(Entity entity) {
         this.entity = entity;
+
+        physicsSystem = entity.game().systems().get("physics");
 
         entityPosition = entity.events().event("position", Vec2Property.make());
         entityRotation = entity.events().event("rotation", FloatProperty.make());
@@ -171,23 +176,42 @@ public class DestructibleComponent implements Component {
         return false;
     }
 
+    private class PartsCreatable implements Creatable {
+        private DestructionHelper destructionHelper;
+        private Destroyer destroyer;
+        private ArrayList<ArrayList<Vector2>> parts;
+
+        private PartsCreatable(DestructionHelper destructionHelper, Destroyer destroyer, ArrayList<ArrayList<Vector2>> parts) {
+            this.destructionHelper = destructionHelper;
+            this.destroyer = destroyer;
+            this.parts = parts;
+        }
+
+        @Override
+        public void create() {
+            try {
+                for (int i = 0; i < parts.size(); i++) {
+                    spawnPart(parts.get(i), destructionHelper);
+                }
+            } finally {
+                destructionHelper.dispose();
+                destructionHelper = null;
+            }
+
+            destroyerPool.free(destroyer);
+            destructionInProgress = false;
+            destructionEndEvent.trigger();
+        }
+    }
+
     private void processDestructionResult(ArrayList<ArrayList<Vector2>> parts) {
         DestructionHelper destructionHelper = new DestructionHelper();
 
-        try {
-            destructionHelper.setupTexturePlacement(textureRegion, texturePlacement);
+        destructionHelper.setupTexturePlacement(textureRegion, texturePlacement);
 
-            for (int i = 0; i < parts.size(); i++) {
-                spawnPart(parts.get(i), destructionHelper);
-            }
-        } finally {
-            destructionHelper.dispose();
-        }
+        physicsSystem.enqueueCreatable(new PartsCreatable(destructionHelper, destroyer, parts));
 
-        destroyerPool.free(destroyer);
         destroyer = null;
-        destructionInProgress = false;
-        destructionEndEvent.trigger();
     }
 
     private void spawnPart(ArrayList<Vector2> shape, DestructionHelper destructionHelper) {

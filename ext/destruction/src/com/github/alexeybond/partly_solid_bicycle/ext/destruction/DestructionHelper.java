@@ -7,9 +7,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.FloatArray;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Helper that helps to build physical and visual components from output of destroyer.
@@ -83,7 +83,7 @@ public final class DestructionHelper implements Disposable {
         if (currentVertexIndex == shapeVertices.length) {
             polygonShape.set(shapeVertices);
         } else {
-            polygonShape.set(Arrays.copyOf(shapeVertices, currentVertexIndex));
+            polygonShape.set(new FloatArray(true, shapeVertices, 0, currentVertexIndex).items);
         }
 
         ++fixtureIndex;
