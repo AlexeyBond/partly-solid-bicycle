@@ -11,3 +11,5 @@ include 'demo:desktop'
 include 'demo:android'
 include 'demo:html'
 include 'demo:ios'
+include 'editor'
+
