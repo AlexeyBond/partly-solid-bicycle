@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Logger;
+import com.github.alexeybond.partly_solid_bicycle.application.LoadProgressManager;
+import com.github.alexeybond.partly_solid_bicycle.application.LoadTask;
 import com.github.alexeybond.partly_solid_bicycle.ioc.IoC;
 import com.github.alexeybond.partly_solid_bicycle.ioc.IoCStrategy;
 import com.github.alexeybond.partly_solid_bicycle.ioc.modules.Module;
@@ -46,7 +48,38 @@ public class ResourceManagement implements Module {
 
     private Logger log = new Logger("ResourceManagement", Logger.DEBUG);
 
+    private LoadProgressManager loadProgressManager;
+
     private AssetManager assetManager;
+
+    private LoadTask loadTask = new LoadTask() {
+        @Override
+        public boolean isDone() {
+            return assetManager.getProgress() == 1f;
+        }
+
+        @Override
+        public void run() {
+            assetManager.update();
+        }
+
+        @Override
+        public float getProgress() {
+            return assetManager.getProgress();
+        }
+
+        @Override
+        public float getMaxProgress() {
+            return 1;
+        }
+
+        @Override
+        public String getMessage() {
+            int q = assetManager.getQueuedAssets();
+            int l = assetManager.getLoadedAssets();
+            return "Loading assets: " + l + "/" + (q + l);
+        }
+    };
 
     private <T> IoCStrategy assetLoadStrategy(final Class<T> type, final AssetLoaderParameters<T> params) {
         return new IoCStrategy() {
@@ -98,6 +131,9 @@ public class ResourceManagement implements Module {
 
         IoC.register("asset manager", new Singleton(assetManager));
 
+        loadProgressManager = IoC.resolve("load progress manager");
+        loadProgressManager.addRepeatable(loadTask);
+
         final PreloadListCallback loadCallback = new CompositeListCallback();
         final PreloadListCallback unloadCallback = new CompositeListCallback();
 
@@ -147,6 +183,7 @@ public class ResourceManagement implements Module {
 
     @Override
     public void shutdown() {
+        loadProgressManager.remove(loadTask);
         assetManager.dispose();
     }
 }

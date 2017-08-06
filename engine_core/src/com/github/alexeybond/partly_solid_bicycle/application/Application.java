@@ -2,7 +2,6 @@ package com.github.alexeybond.partly_solid_bicycle.application;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.github.alexeybond.partly_solid_bicycle.drawing.Scene;
 import com.github.alexeybond.partly_solid_bicycle.ioc.IoC;
 import com.github.alexeybond.partly_solid_bicycle.ioc.IoCContext;
@@ -12,19 +11,26 @@ import java.io.PrintStream;
 import java.util.Date;
 
 /**
+ * This class is the basic implementation of LibGDX {@link ApplicationListener} for applications using
+ * Partly Solid Bicycle(C)(R)(TM)(xD).
  *
+ * <p>
+ * Application manages global state ({@link IoC} context) and displayed screens.
+ * </p>
  *
- * <p>There are tow special kinds of screens th application class is aware of:</p>
+ * <p>There are two special kinds of screens the application class is aware of:</p>
  * <ul>
  *     <li>initial screen - the screen that becomes active as the application is created</li>
  *     <li>loading screen - the screen that is shown when some resources that are required
- *     by another screen are being loaded</li>
+ *     by another screen are being loaded. Loading screen is responsible for running load
+ *     progress manager on update.
+ *     </li>
  * </ul>
  */
 public class Application implements ApplicationListener {
     private Modules modules = new Modules();
     private IoCContext context;
-    private AssetManager assetManager;
+    private LoadProgressManager loadProgressManager;
     private Screen currentScreen;
     private boolean isLoading = false;
 
@@ -58,9 +64,9 @@ public class Application implements ApplicationListener {
     }
 
     private void checkLoading() {
-        if (null == assetManager) return;
+        if (null == loadProgressManager) return;
 
-        if (assetManager.getProgress() != 1f) {
+        if (!loadProgressManager.isCompleted()) {
             if (!isLoading) {
                 changeScreen(currentScreen, IoC.<Screen>resolve("loading screen"));
                 isLoading = true;
@@ -72,7 +78,9 @@ public class Application implements ApplicationListener {
 
     private void logCrash(Throwable e) {
         try {
-            PrintStream ps = new PrintStream(Gdx.files.external("crash-" + new Date() + ".log").write(false));
+            String crashLogFileName = "crash-" + new Date() + ".log";
+            crashLogFileName = crashLogFileName.replace(':', '-');
+            PrintStream ps = new PrintStream(Gdx.files.external(crashLogFileName).write(false));
             try {
                 e.printStackTrace(ps);
             } finally {
@@ -91,9 +99,9 @@ public class Application implements ApplicationListener {
         modules = setupModules(modules);
 
         try {
-            assetManager = IoC.resolve("asset manager");
+            loadProgressManager = IoC.resolve("load progress manager");
         } catch (Exception e) {
-            Gdx.app.log("APP,WARN", "Application is running without asset manager.");
+            Gdx.app.log("APP,WARN", "Application is running without load progress manager.");
         }
 
         goToInitial(IoC.<Screen>resolve("initial screen"));

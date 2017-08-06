@@ -1,10 +1,11 @@
 package com.github.alexeybond.partly_solid_bicycle.application.impl.screens;
 
-import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.github.alexeybond.partly_solid_bicycle.application.Layer;
+import com.github.alexeybond.partly_solid_bicycle.application.LoadProgressManager;
 import com.github.alexeybond.partly_solid_bicycle.application.Screen;
 import com.github.alexeybond.partly_solid_bicycle.application.impl.DefaultScreen;
 import com.github.alexeybond.partly_solid_bicycle.drawing.Drawable;
@@ -17,10 +18,10 @@ import com.github.alexeybond.partly_solid_bicycle.util.parts.AParts;
  *
  */
 public class DefaultLoadingScreen extends DefaultScreen {
-    private final AssetManager assetManager;
+    private final LoadProgressManager progressManager;
 
-    public DefaultLoadingScreen(AssetManager assetManager) {
-        this.assetManager = assetManager;
+    public DefaultLoadingScreen(LoadProgressManager progressManager) {
+        this.progressManager = progressManager;
     }
 
     @Override
@@ -62,7 +63,7 @@ public class DefaultLoadingScreen extends DefaultScreen {
                 shapeRenderer = context.state().beginFilled();
                 shapeRenderer.setColor(Color.WHITE);
 
-                shapeRenderer.rect(-100, -100, 200f * assetManager.getProgress(), 200f);
+                shapeRenderer.rect(-100, -100, 200f * progressManager.getProgress(), 200f);
             }
         });
     }
@@ -71,13 +72,21 @@ public class DefaultLoadingScreen extends DefaultScreen {
     public void update(float dt) {
         super.update(dt);
 
-        if (assetManager.update()) {
+        progressManager.runNext();
+
+        if (progressManager.isCompleted()) {
             next(prev());
         }
+
+        message(progressManager.getMessage());
     }
 
     @Override
     protected boolean checkKeepPrevious() {
         return true;
+    }
+
+    protected void message(String message) {
+        Gdx.graphics.setTitle(message);
     }
 }

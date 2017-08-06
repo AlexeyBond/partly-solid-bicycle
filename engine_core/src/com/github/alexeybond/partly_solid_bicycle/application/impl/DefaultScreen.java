@@ -5,6 +5,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.alexeybond.partly_solid_bicycle.application.Layer;
+import com.github.alexeybond.partly_solid_bicycle.application.LoadProgressManager;
+import com.github.alexeybond.partly_solid_bicycle.application.LoadTask;
 import com.github.alexeybond.partly_solid_bicycle.application.Screen;
 import com.github.alexeybond.partly_solid_bicycle.drawing.*;
 import com.github.alexeybond.partly_solid_bicycle.drawing.rt.ScreenTarget;
@@ -36,12 +38,43 @@ public abstract class DefaultScreen implements Screen {
     private Screen next = null;
     private Screen prev = null;
 
-    @Override
-    public void update(float dt) {
+    private final LoadTask createLayersTask = new LoadTask() {
+        @Override
+        public boolean isDone() {
+            return layersCreated;
+        }
+
+        @Override
+        public void run() {
+            checkCreateLayers();
+        }
+
+        @Override
+        public float getProgress() {
+            return layersCreated ? 1 : 0;
+        }
+
+        @Override
+        public float getMaxProgress() {
+            return 1;
+        }
+
+        @Override
+        public String getMessage() {
+            return "Creating screen layers";
+        }
+    };
+
+    private void checkCreateLayers() {
         if (!layersCreated) {
             createLayers(layers);
             layersCreated = true;
         }
+    }
+
+    @Override
+    public void update(float dt) {
+        checkCreateLayers();
 
         Array<Layer> layers = this.layers.startIterations();
 
@@ -77,6 +110,9 @@ public abstract class DefaultScreen implements Screen {
             prev.acquire();
             this.prev = prev;
         }
+
+        LoadProgressManager progressManager = IoC.resolve("load progress manager");
+        createLoadTasks(progressManager);
     }
 
     @Override
@@ -230,6 +266,14 @@ public abstract class DefaultScreen implements Screen {
      */
     protected void createModules(Modules modules) {
 
+    }
+
+    /**
+     * Override to add custom tasks to progress manager.
+     */
+    protected void createLoadTasks(LoadProgressManager progressManager) {
+        if (!layersCreated)
+            progressManager.addOnce(createLayersTask);
     }
 
     /**
