@@ -1,0 +1,3 @@
+rootProject.name = 'partly-solid-bicycle'
+include 'psb-core'
+
