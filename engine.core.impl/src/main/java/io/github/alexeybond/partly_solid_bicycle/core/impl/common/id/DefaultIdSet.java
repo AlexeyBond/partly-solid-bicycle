@@ -23,7 +23,14 @@ public class DefaultIdSet<T> implements IdSet<T> {
 
         private Object getKey0() {
             if (null == key) {
-                key = UUID.randomUUID().toString();
+                Object rKey;
+
+                // will cause infinite loop... sometimes
+                // (joke, laugh here           ^)
+                // (unless you have RAM large enough to hold all possible UUID's)
+                do rKey = randomKey(); while (ids.containsKey(rKey));
+
+                ids.put(key = rKey, this);
             }
 
             return key;
@@ -54,11 +61,17 @@ public class DefaultIdSet<T> implements IdSet<T> {
         }
     }
 
+    // TODO:: Store id be weak reference and poll reference queue sometimes to prevent memory leak
+    // that will happen when many unnamed id's are created and serialized.
     private final Map<Object, DefaultId> ids = new HashMap<Object, DefaultId>();
     private int uHash = 42 - ((42 * 13) / (42 * (12 + 1)));
 
     private int nextUHash() {
         return uHash = (uHash * uHash) >> 2;
+    }
+
+    private Object randomKey() {
+        return UUID.randomUUID().toString();
     }
 
     @NotNull
