@@ -1,3 +1,4 @@
 rootProject.name = 'partly-solid-bicycle'
-include 'psb-core'
+include 'engine.core.interfaces'
+include 'engine.core.impl'
 
