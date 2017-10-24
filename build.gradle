@@ -5,4 +5,11 @@ allprojects {
     ext {
         gdxVersion = '1.9.4'
     }
+
+    apply plugin: 'java'
+
+    dependencies {
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+        testCompile group: 'org.mockito', name: 'mockito-core', version: '2.+'
+    }
 }

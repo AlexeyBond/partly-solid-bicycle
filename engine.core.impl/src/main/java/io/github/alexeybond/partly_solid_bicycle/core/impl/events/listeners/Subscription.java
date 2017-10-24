@@ -1,8 +1,8 @@
-package io.github.alexeybond.partly_solid_bicycle.core.interfaces.events.listeners;
+package io.github.alexeybond.partly_solid_bicycle.core.impl.events.listeners;
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.events.EventListener;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.events.EventSource;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.events.sources.NullEventSource;
+import io.github.alexeybond.partly_solid_bicycle.core.impl.events.sources.NullEventSource;
 
 /**
  * Helper class managing subscription to single event.
@@ -32,7 +32,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.events.sources.
  * @param <T> event source type
  */
 public abstract class Subscription<T extends EventSource> implements EventListener<T> {
-    private EventSource source = NullEventSource.INSTANCE;
+    private EventSource<T> source = NullEventSource.get();
     private int subId = -1;
 
     /**
@@ -40,7 +40,7 @@ public abstract class Subscription<T extends EventSource> implements EventListen
      *
      * @param src the event source
      */
-    public void subscribe(T src) {
+    public void subscribe(EventSource<T> src) {
         subId = source.unsubscribe(subId, this);
         subId = src.subscribe(this);
         source = src;
@@ -51,6 +51,6 @@ public abstract class Subscription<T extends EventSource> implements EventListen
      */
     public void clear() {
         subId = source.unsubscribe(subId, this);
-        source = NullEventSource.INSTANCE;
+        source = NullEventSource.get();
     }
 }
