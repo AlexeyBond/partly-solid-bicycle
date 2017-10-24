@@ -15,22 +15,28 @@ public interface NotifiedScopeMember<TMember, TScope extends Scope<TMember>> {
      *
      * @param scope the scope
      * @param id    identifier of this object in scope
+     * @throws Exception if any error occurs
      */
-    void onJoin(@NotNull TScope scope, @NotNull Id<TMember> id);
+    void onJoin(@NotNull TScope scope, @NotNull Id<TMember> id)
+        throws Exception;
 
     /**
      * Called when this object is removed from scope.
      *
      * @param scope the scope
      * @param id    identifier of this object in scope
+     * @throws Exception if any error occurs
      */
-    void onLeave(@NotNull TScope scope, @NotNull Id<TMember> id);
+    void onLeave(@NotNull TScope scope, @NotNull Id<TMember> id)
+        throws Exception;
 
     /**
      * Called instead of {@link #onLeave(Scope, Id)} when the root scope is being destroyed.
      *
      * @param scope the scope
      * @param id    identifier of this object in scope
+     * @throws Exception if any error occurs
      */
-    void onDispose(@NotNull TScope scope, @NotNull Id<TMember> id);
+    void onDispose(@NotNull TScope scope, @NotNull Id<TMember> id)
+        throws Exception;
 }

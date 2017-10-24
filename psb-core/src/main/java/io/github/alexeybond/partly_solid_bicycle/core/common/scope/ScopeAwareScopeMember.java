@@ -10,6 +10,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ScopeAwareScopeMember<TMember, TScope extends Scope<TMember>>
         extends NotifiedScopeMember<TMember, TScope> {
+    /**
+     * Get the scope this object belongs to.
+     *
+     * @return scope this object belongs to
+     * @throws IllegalStateException if this object does not belong to any scope
+     */
     @NotNull
-    TScope getNativeScope();
+    TScope getNativeScope()
+        throws IllegalStateException;
 }
