@@ -1,9 +1,13 @@
 package io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope;
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.IdSet;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.ScopeMemberFactoryException;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.ScopeMemberNotFoundException;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.UnsupportedScopeOperationException;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.visitor.Visitable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Scope is a hierarchical key-value storage of items (scope members) of some type.
@@ -16,6 +20,12 @@ import org.jetbrains.annotations.NotNull;
  * @param <T> type of scope member
  */
 public interface Scope<T> extends Visitable<ScopeVisitor<T>> {
+    /**
+     * @return {@link IdSet} that provides identifiers for objects within this scope
+     */
+    @NotNull
+    IdSet<T> getIdSet();
+
     /**
      * Get reference to member with given identifier.
      *
@@ -51,4 +61,36 @@ public interface Scope<T> extends Visitable<ScopeVisitor<T>> {
     @NotNull
     <TT extends T> MemberReference<TT> getSuper(@NotNull Id<T> id)
         throws ScopeMemberNotFoundException;
+
+    /**
+     * Remove member with given id. Has no effect if there is no member with given id.
+     *
+     * @param id member id
+     * @throws UnsupportedScopeOperationException if this scope may contain items and does not support
+     *                                            remove operation
+     */
+    void removeId(@NotNull Id<T> id)
+            throws UnsupportedScopeOperationException;
+
+    /**
+     * Create new member with given id using given factory or return reference to an exist own member with
+     * given identifier if any.
+     *
+     * <p>
+     *  Member may be created lazily on first request to reference or immediately on {@code put} call depending
+     *  on implementation and state of the scope.
+     * </p>
+     *
+     * @param id      member id
+     * @param factory factory that should create new member
+     * @param arg     argument to pass to factory
+     * @param <TT>    member type
+     * @param <A>     factory argument type
+     * @return reference to present or created member with given id
+     * @throws ScopeMemberFactoryException if factory was called immediately and has thrown the exception
+     * @throws UnsupportedScopeOperationException if this scope is read-only
+     */
+    @NotNull
+    <TT extends T, A> MemberReference<TT> put(@NotNull Id<T> id, @NotNull Factory<TT, A> factory, @Nullable A arg)
+            throws ScopeMemberFactoryException, UnsupportedScopeOperationException;
 }

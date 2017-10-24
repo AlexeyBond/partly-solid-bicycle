@@ -8,8 +8,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <TMember> type of this class visible to scope
  * @param <TScope>  type of scope this object may belong to
  */
-public interface ScopeAwareScopeMember<TMember, TScope extends Scope<TMember>>
-        extends NotifiedScopeMember<TMember, TScope> {
+public interface ScopeAwareScopeMember<TMember, TScope extends Scope<TMember>> {
     /**
      * Get the scope this object belongs to.
      *
