@@ -1,6 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope;
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.InvalidScopeMemberReference;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.InvalidScopeMemberReferenceStateException;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -20,8 +21,10 @@ public interface MemberReference<T> {
      * @throws InvalidScopeMemberReference (with cause exception) if reference tried to create a member
      *                                     lazily and member creation failed with exception
      * @throws InvalidScopeMemberReference if the member was removed from scope
+     * @throws InvalidScopeMemberReferenceStateException if the member is temporally unavailable because of
+     *                                                   reference state that may change in future
      */
     @NotNull
     T get()
-            throws InvalidScopeMemberReference;
+            throws InvalidScopeMemberReference, InvalidScopeMemberReferenceStateException;
 }
