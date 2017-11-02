@@ -5,7 +5,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.Me
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.InvalidScopeMemberReference;
 import org.jetbrains.annotations.NotNull;
 
-class LazyMemberReference<T> implements MemberReference<T> {
+public class LazyMemberReference<T> implements MemberReference<T> {
     LazyMemberReference(Factory<? extends T, ?> factory, Object factoryArg) {
         this.factory = factory;
         this.factoryArg = factoryArg;
