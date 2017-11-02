@@ -9,5 +9,5 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.Sc
 public interface InnerWorld extends
         World,
         Component,
-        ScopeAwareScopeMember<Component, Scope<Component>> {
+        ScopeAwareScopeMember<Component, Scope<Component, Entity>> {
 }

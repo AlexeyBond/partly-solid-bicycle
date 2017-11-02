@@ -1,7 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.scope.lazy;
 
 import io.github.alexeybond.partly_solid_bicycle.core.impl.common.id.DefaultIdSet;
-import io.github.alexeybond.partly_solid_bicycle.core.impl.scope.DefaultScope;
+import io.github.alexeybond.partly_solid_bicycle.core.impl.scope.DefaultSelfOwnedScope;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.scope.NullScope;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.Factory;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.MemberReference;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 
 public class LazyReferenceProviderTest {
     @Test public void testLoopDetection() {
-        final Scope<Object> scope = new DefaultScope<Object, LazyMemberReference<Object>>(
+        final Scope<Object, ?> scope = new DefaultSelfOwnedScope<Object, LazyMemberReference<Object>>(
                 new LazyReferenceProvider<Object>(), new NullScope<Object>(new DefaultIdSet<Object>()));
         scope.put(scope.getIdSet().get("A"), new Factory<Object, Object>() {
             @NotNull
@@ -52,7 +52,7 @@ public class LazyReferenceProviderTest {
 
         when(factoryMock.create(same(arg))).thenReturn(obj).thenThrow(RuntimeException.class);
 
-        final Scope<Object> scope = new DefaultScope<Object, LazyMemberReference<Object>>(
+        final Scope<Object, ?> scope = new DefaultSelfOwnedScope<Object, LazyMemberReference<Object>>(
                 new LazyReferenceProvider<Object>(), new NullScope<Object>(new DefaultIdSet<Object>()));
 
         scope.put(scope.getIdSet().get("A"), factoryMock, arg);

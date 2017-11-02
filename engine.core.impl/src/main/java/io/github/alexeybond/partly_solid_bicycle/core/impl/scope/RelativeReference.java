@@ -34,7 +34,7 @@ public class RelativeReference<T> implements MemberReference<T> {
     }
 
     @NotNull
-    private <X> X walkInto(@NotNull Scope<X> scope, @NotNull String id, int step) {
+    private <X> X walkInto(@NotNull Scope<X, ?> scope, @NotNull String id, int step) {
         try {
             return scope.get(scope.getIdSet().get(id)).get();
         } catch (Exception e) {

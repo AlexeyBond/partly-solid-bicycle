@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
  * @param <TMember> type of this class visible to scope
  * @param <TScope>  type of scope this object may belong to
  */
-public interface ForwardAwareScopeMember<TMember, TScope extends Scope<TMember>> {
+public interface ForwardAwareScopeMember<TMember, TScope extends Scope<TMember, ?>> {
     /**
      * Called when a member gets first time accessed from child scope of a scope it is accessible from.
      *

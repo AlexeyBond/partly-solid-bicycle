@@ -19,12 +19,19 @@ import org.jetbrains.annotations.Nullable;
  *
  * @param <T> type of scope member
  */
-public interface Scope<T> extends Visitable<ScopeVisitor<T>> {
+public interface Scope<T, TOwner extends ScopeOwner<Scope<T, TOwner>>>
+        extends Visitable<ScopeVisitor<T, Scope<T, TOwner>>> {
     /**
      * @return {@link IdSet} that provides identifiers for objects within this scope
      */
     @NotNull
     IdSet<T> getIdSet();
+
+    /**
+     * @return {@link ScopeOwner owner} this scope belongs to
+     */
+    @NotNull
+    TOwner getOwner();
 
     /**
      * Get reference to member with given identifier.

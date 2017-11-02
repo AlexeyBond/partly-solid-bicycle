@@ -9,8 +9,11 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.ex
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DefaultScope<T, TRef extends MemberReference<T>>
-        implements Scope<T> {
+public abstract class DefaultScope<
+    T,
+    TRef extends MemberReference<T>,
+    TOwner extends ScopeOwner<Scope<T, TOwner>>>
+        implements Scope<T, TOwner> {
     @NotNull
     private final ReferenceProvider<T, TRef> referenceProvider;
 
@@ -18,14 +21,14 @@ public class DefaultScope<T, TRef extends MemberReference<T>>
     private final IdentityMap<Id<T>, TRef> map;
 
     @NotNull
-    private final Scope<T> superScope;
+    private final Scope<T, ?> superScope;
 
     @NotNull
     private final IdSet<T> idSet;
 
     public DefaultScope(
             @NotNull ReferenceProvider<T, TRef> referenceProvider,
-            @NotNull Scope<T> superScope) {
+            @NotNull Scope<T, ?> superScope) {
         this.referenceProvider = referenceProvider;
         this.superScope = superScope;
         this.idSet = superScope.getIdSet();
@@ -69,6 +72,10 @@ public class DefaultScope<T, TRef extends MemberReference<T>>
 
     @NotNull
     @Override
+    public abstract TOwner getOwner();
+
+    @NotNull
+    @Override
     public final <TT extends T> MemberReference<TT> get(@NotNull Id<T> id)
             throws ScopeMemberNotFoundException {
         try {
@@ -96,7 +103,7 @@ public class DefaultScope<T, TRef extends MemberReference<T>>
     }
 
     @Override
-    public void accept(@NotNull ScopeVisitor<T> visitor) {
+    public void accept(@NotNull ScopeVisitor<T, Scope<T, TOwner>> visitor) {
         for (IdentityMap.Entry<Id<T>, TRef> entry : map) {
             visitor.visitMember(entry.key, entry.value.get());
         }

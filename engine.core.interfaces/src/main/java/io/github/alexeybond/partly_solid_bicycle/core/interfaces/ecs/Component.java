@@ -6,5 +6,5 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.Sc
 
 public interface Component
         extends NotifiedScopeMember<Component, Entity>,
-                ForwardAwareScopeMember<Component, Scope<Component>> {
+                ForwardAwareScopeMember<Component, Scope<Component, Entity>> {
 }

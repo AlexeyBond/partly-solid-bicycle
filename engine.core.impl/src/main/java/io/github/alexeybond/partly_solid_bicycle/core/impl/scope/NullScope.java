@@ -2,17 +2,20 @@ package io.github.alexeybond.partly_solid_bicycle.core.impl.scope;
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.IdSet;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.Factory;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.MemberReference;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.Scope;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.ScopeVisitor;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.*;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.ScopeMemberFactoryException;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.ScopeMemberNotFoundException;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.UnsupportedScopeOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class NullScope<T> implements Scope<T> {
+/**
+ * Self-owned scope with no members.
+ *
+ * @param <T>
+ */
+public class NullScope<T>
+        implements Scope<T, NullScope<T>>, ScopeOwner<Scope<T, NullScope<T>>> {
     @NotNull
     private final IdSet<T> idSet;
 
@@ -30,6 +33,17 @@ public class NullScope<T> implements Scope<T> {
     @Override
     public IdSet<T> getIdSet() {
         return idSet;
+    }
+
+    @NotNull
+    @Override
+    public NullScope<T> getOwner() {
+        return this;
+    }
+
+    @Override
+    public NullScope<T> getScope() {
+        return this;
     }
 
     @NotNull
@@ -70,7 +84,7 @@ public class NullScope<T> implements Scope<T> {
     }
 
     @Override
-    public void accept(@NotNull ScopeVisitor<T> visitor) {
+    public void accept(@NotNull ScopeVisitor<T, Scope<T, NullScope<T>>> visitor) {
         // no members
     }
 }

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <TMember> type of this class visible to scope
  * @param <TOwner>  type of owner of scope this object may belong to
  */
-public interface NotifiedScopeMember<TMember, TOwner extends ScopeOwner<? extends Scope<TMember>>> {
+public interface NotifiedScopeMember<TMember, TOwner extends ScopeOwner<? extends Scope<TMember, ?>>> {
     /**
      * Called when this object is added to scope.
      *
