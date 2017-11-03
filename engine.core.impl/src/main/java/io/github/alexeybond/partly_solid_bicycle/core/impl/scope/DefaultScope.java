@@ -105,7 +105,9 @@ public abstract class DefaultScope<
     @Override
     public void accept(@NotNull ScopeVisitor<T, Scope<T, TOwner>> visitor) {
         for (IdentityMap.Entry<Id<T>, TRef> entry : map) {
-            visitor.visitMember(entry.key, entry.value.get());
+            // IdentityMap's iterator does not throw ConcurrentModificationException when
+            // entry is deleted during iteration.
+            visitor.visitMember(entry.key, entry.value, this);
         }
     }
 
@@ -142,5 +144,9 @@ public abstract class DefaultScope<
         TRef ref = map.remove(id);
 
         referenceProvider.removeReference(ref);
+    }
+
+    protected void clear() {
+        // TODO:: Implement
     }
 }

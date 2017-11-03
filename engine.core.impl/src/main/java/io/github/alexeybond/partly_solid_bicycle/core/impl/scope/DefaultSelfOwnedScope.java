@@ -14,6 +14,7 @@ public class DefaultSelfOwnedScope<T, TRef extends MemberReference<T>>
         super(referenceProvider, superScope);
     }
 
+    @NotNull
     @Override
     public Scope<T, DefaultSelfOwnedScope<T, TRef>> getScope() {
         return this;

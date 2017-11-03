@@ -33,6 +33,12 @@ public interface NotifiedScopeMember<TMember, TOwner extends ScopeOwner<? extend
     /**
      * Called instead of {@link #onLeave(TOwner, Id)} when the root scope is being destroyed.
      *
+     * <p>
+     *  Unlike {@link #onLeave(ScopeOwner, Id)} this method may leave this object and it's children
+     *  of any kind in inconsistent state. The only thing this method <em>must</em> do is to release
+     *  any external resources belonging to this object or it's children of any kind.
+     * </p>
+     *
      * @param owner owner of the scope
      * @param id    identifier of this object in scope
      * @throws Exception if any error occurs

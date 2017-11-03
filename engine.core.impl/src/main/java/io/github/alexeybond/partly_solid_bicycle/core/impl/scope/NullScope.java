@@ -41,6 +41,7 @@ public class NullScope<T>
         return this;
     }
 
+    @NotNull
     @Override
     public NullScope<T> getScope() {
         return this;
