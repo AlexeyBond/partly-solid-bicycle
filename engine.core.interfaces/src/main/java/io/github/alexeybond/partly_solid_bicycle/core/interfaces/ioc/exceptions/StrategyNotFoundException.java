@@ -1,9 +1,9 @@
 package io.github.alexeybond.partly_solid_bicycle.core.interfaces.ioc.exceptions;
 
 public class StrategyNotFoundException extends RuntimeException {
-    private final String key;
+    private final Object key;
 
-    public StrategyNotFoundException(String key) {
+    public StrategyNotFoundException(Object key) {
         this.key = key;
     }
 
