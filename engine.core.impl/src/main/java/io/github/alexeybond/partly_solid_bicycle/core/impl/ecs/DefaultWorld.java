@@ -54,8 +54,8 @@ public class DefaultWorld
     @Nullable
     @Override
     public Component forward(
-            @NotNull Scope<Component, Entity> fromScope,
-            @NotNull Scope<Component, Entity> toScope) {
+            @NotNull Entity from,
+            @NotNull Entity to) {
         return this;
     }
 

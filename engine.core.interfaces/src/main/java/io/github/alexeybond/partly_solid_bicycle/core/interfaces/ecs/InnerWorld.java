@@ -4,7 +4,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.Sc
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.ScopeAwareScopeMember;
 
 /**
- * Component of {@link Entity entity} that contains set of another entities and is a native world for those entities.
+ * Component of {@link Entity entity} that also is a world containing other entities.
  */
 public interface InnerWorld extends
         World,

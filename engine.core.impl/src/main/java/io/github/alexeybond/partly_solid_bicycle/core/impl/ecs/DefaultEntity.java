@@ -10,6 +10,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ecs.Component;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ecs.Entity;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ecs.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class DefaultEntity
         extends DefaultScope<Component, LazyMemberReference<Component>, Entity>
@@ -63,5 +64,11 @@ public class DefaultEntity
             throws Exception {
         // TODO:: Notify components
         this.world = null;
+    }
+
+    @Nullable
+    @Override
+    public Entity forward(@NotNull World from, @NotNull World to) {
+        return this;
     }
 }

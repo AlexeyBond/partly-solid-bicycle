@@ -89,6 +89,7 @@ public abstract class DefaultScope<
     @Override
     public final <TT extends T> MemberReference<TT> getOwn(@NotNull Id<T> id)
             throws ScopeMemberNotFoundException {
+        // TODO:: This will return forwarded reference if it is present
         @SuppressWarnings({"unchecked"})
         MemberReference<TT> uncheckedReference = (MemberReference<TT>) getOwn0(id);
 
