@@ -1,4 +1,5 @@
 rootProject.name = 'partly-solid-bicycle'
 include 'engine.core.interfaces'
 include 'engine.core.impl'
+include 'engine.game3d.interfaces'
 

@@ -4,6 +4,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.ProcessMana
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ecs.Engine;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ecs.System;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ecs.systems.ProcessManagementSystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class DefaultProcessManagementSystem
         extends DefaultProcessManager
-        implements System {
+        implements ProcessManagementSystem {
     private final ProcessManager master;
     private final String name;
 

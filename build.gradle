@@ -1,14 +1,29 @@
 group 'io.github.alexeybond.partly_solid_bicycle'
 version '0.2.0-SNAPSHOT'
 
-allprojects {
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
     ext {
         gdxVersion = '1.9.4'
     }
 
+    repositories {
+        mavenCentral()
+    }
+
     apply plugin: 'java'
 
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
+
     dependencies {
+        compile "org.jetbrains:annotations:13.0"
+
         testCompile group: 'junit', name: 'junit', version: '4.12'
         testCompile group: 'org.mockito', name: 'mockito-core', version: '2.+'
     }

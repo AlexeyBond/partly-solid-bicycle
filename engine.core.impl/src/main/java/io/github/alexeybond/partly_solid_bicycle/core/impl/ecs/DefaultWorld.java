@@ -6,13 +6,24 @@ import io.github.alexeybond.partly_solid_bicycle.core.impl.scope.lazy.LazyMember
 import io.github.alexeybond.partly_solid_bicycle.core.impl.scope.lazy.LazyReferenceProvider;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.Scope;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ecs.*;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ecs.Component;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ecs.Engine;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ecs.Entity;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ecs.World;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ecs.components.InnerWorldComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Default implementation of {@link World}.
+ *
+ * <p>
+ *  This class also implements {@link InnerWorldComponent} so it always is a component of some entity.
+ * </p>
+ */
 public class DefaultWorld
             extends DefaultScope<Entity, LazyMemberReference<Entity>, World>
-            implements InnerWorld {
+            implements InnerWorldComponent {
     private static final ReferenceProvider<Entity, LazyMemberReference<Entity>> REFERENCE_PROVIDER
             = new LazyReferenceProvider<Entity>();
 
