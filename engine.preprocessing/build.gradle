@@ -1,0 +1,34 @@
+group 'io.github.alexeybond.partly_solid_bicycle'
+version '0.2.0-SNAPSHOT'
+
+buildscript {
+    ext.kotlin_version = '1.1.4-3'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'kotlin'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    compile project(':engine.core.interfaces')
+
+    compile 'com.squareup:javapoet:1.9.0'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.6"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.6"
+}

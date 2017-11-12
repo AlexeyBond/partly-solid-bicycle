@@ -2,4 +2,7 @@ rootProject.name = 'partly-solid-bicycle'
 include 'engine.core.interfaces'
 include 'engine.core.impl'
 include 'engine.game3d.interfaces'
+include 'engine.preprocessing'
+include 'test:annotation_processing'
+findProject(':test:annotation_processing')?.name = 'test.annotation_processing'
 
