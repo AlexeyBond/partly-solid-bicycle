@@ -46,7 +46,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
             companionCreators.forEach { (type, creator) ->
                 val name = companionClassName(componentType, type)
 
-                creator.generateCompanion(type, name, componentType)?.let { source ->
+                creator.generateCompanion(processingEnv, type, name, componentType)?.let { source ->
                     JavaFile.builder(name.packageName(), source).build()
                             .writeTo(processingEnv.filer)
                 }
