@@ -8,6 +8,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companio
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.CompanionTypeCreator
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.FieldLoadGenerator
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.exceptions.NoLoadRequiredException
 import java.util.*
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.ElementKind
@@ -66,12 +67,20 @@ class LoaderCompanionCreator : CompanionTypeCreator {
                     val rvalue = "$PARAM_DATA.getField(\"${field.simpleName}\")"
 
                     for (generator in generators) {
-                        generator.generateRead(processingEnvironment, field, lvalue, rvalue)?.let { code ->
-                            // TODO:: Add annotation marking field as non-required (or guess from initializer)
-                            b = b
-                                    .beginControlFlow("")
-                                    .addCode(code)
-                                    .endControlFlow()
+                        try {
+                            generator.generateRead(
+                                    processingEnvironment,
+                                    field.asType(),
+                                    lvalue, rvalue)
+                                    ?.let { code ->
+                                        // TODO:: Add annotation marking field as non-required (or guess from initializer)
+                                        b = b
+                                                .beginControlFlow("")
+                                                .addCode(code)
+                                                .endControlFlow()
+                                        return@forEach
+                                    }
+                        } catch (e: NoLoadRequiredException) {
                             return@forEach
                         }
                     }
