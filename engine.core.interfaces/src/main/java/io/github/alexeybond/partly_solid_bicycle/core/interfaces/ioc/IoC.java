@@ -8,30 +8,27 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Service locator.
  */
-public enum IoC implements IoCContainer {
-    IoC;
-
-    private IoCContainerHolder containerHolder;
+public enum IoC {
+    ;
+    private static IoCContainerHolder containerHolder;
 
     @SuppressWarnings({"unchecked"})
-    public <T> T resolve(@NotNull Object key, Object... args)
+    public static <T> T resolve(@NotNull Object key, Object... args)
             throws StrategyException, StrategyNotFoundException {
         return (T) resolveStrategy(key).resolve(args);
     }
 
-    @Override
     @NotNull
-    public IoCStrategy resolveStrategy(@NotNull Object key)
+    public static IoCStrategy resolveStrategy(@NotNull Object key)
             throws StrategyNotFoundException {
         return containerHolder.get().resolveStrategy(key);
     }
 
-    @Override
-    public void register(@NotNull Object key, IoCStrategy strategy) {
+    public static void register(@NotNull Object key, IoCStrategy strategy) {
         containerHolder.get().register(key, strategy);
     }
 
-    public void use(@NotNull IoCContainerHolder holder) {
+    public static void use(@NotNull IoCContainerHolder holder) {
         if (null != containerHolder) {
             throw new IllegalStateException("Container holder already initialized.");
         }
@@ -39,7 +36,7 @@ public enum IoC implements IoCContainer {
         containerHolder = holder;
     }
 
-    public void use(@Nullable IoCContainer container) {
+    public static void use(@Nullable IoCContainer container) {
         containerHolder.set(container);
     }
 }
