@@ -1,0 +1,47 @@
+group 'io.github.alexeybond.partly_solid_bicycle'
+version '0.2.0-SNAPSHOT'
+
+buildscript {
+    ext.kotlin_version = '1.1.4-3'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+task run(dependsOn: classes, type: JavaExec) {
+    main = "io.github.alexeybond.partly_solid_bicycle.test.simple_desktop_application.SimpleAppKt"
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    workingDir = project.projectDir.toPath().resolve("workdir").toFile()
+}
+
+dependencies {
+    compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    compile project(':engine.core.impl')
+}
