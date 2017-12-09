@@ -1,8 +1,10 @@
 package io.github.alexeybond.partly_solid_bicycle.game2d.render.batching;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface BatchingMode<T> {
     /**
      * @throws ClassCastException if state type does not match the expected one
      */
-    T begin(BatchingState state);
+    T begin(@NotNull BatchingState state);
 }

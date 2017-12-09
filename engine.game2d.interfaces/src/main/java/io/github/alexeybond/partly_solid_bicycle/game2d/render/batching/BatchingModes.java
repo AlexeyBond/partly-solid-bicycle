@@ -2,12 +2,14 @@ package io.github.alexeybond.partly_solid_bicycle.game2d.render.batching;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import org.jetbrains.annotations.NotNull;
 
 public enum BatchingModes {
     ;
     public static final BatchingMode<Batch> SPRITES = new BatchingMode<Batch>() {
         @Override
-        public Batch begin(BatchingState state) {
+        @NotNull
+        public Batch begin(@NotNull BatchingState state) {
             BatchingStateWithSpriteBatch s = (BatchingStateWithSpriteBatch) state;
 
             try {
@@ -20,7 +22,8 @@ public enum BatchingModes {
 
     public static final BatchingMode<ShapeRenderer> LINES = new BatchingMode<ShapeRenderer>() {
         @Override
-        public ShapeRenderer begin(BatchingState state) {
+        @NotNull
+        public ShapeRenderer begin(@NotNull BatchingState state) {
             BatchingStateWithShapeRenderer s = (BatchingStateWithShapeRenderer) state;
 
             try {
@@ -33,7 +36,8 @@ public enum BatchingModes {
 
     public static final BatchingMode<ShapeRenderer> FILLED = new BatchingMode<ShapeRenderer>() {
         @Override
-        public ShapeRenderer begin(BatchingState state) {
+        @NotNull
+        public ShapeRenderer begin(@NotNull BatchingState state) {
             BatchingStateWithShapeRenderer s = (BatchingStateWithShapeRenderer) state;
 
             try {
@@ -46,7 +50,8 @@ public enum BatchingModes {
 
     public static final BatchingMode<ShapeRenderer> POINTS = new BatchingMode<ShapeRenderer>() {
         @Override
-        public ShapeRenderer begin(BatchingState state) {
+        @NotNull
+        public ShapeRenderer begin(@NotNull BatchingState state) {
             BatchingStateWithShapeRenderer s = (BatchingStateWithShapeRenderer) state;
 
             try {
@@ -59,7 +64,7 @@ public enum BatchingModes {
 
     public static final BatchingMode<Void> NONE = new BatchingMode<Void>() {
         @Override
-        public Void begin(BatchingState state) {
+        public Void begin(@NotNull BatchingState state) {
             state.end();
             return null;
         }

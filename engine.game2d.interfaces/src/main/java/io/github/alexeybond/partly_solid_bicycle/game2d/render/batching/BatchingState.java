@@ -1,6 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.game2d.render.batching;
 
 import com.badlogic.gdx.math.Matrix4;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Component managing geometry batching mechanisms.
@@ -26,7 +27,7 @@ public interface BatchingState {
      *     </pre>
      * </p>
      */
-    <T> T begin(BatchingMode<T> mode);
+    <T> T begin(@NotNull BatchingMode<T> mode);
 
     /**
      * Flush all batched geometry and stop geometry batching.
@@ -36,5 +37,5 @@ public interface BatchingState {
     /**
      * Set projection matrix applied to all batched geometry.
      */
-    void setProjection(Matrix4 projectionMatrix);
+    void setProjection(@NotNull Matrix4 projectionMatrix);
 }
