@@ -5,3 +5,5 @@ include 'engine.game3d.interfaces'
 include 'engine.preprocessing'
 include 'test:annotation_processing'
 include 'test:simple_desktop_application'
+include 'engine.game2d.interfaces'
+
