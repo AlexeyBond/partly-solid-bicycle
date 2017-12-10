@@ -1,4 +1,4 @@
-package io.github.alexeybond.partly_solid_bicycle.game2d.render.batching;
+package io.github.alexeybond.partly_solid_bicycle.game2d.interfaces.render.batching;
 
 import com.badlogic.gdx.math.Matrix4;
 import org.jetbrains.annotations.NotNull;

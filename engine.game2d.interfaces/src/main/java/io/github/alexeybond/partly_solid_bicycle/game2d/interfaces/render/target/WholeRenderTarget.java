@@ -1,4 +1,4 @@
-package io.github.alexeybond.partly_solid_bicycle.game2d.render.target;
+package io.github.alexeybond.partly_solid_bicycle.game2d.interfaces.render.target;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +27,7 @@ public interface WholeRenderTarget extends RenderTarget {
 
     /**
      * Does the same as {@link #begin()} but is not guaranteed to setup a viewport.
-     * <p>
+     *
      * <p>
      * This method is assumed to be called by a {@link RenderTarget} decorator that represents
      * a sub-area of this target inside of {@link #begin()} method before viewport setup.

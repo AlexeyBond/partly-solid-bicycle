@@ -1,4 +1,4 @@
-package io.github.alexeybond.partly_solid_bicycle.game2d.render.target;
+package io.github.alexeybond.partly_solid_bicycle.game2d.interfaces.render.target;
 
 import com.badlogic.gdx.utils.Disposable;
 import org.jetbrains.annotations.NotNull;
@@ -62,6 +62,10 @@ public interface RenderTarget extends Disposable {
 
     /**
      * Begin drawing to this target.
+     *
+     * <p>
+     *     This method should setup current output buffer and viewport.
+     * </p>
      */
     void begin();
 

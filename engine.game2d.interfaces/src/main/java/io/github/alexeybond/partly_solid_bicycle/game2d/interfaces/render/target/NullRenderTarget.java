@@ -1,4 +1,4 @@
-package io.github.alexeybond.partly_solid_bicycle.game2d.render.target;
+package io.github.alexeybond.partly_solid_bicycle.game2d.interfaces.render.target;
 
 import org.jetbrains.annotations.NotNull;
 
