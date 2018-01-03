@@ -2,6 +2,7 @@ group 'io.github.alexeybond.partly_solid_bicycle'
 version '0.2.0-SNAPSHOT'
 
 dependencies {
+    compileOnly project(':engine.preprocessing')
     compile project(':engine.core.interfaces')
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
 }
