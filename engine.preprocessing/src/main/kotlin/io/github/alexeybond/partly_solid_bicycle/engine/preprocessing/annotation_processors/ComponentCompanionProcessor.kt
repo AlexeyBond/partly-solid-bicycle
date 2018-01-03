@@ -30,7 +30,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
                 }
 
                 processingEnv.messager.printMessage(Diagnostic.Kind.NOTE,
-                        "Using $creator to create companion classes of type $type; " +
+                        "Using $creator to create companion classes of type '$type'; " +
                                 "FQN is ${creator.javaClass.canonicalName}.")
                 companionCreators[type] = creator
             }

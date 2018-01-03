@@ -1,5 +1,6 @@
 package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.field_processing_generators
 
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.FieldLoadGenerator
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.type.TypeKind
@@ -14,17 +15,19 @@ class DefaultFieldLoadGenerator : FieldLoadGenerator {
         return processingEnvironment.typeUtils.run {
             when {
                 isSameType(targetType, getPrimitiveType(TypeKind.BOOLEAN)) ->
-                    "$lvalueExpr = $rvalueExpr.getBoolean();"
+                    "$lvalueExpr = $rvalueExpr.getBoolean();\n"
                 isSameType(targetType, getPrimitiveType(TypeKind.FLOAT)) ->
-                    "$lvalueExpr = (float) $rvalueExpr.getDouble();"
+                    "$lvalueExpr = (float) $rvalueExpr.getDouble();\n"
                 isSameType(targetType, getPrimitiveType(TypeKind.DOUBLE)) ->
-                    "$lvalueExpr = $rvalueExpr.getDouble();"
+                    "$lvalueExpr = $rvalueExpr.getDouble();\n"
                 isSameType(targetType, getPrimitiveType(TypeKind.INT)) ->
-                    "$lvalueExpr = (int) $rvalueExpr.getLong();"
+                    "$lvalueExpr = (int) $rvalueExpr.getLong();\n"
                 isSameType(targetType, getPrimitiveType(TypeKind.LONG)) ->
-                    "$lvalueExpr = $rvalueExpr.getLong();"
+                    "$lvalueExpr = $rvalueExpr.getLong();\n"
                 targetType.toString().equals(String::class.java.canonicalName) ->
-                    "$lvalueExpr = $rvalueExpr.getString();"
+                    "$lvalueExpr = $rvalueExpr.getString();\n"
+                targetType.toString().equals(InputDataObject::class.java.canonicalName) ->
+                    "$lvalueExpr = $rvalueExpr;\n"
                 else -> null
             }
         }

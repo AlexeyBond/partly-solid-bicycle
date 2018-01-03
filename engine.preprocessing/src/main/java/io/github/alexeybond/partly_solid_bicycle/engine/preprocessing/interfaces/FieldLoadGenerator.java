@@ -21,7 +21,7 @@ public interface FieldLoadGenerator {
      * code:
      * <pre>
      *   this.name = data.getString();
-     *  </pre>
+     * </pre>
      * </p>
      *
      * @param processingEnvironment processing environment

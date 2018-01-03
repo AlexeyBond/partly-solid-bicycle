@@ -6,6 +6,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataO
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions.DuplicateFieldException;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions.InvalidInputDataTypeException;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions.InvalidOutputDataTypeException;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions.UndefinedFieldException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,7 +141,9 @@ abstract class NodeState {
 
         @Override
         DynamicNode getFld(DynamicNode node, String name) {
-            return (DynamicNode) ((ObjectMap) node.mObject).get(name);
+            DynamicNode field = (DynamicNode) ((ObjectMap) node.mObject).get(name);
+            if (null == field) throw new UndefinedFieldException(name);
+            return field;
         }
 
         @Override

@@ -1,11 +1,12 @@
 package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.companion_creators
 
-import com.squareup.javapoet.ClassName
-import com.squareup.javapoet.MethodSpec
-import com.squareup.javapoet.ParameterizedTypeName
-import com.squareup.javapoet.TypeSpec
+import com.squareup.javapoet.*
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.CompanionResolver
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.Loader
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.impl.SingletonCompanionResolver
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions.UndefinedFieldException
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Optional
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.CompanionTypeCreator
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.FieldLoadGenerator
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.exceptions.NoLoadRequiredException
@@ -39,11 +40,23 @@ class LoaderCompanionCreator : CompanionTypeCreator {
 
         loadMethodBuilder = writeBody(processingEnvironment, componentClass, loadMethodBuilder)
 
+        val resolverField = FieldSpec.builder(
+                ParameterizedTypeName.get(ClassName.get(CompanionResolver::class.java),
+                        TypeName.get(componentClass.asType()),
+                        ParameterizedTypeName.get(ClassName.get(Loader::class.java),
+                                TypeName.get(componentClass.asType()))),
+                "RESOLVER")
+                .addModifiers(Modifier.STATIC, Modifier.FINAL, Modifier.PUBLIC)
+                .initializer("new \$T(new \$T())",
+                        SingletonCompanionResolver::class.java, className)
+                .build()
+
         return TypeSpec.classBuilder(className)
                 .addModifiers(Modifier.PUBLIC)
                 .addSuperinterface(ParameterizedTypeName.get(
                         ClassName.get(Loader::class.java), ClassName.get(componentClass)))
                 .addMethod(loadMethodBuilder.build())
+                .addField(resolverField)
                 .build()
     }
 
@@ -63,8 +76,11 @@ class LoaderCompanionCreator : CompanionTypeCreator {
                 .filter { field -> field.modifiers.intersect(STOP_MODIFIERS).isEmpty() }
                 .forEach { field ->
                     // TODO:: Add annotation changing serialized field name
+                    val serializedName = field.simpleName
                     val lvalue = "$PARAM_DST.${field.simpleName}"
-                    val rvalue = "$PARAM_DATA.getField(\"${field.simpleName}\")"
+                    val fieldVar = "__fld"
+                    val fieldExpr = "$PARAM_DATA.getField(\"$serializedName\")"
+                    val rvalue = fieldVar
 
                     for (generator in generators) {
                         try {
@@ -73,11 +89,24 @@ class LoaderCompanionCreator : CompanionTypeCreator {
                                     field.asType(),
                                     lvalue, rvalue)
                                     ?.let { code ->
-                                        // TODO:: Add annotation marking field as non-required (or guess from initializer)
+                                        // TODO:: Add more elegant way to declare optional field later
+                                        val optional = field.getAnnotation(Optional::class.java) != null
                                         b = b
-                                                .beginControlFlow("")
-                                                .addCode(code)
+                                                .beginControlFlow("do")
+                                                .addCode("\$T $fieldVar = null;\n",
+                                                        InputDataObject::class.java)
+                                        if (optional) b = b
+                                                .beginControlFlow("try")
+                                        b = b
+                                                .addCode("$fieldVar = $fieldExpr;\n")
+                                        if (optional) b = b
+                                                .nextControlFlow("catch (\$T ignore)",
+                                                        UndefinedFieldException::class.java)
+                                                .addCode("break;\n")
                                                 .endControlFlow()
+                                        b = b
+                                                .addCode(code)
+                                                .endControlFlow("while(false);\n")
                                         return@forEach
                                     }
                         } catch (e: NoLoadRequiredException) {
