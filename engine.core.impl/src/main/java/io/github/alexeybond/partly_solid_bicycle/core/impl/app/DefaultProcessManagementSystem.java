@@ -10,6 +10,9 @@ import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotation
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Process manager that is a {@link System system} in terms of ECS.
  */
@@ -24,9 +27,39 @@ public class DefaultProcessManagementSystem
 
     public String processName;
 
+    /**
+     * List of process order hints.
+     * <p>
+     * Each nested list represents a sequence of names of processes depending on each other.
+     * For example in this case:
+     * <pre>
+     * "orderHints": [
+     *  ["a", "b", "c"],
+     *  ["b", "z"],
+     *  ["x", "w"],
+     * ]
+     * </pre>
+     * the following process dependencies are configured:
+     * <ul>
+     * <li>"b" depends on "a"</li>
+     * <li>"c" depends on "b"</li>
+     * <li>"z" depends on "b"</li>
+     * <li>"w" depends on "x"</li>
+     * </ul>
+     * </p>
+     */
+    @Optional
+    public List<List<String>> orderHints = Collections.emptyList();
+
     @Override
     public void onJoin(@NotNull Engine owner, @NotNull Id<System> id)
             throws Exception {
+        for (List<String> hint : orderHints) {
+            for (int i = 1; i < hint.size(); i++) {
+                orderHint(hint.get(i - 1), hint.get(i));
+            }
+        }
+
         master = owner.getScope()
                 .<ProcessManagementSystem>get(owner.getScope().getIdSet().get(masterId)).get();
         master.addProcess(processName, this);

@@ -1,9 +1,12 @@
 package io.github.alexeybond.partly_solid_bicycle.test.annotation_processing;
 
 import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.Component1_loader;
+import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.Component2_loader;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.data.dynamic.DynamicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions.UndefinedFieldException;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -54,5 +57,28 @@ public class LoaderCompanionTest {
         assertEquals(42.0f, component.z, Float.MIN_VALUE);
         assertEquals("bar", component.name);
         assertSame(null, component.data);
+    }
+
+    @Test
+    public void doTestNestedLists() {
+        DynamicNode dataObject = new DynamicNode();
+        DynamicNode lst1 = dataObject.addField("multilist");
+        DynamicNode lst2 = lst1.addItem();
+        lst2.addItem().setString("foo");
+        lst2.addItem().setString("bar");
+        lst2 = lst1.addItem();
+        lst2.addItem().setString("baz");
+
+        Component2 component = new Component2();
+
+        Component2_loader.RESOLVER.resolve(component).load(component, dataObject);
+
+        assertEquals(
+                Arrays.asList(
+                        Arrays.asList("foo", "bar"),
+                        Arrays.asList("baz")
+                ),
+                component.multilist
+        );
     }
 }

@@ -11,7 +11,7 @@ class DefaultFieldLoadGenerator : FieldLoadGenerator {
             processingEnvironment: ProcessingEnvironment,
             targetType: TypeMirror,
             lvalueExpr: String,
-            rvalueExpr: String): String? {
+            rvalueExpr: String, rootGenerator: FieldLoadGenerator): String? {
         return processingEnvironment.typeUtils.run {
             when {
                 isSameType(targetType, getPrimitiveType(TypeKind.BOOLEAN)) ->

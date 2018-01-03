@@ -26,6 +26,18 @@ class LoaderCompanionCreator : CompanionTypeCreator {
     private val generators = ServiceLoader
             .load(FieldLoadGenerator::class.java, javaClass.classLoader).toList()
 
+    private val rootGenerator = FieldLoadGenerator { env, targetType, lvalueExpr, rvalueExpr, rootGenerator ->
+        try {
+            for (generator in generators) {
+                val generated = generator.generateRead(env, targetType, lvalueExpr, rvalueExpr, rootGenerator)
+                if (null != generated) return@FieldLoadGenerator generated
+            }
+        } catch (e: NoLoadRequiredException) {
+        }
+
+        return@FieldLoadGenerator null
+    }
+
     override fun generateCompanion(
             processingEnvironment: ProcessingEnvironment,
             companionType: String,
@@ -82,37 +94,31 @@ class LoaderCompanionCreator : CompanionTypeCreator {
                     val fieldExpr = "$PARAM_DATA.getField(\"$serializedName\")"
                     val rvalue = fieldVar
 
-                    for (generator in generators) {
-                        try {
-                            generator.generateRead(
-                                    processingEnvironment,
-                                    field.asType(),
-                                    lvalue, rvalue)
-                                    ?.let { code ->
-                                        // TODO:: Add more elegant way to declare optional field later
-                                        val optional = field.getAnnotation(Optional::class.java) != null
-                                        b = b
-                                                .beginControlFlow("do")
-                                                .addCode("\$T $fieldVar = null;\n",
-                                                        InputDataObject::class.java)
-                                        if (optional) b = b
-                                                .beginControlFlow("try")
-                                        b = b
-                                                .addCode("$fieldVar = $fieldExpr;\n")
-                                        if (optional) b = b
-                                                .nextControlFlow("catch (\$T ignore)",
-                                                        UndefinedFieldException::class.java)
-                                                .addCode("break;\n")
-                                                .endControlFlow()
-                                        b = b
-                                                .addCode(code)
-                                                .endControlFlow("while(false);\n")
-                                        return@forEach
-                                    }
-                        } catch (e: NoLoadRequiredException) {
-                            return@forEach
-                        }
-                    }
+                    rootGenerator.generateRead(
+                            processingEnvironment,
+                            field.asType(),
+                            lvalue, rvalue, rootGenerator)
+                            ?.let { code ->
+                                // TODO:: Add more elegant way to declare optional field later
+                                val optional = field.getAnnotation(Optional::class.java) != null
+                                b = b
+                                        .beginControlFlow("do")
+                                        .addCode("\$T $fieldVar = null;\n",
+                                                InputDataObject::class.java)
+                                if (optional) b = b
+                                        .beginControlFlow("try")
+                                b = b
+                                        .addCode("$fieldVar = $fieldExpr;\n")
+                                if (optional) b = b
+                                        .nextControlFlow("catch (\$T ignore)",
+                                                UndefinedFieldException::class.java)
+                                        .addCode("break;\n")
+                                        .endControlFlow()
+                                b = b
+                                        .addCode(code)
+                                        .endControlFlow("while(false);\n")
+                                return@forEach
+                            }
 
                     processingEnvironment.messager.printMessage(Diagnostic.Kind.ERROR,
                             "Cannot generate load operation for field.", field)

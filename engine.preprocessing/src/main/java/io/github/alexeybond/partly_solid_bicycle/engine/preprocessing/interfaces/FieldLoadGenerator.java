@@ -30,6 +30,7 @@ public interface FieldLoadGenerator {
      *                              variable that should be assigned
      * @param rvalueExpr            text representation of expression that evaluates to a {@link InputDataObject}
      *                              containing value that should be assigned
+     * @param rootGenerator         a generator to use to generate reads of nested elements of the value
      * @return the code that assigns value of {@code rvalueExpr} to {@code lvalueExpr}
      * @throws NoLoadRequiredException if no assignment should be generated for variable of given type
      */
@@ -38,6 +39,7 @@ public interface FieldLoadGenerator {
             @NotNull ProcessingEnvironment processingEnvironment,
             @NotNull TypeMirror targetType,
             @NotNull String lvalueExpr,
-            @NotNull String rvalueExpr)
+            @NotNull String rvalueExpr,
+            @NotNull FieldLoadGenerator rootGenerator)
             throws NoLoadRequiredException;
 }
