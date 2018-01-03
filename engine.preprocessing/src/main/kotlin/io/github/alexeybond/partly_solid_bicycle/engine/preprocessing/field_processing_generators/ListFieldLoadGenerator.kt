@@ -18,6 +18,11 @@ class ListFieldLoadGenerator : FieldLoadGenerator {
             rootGenerator: FieldLoadGenerator): String? {
         val tu = processingEnvironment.typeUtils
         val eu = processingEnvironment.elementUtils
+        if (!tu.isAssignable(
+                tu.erasure(targetType),
+                eu.getTypeElement(java.lang.Iterable::class.java.canonicalName).asType())) {
+            return null
+        }
         if (!tu.isSubtype(
                 eu.getTypeElement(ArrayList::class.java.canonicalName).asType(),
                 tu.erasure(targetType)))
@@ -32,9 +37,9 @@ class ListFieldLoadGenerator : FieldLoadGenerator {
         }
         val elemType = typeArgs[0]
 
-        val rawElemVarName = "_data${x++}"
-        val loadedElemVarName = "_elem${x}"
-        val listVarName = "_list${x}"
+        val rawElemVarName = "_list_data${x++}"
+        val loadedElemVarName = "_list_elem${x}"
+        val listVarName = "_list_result${x}"
 
         val itemLoadStmt = rootGenerator.generateRead(
                 processingEnvironment,
