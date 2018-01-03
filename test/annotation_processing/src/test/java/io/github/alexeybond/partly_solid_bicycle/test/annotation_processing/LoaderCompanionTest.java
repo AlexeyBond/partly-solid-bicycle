@@ -2,14 +2,14 @@ package io.github.alexeybond.partly_solid_bicycle.test.annotation_processing;
 
 import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.Component1_loader;
 import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.Component2_loader;
+import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.Component3_loader;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.data.dynamic.DynamicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions.UndefinedFieldException;
 import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 
 public class LoaderCompanionTest {
     @Test public void doTest() {
@@ -80,5 +80,30 @@ public class LoaderCompanionTest {
                 ),
                 component.multilist
         );
+    }
+
+    @Test
+    public void doTestArrays() {
+        /*{floats: [42,21,10.5], ints:[[[10,20],[100,200]]]}*/
+        DynamicNode dataObject = new DynamicNode();
+        DynamicNode lst = dataObject.addField("floats");
+        lst.addItem().setDouble(42);
+        lst.addItem().setDouble(21);
+        lst.addItem().setDouble(10.5);
+        lst = dataObject.addField("ints");
+        DynamicNode lst1 = lst.addItem();
+        DynamicNode lst2 = lst1.addItem();
+        lst2.addItem().setLong(10);
+        lst2.addItem().setLong(20);
+        lst2 = lst1.addItem();
+        lst2.addItem().setLong(100);
+        lst2.addItem().setLong(200);
+
+        Component3 component = new Component3();
+
+        Component3_loader.RESOLVER.resolve(component).load(component, dataObject);
+
+        assertArrayEquals(new float[]{42, 21, 10.5f}, component.floats, Float.MIN_VALUE);
+        assertArrayEquals(new int[][][]{{{10, 20}, {100, 200}}}, component.ints);
     }
 }

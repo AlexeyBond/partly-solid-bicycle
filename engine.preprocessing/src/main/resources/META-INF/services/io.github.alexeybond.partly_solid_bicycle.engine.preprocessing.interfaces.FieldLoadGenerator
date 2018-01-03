@@ -1,2 +1,3 @@
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.field_processing_generators.DefaultFieldLoadGenerator
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.field_processing_generators.ListFieldLoadGenerator
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.field_processing_generators.ArrayFieldLoadGenerator
