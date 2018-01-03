@@ -41,13 +41,13 @@ public interface Scene extends Drawable, Disposable {
      * @throws IllegalArgumentException when no layer with given identifier exists
      */
     @NotNull
-    Layer getLayer(String id) throws IllegalArgumentException;
+    Layer getLayer(@NotNull String id) throws IllegalArgumentException;
 
     /**
      * Create new {@link Layer layer} or get exist one.
      */
     @NotNull
-    Layer createLayer(String id) throws IllegalStateException;
+    Layer createLayer(@NotNull String id) throws IllegalStateException;
 
     /**
      * Disposes all layers and other associated resources.

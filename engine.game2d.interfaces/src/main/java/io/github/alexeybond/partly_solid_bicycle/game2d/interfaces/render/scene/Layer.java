@@ -14,7 +14,8 @@ public interface Layer extends Drawable, Disposable {
     /**
      * Get or create a {@link SubLayer sub-layer} with given priority and name.
      */
-    <T extends SubLayer> T subLayer(int priority, String id, SubLayerFactory<T> factory);
+    @NotNull
+    <T extends SubLayer> T subLayer(int priority, @NotNull String id, @NotNull SubLayerFactory<T> factory);
 
     /**
      * Disposes all sub-layers.

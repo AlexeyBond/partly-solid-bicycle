@@ -1,6 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.game2d.interfaces.render.scene;
 
 import io.github.alexeybond.partly_solid_bicycle.game2d.interfaces.render.DrawingState;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Object responsible for rendering the whole {@link Scene}.
@@ -22,10 +23,10 @@ public interface SceneRenderer {
      * requiring them every time using {@link Scene#getLayer(String)}.
      * </p>
      */
-    void init(Scene scene);
+    void init(@NotNull Scene scene);
 
     /**
      * Render scene.
      */
-    void render(DrawingState state);
+    void render(@NotNull Scene scene, @NotNull DrawingState state);
 }
