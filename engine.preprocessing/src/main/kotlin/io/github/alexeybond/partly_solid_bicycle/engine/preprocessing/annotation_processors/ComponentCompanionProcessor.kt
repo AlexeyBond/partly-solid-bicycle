@@ -171,6 +171,11 @@ class ComponentCompanionProcessor : AbstractProcessor() {
     }
 
     private fun generateCompanionOwners() {
+        // ****
+        // TODO:: Use IoC context to store companion resolvers.
+        // This will allow context isolation between different applications and application states
+        // ****
+
         val defaultCompanions = companions.remove("default") ?: HashMap()
         components.forEach { componentType ->
             val className = ClassName.get(componentType)
