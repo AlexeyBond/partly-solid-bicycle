@@ -22,36 +22,41 @@ import kotlin.collections.HashMap
 @SupportedAnnotationTypes("*")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 class ComponentCompanionProcessor : AbstractProcessor() {
-    private val companionCreators: HashMap<String, CompanionTypeCreator> = HashMap()
+    // companionCreators[env][type] = creator
+    private val companionCreators: HashMap<String, HashMap<String, CompanionTypeCreator>> = HashMap()
 
-    lateinit var companionAnnotationType: TypeMirror
-    lateinit var componentAnnotationType: TypeMirror
-    lateinit var tu: Types
-    lateinit var eu: Elements
+    private lateinit var companionAnnotationType: TypeMirror
+    private lateinit var componentAnnotationType: TypeMirror
+    private lateinit var tu: Types
+    private lateinit var eu: Elements
 
     // companions[env][component_class][companion_type] = companion_class
-    val companions = HashMap<String, HashMap<TypeName, HashMap<String, TypeName>>>()
+    private val companions = HashMap<String, HashMap<TypeName, HashMap<String, TypeName>>>()
 
-    val components = ArrayList<TypeElement>()
+    private val components = ArrayList<TypeElement>()
 
     override fun init(processingEnv: ProcessingEnvironment?) {
         super.init(processingEnv!!)
 
         ServiceLoader.load(CompanionTypeCreator::class.java, javaClass.classLoader).forEach { creator ->
-            creator.companionTypes.forEach { type ->
-                companionCreators[type]?.let { conflicting ->
-                    processingEnv.messager.printMessage(Diagnostic.Kind.WARNING,
-                            "Component companion creators $conflicting and $creator " +
-                                    "have a conflict for companion type '$type'; " +
-                                    "creator classes are: " +
-                                    "" + "${conflicting.javaClass.canonicalName} and " +
-                                    "" + "${creator.javaClass.canonicalName}.")
-                }
+            creator.companionEnvironments.forEach { env ->
+                val envCreators = companionCreators.computeIfAbsent(env, { HashMap() })
+                creator.companionTypes.forEach { type ->
+                    envCreators[type]?.let { conflicting ->
+                        processingEnv.messager.printMessage(Diagnostic.Kind.WARNING,
+                                "Component companion creators $conflicting and $creator " +
+                                        "have a conflict for companion type '$type'" +
+                                        " in '$env' environment; " +
+                                        "creator classes are: " +
+                                        "" + "${conflicting.javaClass.canonicalName} and " +
+                                        "" + "${creator.javaClass.canonicalName}.")
+                    }
 
-                processingEnv.messager.printMessage(Diagnostic.Kind.NOTE,
-                        "Using $creator to create companion classes of type '$type'; " +
-                                "FQN is ${creator.javaClass.canonicalName}.")
-                companionCreators[type] = creator
+                    processingEnv.messager.printMessage(Diagnostic.Kind.NOTE,
+                            "Using $creator to create companion classes of type '$type'; " +
+                                    "FQN is ${creator.javaClass.canonicalName}.")
+                    envCreators[type] = creator
+                }
             }
         }
 
@@ -71,10 +76,10 @@ class ComponentCompanionProcessor : AbstractProcessor() {
         discoverComponents(roundEnv)
         discoverPredefinedCompanions(roundEnv)
 
-        generateCompanions(roundEnv)
+        generateCompanions()
 //        logCompanions()
 
-        generateCompanionOwners(roundEnv)
+        generateCompanionOwners()
 
         return false
     }
@@ -117,9 +122,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
             val annotation = companionClass.annotationMirrors
                     .find { a -> tu.isSameType(a.annotationType, companionAnnotationType) }!!
 
-            val componentClassMirror = annotation.elementValues
-                    .filterKeys { m -> m.simpleName.contentEquals("component") }
-                    .values.first().value as TypeMirror
+            val componentClassMirror = annotation.getValue(eu, "component").value as TypeMirror
 
             if (0 == eu.getTypeElement(componentClassMirror.toString()).annotationMirrors
                     .count { a -> tu.isSameType(a.annotationType, componentAnnotationType) }) {
@@ -132,29 +135,42 @@ class ComponentCompanionProcessor : AbstractProcessor() {
 
             val componentClassName = ClassName.get(componentClassMirror)
 
-            val companionTypeName = annotation.elementValues
-                    .filterKeys { m -> m.simpleName.contentEquals("companionType") }
-                    .values.first().value as String
+            val companionTypeName = annotation.getValue(eu, "companionType").value as String
 
-            rememberCompanion(listOf("default"), componentClassName, companionTypeName, companionCN)
+            val envs = annotation.getValue(eu, "env").getListValue<String>()
+
+            rememberCompanion(envs, componentClassName, companionTypeName, companionCN)
         }
     }
 
-    private fun generateCompanions(roundEnv: RoundEnvironment) {
+    private fun generateCompanions() {
         components.forEach { componentType ->
-            companionCreators.forEach { (type, creator) ->
-                val name = companionClassName(componentType, type)
+            companionCreators.forEach { env, map ->
+                map.forEach inner@ { type, creator ->
+                    val present = companions[env]
+                            ?.get(ClassName.get(componentType.asType()))
+                            ?.get(type)
 
-                creator.generateCompanion(processingEnv, type, name, componentType)?.let { source ->
-                    JavaFile.builder(name.packageName(), source).build()
-                            .writeTo(processingEnv.filer)
-                    rememberCompanion(listOf("default"), ClassName.get(componentType), type, name)
+                    if (null != present) {
+                        processingEnv.messager.printMessage(Diagnostic.Kind.NOTE,
+                                "Generated companion of type '$type' in '$env' environment is overridden " +
+                                        "by '$present' for '$componentType'.")
+                        return@inner
+                    }
+
+                    val name = companionClassName(componentType, type)
+
+                    creator.generateCompanion(env, processingEnv, type, name, componentType)?.let { source ->
+                        JavaFile.builder(name.packageName(), source).build()
+                                .writeTo(processingEnv.filer)
+                        rememberCompanion(listOf(env), ClassName.get(componentType), type, name)
+                    }
                 }
             }
         }
     }
 
-    private fun generateCompanionOwners(roundEnv: RoundEnvironment) {
+    private fun generateCompanionOwners() {
         val defaultCompanions = companions.remove("default") ?: HashMap()
         components.forEach { componentType ->
             val className = ClassName.get(componentType)

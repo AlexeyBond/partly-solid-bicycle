@@ -8,8 +8,8 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataO
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions.UndefinedFieldException
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotation_processors.COMPANION_RESOLVER_FIELD_NAME
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Optional
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.CompanionTypeCreator
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.FieldLoadGenerator
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.adaptor.CompanionTypeCreatorAdaptor
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.exceptions.NoLoadRequiredException
 import java.util.*
 import javax.annotation.processing.ProcessingEnvironment
@@ -19,7 +19,7 @@ import javax.lang.model.element.TypeElement
 import javax.lang.model.element.VariableElement
 import javax.tools.Diagnostic
 
-class LoaderCompanionCreator : CompanionTypeCreator {
+class LoaderCompanionCreator : CompanionTypeCreatorAdaptor() {
     private val STOP_MODIFIERS = setOf(Modifier.PRIVATE, Modifier.TRANSIENT, Modifier.FINAL, Modifier.STATIC)
     private val PARAM_DST = "dst"
     private val PARAM_DATA = "data"
@@ -40,10 +40,10 @@ class LoaderCompanionCreator : CompanionTypeCreator {
     }
 
     override fun generateCompanion(
+            environment: String,
             processingEnvironment: ProcessingEnvironment,
             companionType: String,
-            className: ClassName,
-            componentClass: TypeElement
+            className: ClassName, componentClass: TypeElement
     ): TypeSpec {
         var loadMethodBuilder = MethodSpec.methodBuilder("load")
                 .addModifiers(Modifier.PUBLIC)

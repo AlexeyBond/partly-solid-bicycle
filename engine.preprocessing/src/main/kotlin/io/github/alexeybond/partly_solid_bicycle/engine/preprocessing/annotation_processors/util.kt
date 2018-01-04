@@ -7,7 +7,10 @@ import com.sun.tools.javac.tree.JCTree
 import com.sun.tools.javac.tree.TreeMaker
 import com.sun.tools.javac.util.Names
 import javax.annotation.processing.ProcessingEnvironment
+import javax.lang.model.element.AnnotationMirror
+import javax.lang.model.element.AnnotationValue
 import javax.lang.model.element.TypeElement
+import javax.lang.model.util.Elements
 
 /**
  * Name of static field of companion class containing a companion resolver.
@@ -30,6 +33,16 @@ fun companionOwnerClassName(ccn: ClassName): ClassName {
     return ClassName.get(
             "generated.${ccn.packageName()}",
             "${ccn.simpleNames().joinToString(separator = "$")}$\$_companionOwner")
+}
+
+inline fun AnnotationMirror.getValue(eu: Elements, param: String): AnnotationValue {
+    return eu.getElementValuesWithDefaults(this)
+            .filterKeys { k -> k.simpleName.contentEquals(param) }
+            .values.first()
+}
+
+inline fun <reified T> AnnotationValue.getListValue(): List<T> {
+    return (value as List<*>).map { x -> (x as AnnotationValue).value as T }
 }
 
 fun reExtendClass(
