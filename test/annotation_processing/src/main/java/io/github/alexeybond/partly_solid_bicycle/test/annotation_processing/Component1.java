@@ -4,7 +4,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataO
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Component;
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Optional;
 
-@Component("component-1")
+@Component(name = "component-1", kind = "any")
 public class Component1 {
     private String privateThing;
 

@@ -5,7 +5,7 @@ import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotation
 
 import java.util.List;
 
-@Component({"component-2"})
+@Component(name = "component-2", kind = "any")
 public class Component2 {
     @Optional
     public List<List<String>> multilist;

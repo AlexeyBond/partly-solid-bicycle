@@ -2,7 +2,7 @@ group 'io.github.alexeybond.partly_solid_bicycle'
 version '0.2.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.1.4-3'
+    ext.kotlin_version = '1.2.10'
 
     repositories {
         mavenCentral()
@@ -24,6 +24,8 @@ dependencies {
     compile project(':engine.core.interfaces')
 
     compile 'com.squareup:javapoet:1.9.0'
+
+    compileOnly files(System.getenv("JAVA_HOME") + "/lib/tools.jar")
 }
 
 compileKotlin {

@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Process manager that is a {@link System system} in terms of ECS.
  */
-@Component({"processManager"})
+@Component(name = "processManager", kind = "system")
 public class DefaultProcessManagementSystem
         extends DefaultProcessManager
         implements ProcessManagementSystem {

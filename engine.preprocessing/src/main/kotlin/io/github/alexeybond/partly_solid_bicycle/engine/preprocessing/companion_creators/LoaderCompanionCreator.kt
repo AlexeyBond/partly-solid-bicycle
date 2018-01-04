@@ -6,6 +6,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companio
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.impl.SingletonCompanionResolver
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions.UndefinedFieldException
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotation_processors.COMPANION_RESOLVER_FIELD_NAME
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Optional
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.CompanionTypeCreator
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.FieldLoadGenerator
@@ -57,7 +58,7 @@ class LoaderCompanionCreator : CompanionTypeCreator {
                         TypeName.get(componentClass.asType()),
                         ParameterizedTypeName.get(ClassName.get(Loader::class.java),
                                 TypeName.get(componentClass.asType()))),
-                "RESOLVER")
+                COMPANION_RESOLVER_FIELD_NAME)
                 .addModifiers(Modifier.STATIC, Modifier.FINAL, Modifier.PUBLIC)
                 .initializer("new \$T(new \$T())",
                         SingletonCompanionResolver::class.java, className)
