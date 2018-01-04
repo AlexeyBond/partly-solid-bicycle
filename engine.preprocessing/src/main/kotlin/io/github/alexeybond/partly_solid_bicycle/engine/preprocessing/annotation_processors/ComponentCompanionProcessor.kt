@@ -6,6 +6,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companio
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.CompanionResolver
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Component
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.ComponentCompanion
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Module
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.CompanionTypeCreator
 import java.util.*
 import javax.annotation.processing.*
@@ -25,13 +26,17 @@ class ComponentCompanionProcessor : AbstractProcessor() {
     // companionCreators[env][type] = creator
     private val companionCreators: HashMap<String, HashMap<String, CompanionTypeCreator>> = HashMap()
 
-    private lateinit var companionAnnotationType: TypeMirror
-    private lateinit var componentAnnotationType: TypeMirror
-    private lateinit var tu: Types
-    private lateinit var eu: Elements
-
     // companions[env][component_class][companion_type] = companion_class
     private val companions = HashMap<String, HashMap<TypeName, HashMap<String, TypeName>>>()
+
+    // moduleComponents[module_class] = {module_components}
+    private val moduleComponents = HashMap<TypeName, MutableCollection<TypeName>>()
+
+    // modules that have useAsDefault=true
+    private val defaultModules = ArrayList<TypeName>()
+
+    private lateinit var tu: Types
+    private lateinit var eu: Elements
 
     private val components = ArrayList<TypeElement>()
 
@@ -62,8 +67,6 @@ class ComponentCompanionProcessor : AbstractProcessor() {
 
         tu = processingEnv.typeUtils
         eu = processingEnv.elementUtils
-        companionAnnotationType = eu.getTypeElement(ComponentCompanion::class.java.canonicalName).asType()
-        componentAnnotationType = eu.getTypeElement(Component::class.java.canonicalName).asType()
     }
 
     override fun process(
@@ -73,6 +76,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
         roundEnv!!
         cleanup()
 
+        discoverModules(roundEnv)
         discoverComponents(roundEnv)
         discoverPredefinedCompanions(roundEnv)
 
@@ -81,12 +85,30 @@ class ComponentCompanionProcessor : AbstractProcessor() {
 
         generateCompanionOwners()
 
+        generateModules()
+
         return false
     }
 
     private fun cleanup() {
         components.clear()
         companions.clear()
+        defaultModules.clear()
+        moduleComponents.clear()
+    }
+
+    private fun discoverModules(roundEnv: RoundEnvironment) {
+        roundEnv.getElementsAnnotatedWith(Module::class.java).forEach { moduleElem ->
+            moduleElem as TypeElement
+            val moduleName = ClassName.get(moduleElem)
+            val annotation = moduleElem.getAnnotationMirror(processingEnv, Module::class)!!
+
+            if (annotation.getValue(eu, "useAsDefault").value as Boolean) {
+                defaultModules.add(moduleName)
+            }
+
+            moduleComponents[moduleName] = ArrayList()
+        }
     }
 
     private fun rememberCompanion(
@@ -112,20 +134,17 @@ class ComponentCompanionProcessor : AbstractProcessor() {
     }
 
     private fun discoverPredefinedCompanions(roundEnv: RoundEnvironment) {
-        val tu = processingEnv.typeUtils
-        val eu = processingEnv.elementUtils
-
         roundEnv.getElementsAnnotatedWith(ComponentCompanion::class.java).forEach { companionClass ->
             companionClass as TypeElement
             val companionCN = ClassName.get(companionClass.asType())
 
-            val annotation = companionClass.annotationMirrors
-                    .find { a -> tu.isSameType(a.annotationType, companionAnnotationType) }!!
+            val annotation = companionClass
+                    .getAnnotationMirror(processingEnv, ComponentCompanion::class)!!
 
             val componentClassMirror = annotation.getValue(eu, "component").value as TypeMirror
 
-            if (0 == eu.getTypeElement(componentClassMirror.toString()).annotationMirrors
-                    .count { a -> tu.isSameType(a.annotationType, componentAnnotationType) }) {
+            if (null == eu.getTypeElement(componentClassMirror.toString())
+                    .getAnnotationMirror(processingEnv, Component::class)) {
                 processingEnv.messager.printMessage(Diagnostic.Kind.ERROR,
                         "Companion registered for a class not annotated as a component.\n" +
                                 "Component class is $componentClassMirror;\nCompanion class is $companionClass.",
@@ -233,6 +252,10 @@ class ComponentCompanionProcessor : AbstractProcessor() {
             JavaFile.builder(companionOwnerName.packageName(), typeSpec).build()
                     .writeTo(processingEnv.filer)
         }
+    }
+
+    private fun generateModules() {
+        // TODO:: Implement
     }
 
     private fun logCompanions() {

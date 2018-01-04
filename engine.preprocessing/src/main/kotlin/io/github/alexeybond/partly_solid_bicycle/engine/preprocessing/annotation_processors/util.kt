@@ -9,8 +9,10 @@ import com.sun.tools.javac.util.Names
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.AnnotationValue
+import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 import javax.lang.model.util.Elements
+import kotlin.reflect.KClass
 
 /**
  * Name of static field of companion class containing a companion resolver.
@@ -35,7 +37,15 @@ fun companionOwnerClassName(ccn: ClassName): ClassName {
             "${ccn.simpleNames().joinToString(separator = "$")}$\$_companionOwner")
 }
 
-inline fun AnnotationMirror.getValue(eu: Elements, param: String): AnnotationValue {
+internal fun Element.getAnnotationMirror(
+        pEnv: ProcessingEnvironment,
+        clz: KClass<out Annotation>): AnnotationMirror? {
+    val t = pEnv.elementUtils.getTypeElement(clz.java.canonicalName).asType()
+    return this.annotationMirrors
+            .find { m -> pEnv.typeUtils.isSameType(m.annotationType, t) }
+}
+
+internal fun AnnotationMirror.getValue(eu: Elements, param: String): AnnotationValue {
     return eu.getElementValuesWithDefaults(this)
             .filterKeys { k -> k.simpleName.contentEquals(param) }
             .values.first()
