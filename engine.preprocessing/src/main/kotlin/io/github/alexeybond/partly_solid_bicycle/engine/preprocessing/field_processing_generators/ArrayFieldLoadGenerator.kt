@@ -2,14 +2,13 @@ package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.field_pro
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.FieldLoadGenerator
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.localVarName
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.type.ArrayType
 import javax.lang.model.type.TypeKind
 import javax.lang.model.type.TypeMirror
 
 class ArrayFieldLoadGenerator : FieldLoadGenerator {
-    private var x = 0
-
     override fun generateRead(
             processingEnvironment: ProcessingEnvironment,
             targetType: TypeMirror,
@@ -20,8 +19,8 @@ class ArrayFieldLoadGenerator : FieldLoadGenerator {
 
         val elemType = (targetType as ArrayType).componentType
 
-        val counterVar = "_array_counter${x++}"
-        val listVar = "_array_list$x"
+        val counterVar = localVarName("counter")
+        val listVar = localVarName("list")
 
         val elemAssignment = rootGenerator.generateRead(
                 processingEnvironment, elemType,

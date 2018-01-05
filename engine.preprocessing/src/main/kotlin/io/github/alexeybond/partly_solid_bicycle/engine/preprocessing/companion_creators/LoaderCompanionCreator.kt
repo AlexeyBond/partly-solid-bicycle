@@ -8,19 +8,19 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataO
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions.UndefinedFieldException
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotation_processors.COMPANION_RESOLVER_FIELD_NAME
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Optional
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.getAnnotationMirror
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.FieldLoadGenerator
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.adaptor.CompanionTypeCreatorAdaptor
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.exceptions.NoLoadRequiredException
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.localVarName
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.publicPropertirs
 import java.util.*
 import javax.annotation.processing.ProcessingEnvironment
-import javax.lang.model.element.ElementKind
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
-import javax.lang.model.element.VariableElement
 import javax.tools.Diagnostic
 
 class LoaderCompanionCreator : CompanionTypeCreatorAdaptor() {
-    private val STOP_MODIFIERS = setOf(Modifier.PRIVATE, Modifier.TRANSIENT, Modifier.FINAL, Modifier.STATIC)
     private val PARAM_DST = "dst"
     private val PARAM_DATA = "data"
 
@@ -83,46 +83,70 @@ class LoaderCompanionCreator : CompanionTypeCreatorAdaptor() {
             builder: MethodSpec.Builder
     ): MethodSpec.Builder {
         var b = builder
-        componentClass.enclosedElements
-                .filter { elem -> elem.kind == ElementKind.FIELD }
-                .map { it as VariableElement }
-                .filter { field -> field.modifiers.intersect(STOP_MODIFIERS).isEmpty() }
-                .forEach { field ->
+        componentClass.publicPropertirs(processingEnvironment)
+                .filter { property -> property.isWritable }
+                .forEach { property ->
                     // TODO:: Add annotation changing serialized field name
-                    val serializedName = field.simpleName
-                    val lvalue = "$PARAM_DST.${field.simpleName}"
-                    val fieldVar = "__fld"
+                    val serializedName = property.name
+                    val useSetter = property.hasSetter
+                    val lvalue: String
+                    val fieldVar = localVarName("fld")
                     val fieldExpr = "$PARAM_DATA.getField(\"$serializedName\")"
                     val rvalue = fieldVar
 
-                    rootGenerator.generateRead(
-                            processingEnvironment,
-                            field.asType(),
-                            lvalue, rvalue, rootGenerator)
-                            ?.let { code ->
-                                // TODO:: Add more elegant way to declare optional field later
-                                val optional = field.getAnnotation(Optional::class.java) != null
-                                b = b
-                                        .beginControlFlow("do")
-                                        .addCode("\$T $fieldVar = null;\n",
-                                                InputDataObject::class.java)
-                                if (optional) b = b
-                                        .beginControlFlow("try")
-                                b = b
-                                        .addCode("$fieldVar = $fieldExpr;\n")
-                                if (optional) b = b
-                                        .nextControlFlow("catch (\$T ignore)",
-                                                UndefinedFieldException::class.java)
-                                        .addCode("break;\n")
-                                        .endControlFlow()
-                                b = b
-                                        .addCode(code)
-                                        .endControlFlow("while(false);\n")
-                                return@forEach
-                            }
+                    if (useSetter) {
+                        lvalue = localVarName("read")
+                    } else {
+                        lvalue = "$PARAM_DST.${property.name}"
+                    }
 
-                    processingEnvironment.messager.printMessage(Diagnostic.Kind.ERROR,
-                            "Cannot generate load operation for field.", field)
+                    val readCode = rootGenerator.generateRead(
+                            processingEnvironment,
+                            property.type,
+                            lvalue, rvalue, rootGenerator)
+
+                    if (null == readCode) {
+                        processingEnvironment.messager.printMessage(Diagnostic.Kind.ERROR,
+                                "Cannot generate load operation for property '${property.name}' " +
+                                        "of component $componentClass.",
+                                property.declaringElements[0])
+
+                        return@forEach
+                    }
+
+                    // TODO:: Add more elegant way to declare optional field later
+                    val optional = property
+                            .getAnnotationMirror(
+                                    processingEnvironment, Optional::class) != null
+
+                    b = b.beginControlFlow("do")
+                            .addCode("\$T $fieldVar = null;\n",
+                                    InputDataObject::class.java)
+
+                    if (useSetter) {
+                        b = b.addCode("\$T $lvalue;\n", property.type)
+                    }
+
+                    if (optional) {
+                        b = b.beginControlFlow("try")
+                    }
+
+                    b = b.addCode("$fieldVar = $fieldExpr;\n")
+
+                    if (optional) {
+                        b = b.nextControlFlow("catch (\$T ignore)",
+                                UndefinedFieldException::class.java)
+                                .addCode("break;\n")
+                                .endControlFlow()
+                    }
+
+                    b = b.addCode(readCode)
+
+                    if (useSetter) {
+                        b = b.addCode("$PARAM_DST.${property.setterName}($lvalue);\n")
+                    }
+
+                    b = b.endControlFlow("while(false);\n")
                 }
 
         return b

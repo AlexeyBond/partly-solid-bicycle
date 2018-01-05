@@ -2,14 +2,13 @@ package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.field_pro
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.FieldLoadGenerator
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.localVarName
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.type.DeclaredType
 import javax.lang.model.type.TypeMirror
 import javax.tools.Diagnostic
 
 class ListFieldLoadGenerator : FieldLoadGenerator {
-    private var x = 0
-
     override fun generateRead(
             processingEnvironment: ProcessingEnvironment,
             targetType: TypeMirror,
@@ -37,9 +36,9 @@ class ListFieldLoadGenerator : FieldLoadGenerator {
         }
         val elemType = typeArgs[0]
 
-        val rawElemVarName = "_list_data${x++}"
-        val loadedElemVarName = "_list_elem${x}"
-        val listVarName = "_list_result${x}"
+        val rawElemVarName = localVarName("data")
+        val loadedElemVarName = localVarName("elem")
+        val listVarName = localVarName("result")
 
         val itemLoadStmt = rootGenerator.generateRead(
                 processingEnvironment,

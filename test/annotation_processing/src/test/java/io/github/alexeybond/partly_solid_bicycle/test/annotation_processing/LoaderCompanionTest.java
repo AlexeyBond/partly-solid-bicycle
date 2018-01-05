@@ -1,8 +1,6 @@
 package io.github.alexeybond.partly_solid_bicycle.test.annotation_processing;
 
-import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.Component1_loader;
-import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.Component2_loader;
-import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.Component3_loader;
+import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.*;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.data.dynamic.DynamicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions.UndefinedFieldException;
 import org.junit.Test;
@@ -105,5 +103,37 @@ public class LoaderCompanionTest {
 
         assertArrayEquals(new float[]{42, 21, 10.5f}, component.floats, Float.MIN_VALUE);
         assertArrayEquals(new int[][][]{{{10, 20}, {100, 200}}}, component.ints);
+    }
+
+    @Test
+    public void doTestSuperclassFields() {
+        DynamicNode dataObject = new DynamicNode();
+        dataObject.addField("s1").setString("foo");
+        dataObject.addField("s2").setString("bar");
+        dataObject.addField("s3").setString("baz");
+
+        Component5 component = new Component5();
+
+        Component5_loader.RESOLVER.resolve(component).load(component, dataObject);
+
+        assertEquals("foo", component.s1);
+        assertEquals("bar", component.s2);
+        assertEquals("baz", component.s3);
+    }
+
+    @Test
+    public void doTestAccessorMethods() {
+        DynamicNode dataObject = new DynamicNode();
+        dataObject.addField("content").setString("1234");
+
+        Component6 component = new Component6();
+
+        String fieldInit = component.content;
+
+        Component6_loader.RESOLVER.resolve(component).load(component, dataObject);
+
+        assertEquals("1", component.getA());
+        assertEquals("234", component.getB());
+        assertSame(fieldInit, component.content); // loader MUST NOT change field value if a setter is present!
     }
 }
