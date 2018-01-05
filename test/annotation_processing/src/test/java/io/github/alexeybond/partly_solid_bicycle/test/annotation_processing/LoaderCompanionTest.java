@@ -6,6 +6,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -135,5 +136,19 @@ public class LoaderCompanionTest {
         assertEquals("1", component.getA());
         assertEquals("234", component.getB());
         assertSame(fieldInit, component.content); // loader MUST NOT change field value if a setter is present!
+    }
+
+    @Test
+    public void doTestKotlinComponent() {
+        DynamicNode dataObject = new DynamicNode();
+        dataObject.addField("prop1").setString("hello, kotlin");
+        dataObject.addField("prop2").addItem().setString("hello");
+
+        Component7 component = new Component7();
+
+        Component7_loader.RESOLVER.resolve(component).load(component, dataObject);
+
+        assertEquals("hello, kotlin", component.getProp1());
+        assertEquals(Collections.singletonList("hello"), component.getProp2());
     }
 }

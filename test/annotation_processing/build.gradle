@@ -1,9 +1,35 @@
 group 'io.github.alexeybond.partly_solid_bicycle'
 version '0.2.0-SNAPSHOT'
 
+buildscript {
+    ext.kotlin_version = '1.2.10'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-kapt'
+
 dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compileOnly project(':engine.preprocessing')
+    kapt project(':engine.preprocessing')
     compile project(':engine.core.interfaces')
 
     testCompile project(':engine.core.impl')
 }
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.6"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.6"
+}
+
+sourceSets.main.java.srcDir file("$buildDir/generated/source/kapt/main/")
+sourceSets.test.java.srcDir file("$buildDir/generated/source/kapt/test/")
