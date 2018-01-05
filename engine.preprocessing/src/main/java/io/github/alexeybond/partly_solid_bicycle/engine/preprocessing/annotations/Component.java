@@ -1,6 +1,6 @@
 package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations;
 
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.GeneratedModule;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.Module;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -37,5 +37,5 @@ public @interface Component {
     /**
      * @return modules this component should be registered by or empty array for default module
      */
-    Class<? extends GeneratedModule>[] modules() default {};
+    Class<? extends Module>[] modules() default {};
 }

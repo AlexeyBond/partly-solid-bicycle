@@ -37,12 +37,6 @@ fun companionOwnerClassName(ccn: ClassName): ClassName {
             "${ccn.simpleNames().joinToString(separator = "$")}\$\$_companionOwner")
 }
 
-fun moduleImplClassName(moduleCN: ClassName): ClassName {
-    return ClassName.get(
-            "generated.${moduleCN.packageName()}",
-            "${moduleCN.simpleNames().joinToString(separator = "$")}_impl")
-}
-
 internal fun Element.getAnnotationMirror(
         pEnv: ProcessingEnvironment,
         clz: KClass<out Annotation>): AnnotationMirror? {

@@ -13,6 +13,7 @@ import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
+import javax.lang.model.type.DeclaredType
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
@@ -305,7 +306,12 @@ class ComponentCompanionProcessor : AbstractProcessor() {
                         !ccMap.keys.intersect(allComponents).isEmpty()
                     }).toHashSet()
 
-            val implCN = moduleImplClassName(moduleCN as ClassName)
+            val modElem = eu.getTypeElement(moduleCN.toString())
+
+            val implCN = ClassName.get(
+                    ClassName.get(modElem).packageName(),
+                    (modElem.superclass as DeclaredType).asElement().simpleName.toString()
+            )
 
             var initCodeBuilder = CodeBlock.builder()
 
@@ -392,7 +398,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
             JavaFile.builder(implCN.packageName(), typeSpec).build()
                     .writeTo(processingEnv.filer)
 
-            reExtendClass(processingEnv, eu.getTypeElement(moduleCN.toString()), implCN)
+//            reExtendClass(processingEnv, eu.getTypeElement(moduleCN.toString()), implCN)
         }
     }
 
