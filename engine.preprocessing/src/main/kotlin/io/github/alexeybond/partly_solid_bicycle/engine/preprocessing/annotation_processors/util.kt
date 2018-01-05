@@ -34,7 +34,13 @@ fun companionClassName(componentClass: TypeElement, companionName: String): Clas
 fun companionOwnerClassName(ccn: ClassName): ClassName {
     return ClassName.get(
             "generated.${ccn.packageName()}",
-            "${ccn.simpleNames().joinToString(separator = "$")}$\$_companionOwner")
+            "${ccn.simpleNames().joinToString(separator = "$")}\$\$_companionOwner")
+}
+
+fun moduleImplClassName(moduleCN: ClassName): ClassName {
+    return ClassName.get(
+            "generated.${moduleCN.packageName()}",
+            "${moduleCN.simpleNames().joinToString(separator = "$")}_impl")
 }
 
 internal fun Element.getAnnotationMirror(
@@ -65,7 +71,9 @@ fun reExtendClass(
     val names = Names.instance(context)
 
     val classDecl = trees.getTree(clz) as JCTree.JCClassDecl
-    val selector = treeMaker.Ident(names.fromString(newBase.reflectionName()))
+    val selector = treeMaker.Select(
+            treeMaker.Ident(names.fromString(newBase.packageName())),
+            names.fromString(newBase.simpleNames().joinToString(separator = "$")))
 
     classDecl.extending = selector
 }

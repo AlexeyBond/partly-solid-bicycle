@@ -29,8 +29,9 @@ class ComponentCompanionProcessor : AbstractProcessor() {
     // companions[env][component_class][companion_type] = companion_class
     private val companions = HashMap<String, HashMap<TypeName, HashMap<String, TypeName>>>()
 
-    // moduleComponents[module_class] = {module_components}
-    private val moduleComponents = HashMap<TypeName, MutableCollection<TypeName>>()
+    // moduleComponents[module_class][env][kind][type] = component
+    private val moduleComponents
+            = HashMap<TypeName, HashMap<String, HashMap<String, HashMap<String, TypeName>>>>()
 
     // modules that have useAsDefault=true
     private val defaultModules = ArrayList<TypeName>()
@@ -107,7 +108,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
                 defaultModules.add(moduleName)
             }
 
-            moduleComponents[moduleName] = ArrayList()
+            moduleComponents[moduleName] = HashMap()
         }
     }
 
@@ -129,6 +130,46 @@ class ComponentCompanionProcessor : AbstractProcessor() {
     private fun discoverComponents(roundEnv: RoundEnvironment) {
         roundEnv.getElementsAnnotatedWith(Component::class.java).forEach { componentType ->
             componentType as TypeElement
+            val componentCN = ClassName.get(componentType)
+            val annotation = componentType.getAnnotationMirror(processingEnv, Component::class)!!
+
+            val kind = annotation.getValue(eu, "kind").value as String
+            val envs = annotation.getValue(eu, "env").getListValue<String>()
+            val mods = annotation.getValue(eu, "modules").getListValue<TypeMirror>()
+            val names = annotation.getValue(eu, "name").getListValue<String>()
+
+            val moduleList: Iterable<TypeName> = if (mods.size > 0) {
+                mods.map { mm -> ClassName.get(mm) }
+            } else {
+                if (defaultModules.size == 0) {
+                    processingEnv.messager.printMessage(Diagnostic.Kind.ERROR,
+                            "No module defined for this component " +
+                                    "and no default module is present in project.",
+                            componentType)
+                }
+                defaultModules
+            }
+
+            moduleList.forEach forModule@ { modName ->
+                val envMap = moduleComponents[modName]
+
+                if (null == envMap) {
+                    processingEnv.messager.printMessage(Diagnostic.Kind.ERROR,
+                            "Module class is not annotated as generated module but is required by " +
+                                    "a component class.",
+                            componentType)
+                    return@forModule
+                }
+
+                envs.forEach { env ->
+                    names.forEach { name ->
+                        envMap.computeIfAbsent(env, { HashMap() })
+                                .computeIfAbsent(kind, { HashMap() })
+                                .put(name, componentCN)
+                    }
+                }
+            }
+
             components.add(componentType)
         }
     }
@@ -255,7 +296,106 @@ class ComponentCompanionProcessor : AbstractProcessor() {
     }
 
     private fun generateModules() {
-        // TODO:: Implement
+        moduleComponents.forEach { (moduleCN, envMap) ->
+            val allComponents = envMap.values
+                    .flatMap { m -> m.values.flatMap { p -> p.values } }
+                    .toHashSet<TypeName>()
+            val allEnvs = (
+                    envMap.keys + companions.filterValues { ccMap ->
+                        !ccMap.keys.intersect(allComponents).isEmpty()
+                    }).toHashSet()
+
+            val implCN = moduleImplClassName(moduleCN as ClassName)
+
+            var initCodeBuilder = CodeBlock.builder()
+
+            allEnvs.forEach { env ->
+                initCodeBuilder = initCodeBuilder.add(
+                        "INITIALIZERS.put(\$S, new \$T() {\n",
+                        env, Runnable::class.java)
+                        .add("@Override\n")
+                        .add("public void run() {\n")
+
+                val envCompanions = companions.get(env)
+
+                envCompanions
+                        ?.filterKeys { c -> allComponents.contains(c) }
+                        ?.forEach { (componentCN, companionMap) ->
+                            val companionOwnerCN = companionOwnerClassName(componentCN as ClassName)
+                            companionMap.forEach { (cType, cClass) ->
+                                initCodeBuilder = initCodeBuilder.add(
+                                        "\$T.$COMPANION_MAP_FIELD_NAME.put(\$S, \$T.$COMPANION_RESOLVER_FIELD_NAME);",
+                                        companionOwnerCN, cType, cClass)
+                            }
+                        }
+
+                val envComponents = moduleComponents
+                        .get(moduleCN)
+                        ?.get(env)
+                        ?.forEach { (kind, typeMap) ->
+                            initCodeBuilder = initCodeBuilder.add(
+                                    "// begin kind \$S\n",
+                                    kind)
+                            typeMap.forEach { (type, cls) ->
+                                initCodeBuilder = initCodeBuilder.add(
+                                        "// register \$T as \$S\n",
+                                        cls, type
+                                )
+                            }
+                        }
+
+                initCodeBuilder = initCodeBuilder.add(
+                        "}\n")
+                        .add(
+                                "});\n")
+            }
+
+            val initCode = initCodeBuilder.build()
+
+            val initializersMapFieldSpec = FieldSpec
+                    .builder(
+                            ParameterizedTypeName.get(Map::class.java, Object::class.java, Runnable::class.java),
+                            "INITIALIZERS",
+                            Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
+                    .initializer("new \$T()", HashMap::class.java)
+                    .build()
+
+            val initMethodSpec = MethodSpec
+                    .methodBuilder("init")
+                    .addParameter(ParameterizedTypeName.get(
+                            Collection::class.java, Object::class.java), "envs")
+                    .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                    .addAnnotation(Override::class.java)
+                    .beginControlFlow("for (\$T env : envs)",
+                            Object::class.java)
+                    .addCode("\$T i = INITIALIZERS.get(env);\n",
+                            Runnable::class.java)
+                    .addCode("if (null == i) continue;\n")
+                    .addCode("i.run();\n")
+                    .endControlFlow()
+                    .build()
+
+            val shutdownMethodSpec = MethodSpec
+                    .methodBuilder("shutdown")
+                    .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                    .addAnnotation(Override::class.java)
+                    .build()
+
+            val typeSpec = TypeSpec.classBuilder(implCN)
+                    .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
+                    .addSuperinterface(
+                            io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.Module::class.java)
+                    .addField(initializersMapFieldSpec)
+                    .addStaticBlock(initCode)
+                    .addMethod(initMethodSpec)
+                    .addMethod(shutdownMethodSpec)
+                    .build()
+
+            JavaFile.builder(implCN.packageName(), typeSpec).build()
+                    .writeTo(processingEnv.filer)
+
+            reExtendClass(processingEnv, eu.getTypeElement(moduleCN.toString()), implCN)
+        }
     }
 
     private fun logCompanions() {
