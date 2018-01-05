@@ -138,7 +138,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
             val mods = annotation.getValue(eu, "modules").getListValue<TypeMirror>()
             val names = annotation.getValue(eu, "name").getListValue<String>()
 
-            val moduleList: Iterable<TypeName> = if (mods.size > 0) {
+            val moduleList: Iterable<TypeName> = if (mods.isNotEmpty()) {
                 mods.map { mm -> ClassName.get(mm) }
             } else {
                 if (defaultModules.size == 0) {
@@ -299,7 +299,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
         moduleComponents.forEach { (moduleCN, envMap) ->
             val allComponents = envMap.values
                     .flatMap { m -> m.values.flatMap { p -> p.values } }
-                    .toHashSet<TypeName>()
+                    .toHashSet()
             val allEnvs = (
                     envMap.keys + companions.filterValues { ccMap ->
                         !ccMap.keys.intersect(allComponents).isEmpty()
@@ -316,9 +316,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
                         .add("@Override\n")
                         .add("public void run() {\n")
 
-                val envCompanions = companions.get(env)
-
-                envCompanions
+                companions[env]
                         ?.filterKeys { c -> allComponents.contains(c) }
                         ?.forEach { (componentCN, companionMap) ->
                             val companionOwnerCN = companionOwnerClassName(componentCN as ClassName)
@@ -329,7 +327,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
                             }
                         }
 
-                val envComponents = moduleComponents
+                moduleComponents
                         .get(moduleCN)
                         ?.get(env)
                         ?.forEach { (kind, typeMap) ->
