@@ -304,7 +304,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
             val allEnvs = (
                     envMap.keys + companions.filterValues { ccMap ->
                         !ccMap.keys.intersect(allComponents).isEmpty()
-                    }).toHashSet()
+                    }.keys).toHashSet()
 
             val modElem = eu.getTypeElement(moduleCN.toString())
 
