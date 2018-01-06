@@ -58,6 +58,7 @@ class ListFieldLoadGenerator : FieldLoadGenerator {
             |   $listVarName.add($loadedElemVarName);
             |}
             |$lvalueExpr = $listVarName;
+            |
         """.trimMargin()
     }
 }

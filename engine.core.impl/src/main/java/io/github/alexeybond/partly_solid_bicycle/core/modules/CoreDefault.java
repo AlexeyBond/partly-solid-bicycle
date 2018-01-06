@@ -1,7 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.core.modules;
 
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Module;
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.GeneratedModule;
 
-@Module(useAsDefault = true)
+@GeneratedModule(useAsDefault = true)
 public class CoreDefault extends CoreDefaultImpl {
 }

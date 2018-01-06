@@ -6,7 +6,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companio
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.CompanionResolver
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Component
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.ComponentCompanion
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Module
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.GeneratedModule
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.CompanionTypeCreator
 import java.util.*
 import javax.annotation.processing.*
@@ -14,6 +14,7 @@ import javax.lang.model.SourceVersion
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.DeclaredType
+import javax.lang.model.type.TypeKind
 import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
@@ -100,10 +101,17 @@ class ComponentCompanionProcessor : AbstractProcessor() {
     }
 
     private fun discoverModules(roundEnv: RoundEnvironment) {
-        roundEnv.getElementsAnnotatedWith(Module::class.java).forEach { moduleElem ->
+        roundEnv.getElementsAnnotatedWith(GeneratedModule::class.java).forEach { moduleElem ->
             moduleElem as TypeElement
             val moduleName = ClassName.get(moduleElem)
-            val annotation = moduleElem.getAnnotationMirror(processingEnv, Module::class)!!
+            val annotation = moduleElem.getAnnotationMirror(processingEnv, GeneratedModule::class)!!
+
+            if (moduleElem.superclass.kind != TypeKind.ERROR) {
+                processingEnv.messager.printMessage(Diagnostic.Kind.ERROR,
+                        "Generated module class must extend a class " +
+                                "not present in project sources or dependencies.",
+                        moduleElem)
+            }
 
             if (annotation.getValue(eu, "useAsDefault").value as Boolean) {
                 defaultModules.add(moduleName)
@@ -320,8 +328,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
                             }
                         }
 
-                moduleComponents
-                        .get(moduleCN)
+                moduleComponents[moduleCN]
                         ?.get(env)
                         ?.forEach { (kind, typeMap) ->
                             initCodeBuilder = initCodeBuilder.add(
@@ -354,7 +361,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
             val initMethodSpec = MethodSpec
                     .methodBuilder("init")
                     .addParameter(ParameterizedTypeName.get(
-                            Collection::class.java, Object::class.java), "envs")
+                            Iterable::class.java, Object::class.java), "envs")
                     .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                     .addAnnotation(Override::class.java)
                     .beginControlFlow("for (\$T env : envs)",

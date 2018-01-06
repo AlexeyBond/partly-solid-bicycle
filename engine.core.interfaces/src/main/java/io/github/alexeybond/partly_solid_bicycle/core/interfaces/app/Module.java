@@ -1,11 +1,9 @@
 package io.github.alexeybond.partly_solid_bicycle.core.interfaces.app;
 
-import java.util.Collection;
-
 /**
  * Module. Initializes some application components.
  * <p>
- * {@link #init(Collection) Initialization method} takes list of environment flags.
+ * {@link #init(Iterable) Initialization method} takes list of environment flags.
  * Those flags are strings marking some properties of environment the module works in.
  * Some of possible flags are:
  * <ul>
@@ -35,7 +33,7 @@ public interface Module {
      *
      * @param env list of environment flags
      */
-    void init(Collection<Object> env);
+    void init(Iterable<Object> env);
 
     /**
      * Shutdown the components this module provides.
