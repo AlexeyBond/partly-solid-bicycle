@@ -237,7 +237,6 @@ class ComponentCompanionProcessor : AbstractProcessor() {
         // This will allow context isolation between different applications and application states
         // ****
 
-        val defaultCompanions = companions.remove("default") ?: HashMap()
         components.forEach { componentType ->
             val className = ClassName.get(componentType)
 
@@ -267,20 +266,9 @@ class ComponentCompanionProcessor : AbstractProcessor() {
                     .addCode("return resolver.resolve(this);\n")
                     .build()
 
-            val initializer = defaultCompanions[className]?.let { companions ->
-                var builder = CodeBlock.builder()
-
-                companions.forEach { type, cls ->
-                    builder = builder.add(
-                            "$COMPANION_MAP_FIELD_NAME.put(\$S, \$T.$COMPANION_RESOLVER_FIELD_NAME);\n",
-                            type, cls)
-                }
-
-                builder.build()
-            } ?: CodeBlock.of("")
-
             val typeSpec = TypeSpec.classBuilder(companionOwnerName)
                     .superclass(className)
+                    .addModifiers(Modifier.PUBLIC)
                     .addSuperinterface(
                             ParameterizedTypeName.get(
                                     ClassName.get(CompanionOwner::class.java),
@@ -288,7 +276,6 @@ class ComponentCompanionProcessor : AbstractProcessor() {
                             ))
                     .addField(companionsFieldSpec)
                     .addMethod(getCompanionMethodSpec)
-                    .addStaticBlock(initializer)
                     .build()
 
             JavaFile.builder(companionOwnerName.packageName(), typeSpec).build()
@@ -328,7 +315,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
                             val companionOwnerCN = companionOwnerClassName(componentCN as ClassName)
                             companionMap.forEach { (cType, cClass) ->
                                 initCodeBuilder = initCodeBuilder.add(
-                                        "\$T.$COMPANION_MAP_FIELD_NAME.put(\$S, \$T.$COMPANION_RESOLVER_FIELD_NAME);",
+                                        "\$T.$COMPANION_MAP_FIELD_NAME.put(\$S, \$T.$COMPANION_RESOLVER_FIELD_NAME);\n",
                                         companionOwnerCN, cType, cClass)
                             }
                         }

@@ -12,4 +12,14 @@ public class Component4 {
     public static class ACompanion implements Companion {
         public static CompanionResolver RESOLVER = new SingletonCompanionResolver(new ACompanion());
     }
+
+    @ComponentCompanion(component = Component4.class, companionType = "companion", env = {"special1"})
+    public static class ASpecialCompanion1 implements Companion {
+        public static CompanionResolver RESOLVER = new SingletonCompanionResolver(new ASpecialCompanion1());
+    }
+
+    @ComponentCompanion(component = Component4.class, companionType = "companion", env = {"special2"})
+    public static class ASpecialCompanion2 implements Companion {
+        public static CompanionResolver RESOLVER = new SingletonCompanionResolver(new ASpecialCompanion2());
+    }
 }
