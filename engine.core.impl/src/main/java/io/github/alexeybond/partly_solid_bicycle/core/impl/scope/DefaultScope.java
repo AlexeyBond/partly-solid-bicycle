@@ -3,9 +3,13 @@ package io.github.alexeybond.partly_solid_bicycle.core.impl.scope;
 import com.badlogic.gdx.utils.IdentityMap;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.IdSet;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.*;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.Factory;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.MemberReference;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.Scope;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.ScopeOwner;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.ScopeMemberFactoryException;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.ScopeMemberNotFoundException;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.visitor.ScopeVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,7 +40,7 @@ public abstract class DefaultScope<
     }
 
     private @NotNull
-    TRef getOwn0(@NotNull Id<T> id) {
+    TRef getPresent0(@NotNull Id<T> id) {
         TRef reference = map.get(id);
 
         if (null == reference) {
@@ -79,19 +83,17 @@ public abstract class DefaultScope<
     public final <TT extends T> MemberReference<TT> get(@NotNull Id<T> id)
             throws ScopeMemberNotFoundException {
         try {
-            return getOwn(id);
+            return getPresent(id);
         } catch (ScopeMemberNotFoundException e) {
             return getAndForwardSuper(id);
         }
     }
 
     @NotNull
-    @Override
-    public final <TT extends T> MemberReference<TT> getOwn(@NotNull Id<T> id)
+    private <TT extends T> MemberReference<TT> getPresent(@NotNull Id<T> id)
             throws ScopeMemberNotFoundException {
-        // TODO:: This will return forwarded reference if it is present
         @SuppressWarnings({"unchecked"})
-        MemberReference<TT> uncheckedReference = (MemberReference<TT>) getOwn0(id);
+        MemberReference<TT> uncheckedReference = (MemberReference<TT>) getPresent0(id);
 
         return uncheckedReference;
     }
@@ -104,11 +106,13 @@ public abstract class DefaultScope<
     }
 
     @Override
-    public void accept(@NotNull ScopeVisitor<T, Scope<T, TOwner>> visitor) {
+    public void accept(@NotNull ScopeVisitor<T, TOwner> visitor) {
+        visitor.visitSuperScope(superScope);
+
         for (IdentityMap.Entry<Id<T>, TRef> entry : map) {
             // IdentityMap's iterator does not throw ConcurrentModificationException when
             // entry is deleted during iteration.
-            visitor.visitMember(entry.key, entry.value, this);
+            visitor.visitReference(entry.key, entry.value);
         }
     }
 
@@ -122,7 +126,7 @@ public abstract class DefaultScope<
         TRef ref, origRef = null;
 
         try {
-            ref = getOwn0(id);
+            ref = getPresent0(id);
             origRef = ref;
 
             ref = referenceProvider.replaceReference(ref, factory, arg);

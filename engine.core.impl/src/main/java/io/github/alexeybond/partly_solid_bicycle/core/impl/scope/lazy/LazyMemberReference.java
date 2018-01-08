@@ -3,6 +3,7 @@ package io.github.alexeybond.partly_solid_bicycle.core.impl.scope.lazy;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.Factory;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.MemberReference;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.InvalidScopeMemberReference;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.visitor.MemberReferenceVisitor;
 import org.jetbrains.annotations.NotNull;
 
 public class LazyMemberReference<T> implements MemberReference<T> {
@@ -38,4 +39,9 @@ public class LazyMemberReference<T> implements MemberReference<T> {
     void removed() {
         state.referenceRemoved(this);
     };
+
+    @Override
+    public void accept(@NotNull MemberReferenceVisitor<T> visitor) {
+        state.referenceVisited(this, visitor);
+    }
 }

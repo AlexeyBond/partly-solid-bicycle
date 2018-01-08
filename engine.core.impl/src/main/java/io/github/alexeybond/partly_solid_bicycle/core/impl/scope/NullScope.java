@@ -2,10 +2,14 @@ package io.github.alexeybond.partly_solid_bicycle.core.impl.scope;
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.IdSet;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.*;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.Factory;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.MemberReference;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.Scope;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.ScopeOwner;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.ScopeMemberFactoryException;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.ScopeMemberNotFoundException;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.UnsupportedScopeOperationException;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.visitor.ScopeVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,7 +89,7 @@ public class NullScope<T>
     }
 
     @Override
-    public void accept(@NotNull ScopeVisitor<T, Scope<T, NullScope<T>>> visitor) {
-        // no members
+    public void accept(@NotNull ScopeVisitor<T, NullScope<T>> visitor) {
+
     }
 }

@@ -5,6 +5,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.Sc
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.ScopeOwner;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.InvalidScopeMemberReference;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.InvalidScopeMemberReferenceStateException;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.visitor.MemberReferenceVisitor;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -74,5 +75,10 @@ public class RelativeReference<T> implements MemberReference<T> {
             throws InvalidScopeMemberReference, InvalidScopeMemberReferenceStateException {
         @SuppressWarnings({"unchecked"}) T uRes = (T) walk();
         return uRes;
+    }
+
+    @Override
+    public void accept(@NotNull MemberReferenceVisitor<T> visitor) {
+        // TODO:: ??
     }
 }

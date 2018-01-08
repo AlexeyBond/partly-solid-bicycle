@@ -2,6 +2,8 @@ package io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope;
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.InvalidScopeMemberReference;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.InvalidScopeMemberReferenceStateException;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.visitor.MemberReferenceVisitor;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.visitor.Visitable;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -13,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @param <T> scope member type
  */
-public interface MemberReference<T> {
+public interface MemberReference<T> extends Visitable<MemberReferenceVisitor<T>> {
     /**
      * Get the scope member.
      *

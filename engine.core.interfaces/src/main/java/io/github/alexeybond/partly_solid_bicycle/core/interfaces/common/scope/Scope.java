@@ -5,22 +5,22 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.IdSet
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.ScopeMemberFactoryException;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.ScopeMemberNotFoundException;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.UnsupportedScopeOperationException;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.visitor.ScopeVisitor;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.visitor.Visitable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Scope is a hierarchical key-value storage of items (scope members) of some type.
- *
  * <p>
- *  Scopes are hierarchical i.e. a scope may have a parent/super scope/scopes. Any member available in super-scope
- *  should available in the sub-scope unless it is hidden by other member with the same identifier.
+ * Scopes are hierarchical i.e. a scope may have a parent/super scope/scopes. Any member available in super-scope
+ * should available in the sub-scope unless it is hidden by other member with the same identifier.
  * </p>
  *
  * @param <T> type of scope member
  */
 public interface Scope<T, TOwner extends ScopeOwner<Scope<T, TOwner>>>
-        extends Visitable<ScopeVisitor<T, Scope<T, TOwner>>> {
+        extends Visitable<ScopeVisitor<T, TOwner>> {
     /**
      * @return {@link IdSet} that provides identifiers for objects within this scope
      */
@@ -43,31 +43,23 @@ public interface Scope<T, TOwner extends ScopeOwner<Scope<T, TOwner>>>
      */
     @NotNull
     <TT extends T> MemberReference<TT> get(@NotNull Id<T> id)
-        throws ScopeMemberNotFoundException;
-
-    /**
-     * Get own member with given id.
-     *
-     * @param id   member id
-     * @param <TT> member type
-     * @return member reference
-     * @throws ScopeMemberNotFoundException if there is no member with given id
-     */
-    @NotNull
-    <TT extends T> MemberReference<TT> getOwn(@NotNull Id<T> id)
-        throws ScopeMemberNotFoundException;
+            throws ScopeMemberNotFoundException;
 
     /**
      * Get member of super-scope with given id.
+     * <p>
+     * This method does not forward members from super-scope.
+     * </p>
      *
      * @param id   member id
      * @param <TT> member type
      * @return member reference
-     * @throws ScopeMemberNotFoundException if there is no member with given id in any of super-scopes of this scope
+     * @throws ScopeMemberNotFoundException if there is no member with given id in any of
+     *                                      super-scopes of this scope
      */
     @NotNull
     <TT extends T> MemberReference<TT> getSuper(@NotNull Id<T> id)
-        throws ScopeMemberNotFoundException;
+            throws ScopeMemberNotFoundException;
 
     /**
      * Remove member with given id. Has no effect if there is no member with given id.
@@ -82,10 +74,9 @@ public interface Scope<T, TOwner extends ScopeOwner<Scope<T, TOwner>>>
     /**
      * Create new member with given id using given factory or return reference to an exist own member with
      * given identifier if any.
-     *
      * <p>
-     *  Member may be created lazily on first request to reference or immediately on {@code put} call depending
-     *  on implementation and state of the scope.
+     * Member may be created lazily on first request to reference or immediately on {@code put} call depending
+     * on implementation and state of the scope.
      * </p>
      *
      * @param id      member id
@@ -94,7 +85,7 @@ public interface Scope<T, TOwner extends ScopeOwner<Scope<T, TOwner>>>
      * @param <TT>    member type
      * @param <A>     factory argument type
      * @return reference to present or created member with given id
-     * @throws ScopeMemberFactoryException if factory was called immediately and has thrown the exception
+     * @throws ScopeMemberFactoryException        if factory was called immediately and has thrown the exception
      * @throws UnsupportedScopeOperationException if this scope is read-only
      */
     @NotNull

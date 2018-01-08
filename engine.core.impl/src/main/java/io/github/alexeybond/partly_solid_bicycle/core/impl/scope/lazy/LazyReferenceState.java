@@ -3,6 +3,7 @@ package io.github.alexeybond.partly_solid_bicycle.core.impl.scope.lazy;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.Factory;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.InvalidScopeMemberReference;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.InvalidScopeMemberReferenceStateException;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.visitor.MemberReferenceVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +16,8 @@ abstract class LazyReferenceState {
             @Nullable A arg);
 
     abstract <T> void referenceRemoved(@NotNull LazyMemberReference<T> reference);
+
+    abstract <T> void referenceVisited(@NotNull LazyMemberReference<T> reference, @NotNull MemberReferenceVisitor<T> visitor);
 
     static final LazyReferenceState FORWARDING = new LazyReferenceState() {
         @Override
@@ -36,6 +39,11 @@ abstract class LazyReferenceState {
         @Override
         <T> void referenceRemoved(@NotNull LazyMemberReference<T> reference) {
             reference.state = REMOVED;
+        }
+
+        @Override
+        <T> void referenceVisited(@NotNull LazyMemberReference<T> reference, @NotNull MemberReferenceVisitor<T> visitor) {
+            visitor.visitForwardedReference(reference.forwarding);
         }
     };
 
@@ -71,6 +79,11 @@ abstract class LazyReferenceState {
         <T> void referenceRemoved(@NotNull LazyMemberReference<T> reference) {
             // do nothing
         }
+
+        @Override
+        <T> void referenceVisited(@NotNull LazyMemberReference<T> reference, @NotNull MemberReferenceVisitor<T> visitor) {
+            visitor.visitUnresolvedMember(reference.factory, reference.factoryArg);
+        }
     };
 
     private static final LazyReferenceState INITIALIZING = new LazyReferenceState() {
@@ -93,6 +106,11 @@ abstract class LazyReferenceState {
             throw new InvalidScopeMemberReferenceStateException(
                     "Member removed while being initialized.");
         }
+
+        @Override
+        <T> void referenceVisited(@NotNull LazyMemberReference<T> reference, @NotNull MemberReferenceVisitor<T> visitor) {
+            visitor.visitUnresolvedMember(reference.factory, reference.factoryArg);
+        }
     };
 
     private static final LazyReferenceState READY = new LazyReferenceState() {
@@ -114,6 +132,11 @@ abstract class LazyReferenceState {
             reference.object = null;
             reference.state = REMOVED;
         }
+
+        @Override
+        <T> void referenceVisited(@NotNull LazyMemberReference<T> reference, @NotNull MemberReferenceVisitor<T> visitor) {
+            visitor.visitResolvedMember(reference.object);
+        }
     };
 
     private static final LazyReferenceState REMOVED = new LazyReferenceState() {
@@ -133,6 +156,11 @@ abstract class LazyReferenceState {
         @Override
         <T> void referenceRemoved(@NotNull LazyMemberReference<T> reference) {
             throw new Error("Unreachable code.");
+        }
+
+        @Override
+        <T> void referenceVisited(@NotNull LazyMemberReference<T> reference, @NotNull MemberReferenceVisitor<T> visitor) {
+            throw new InvalidScopeMemberReference("Member was removed from scope.");
         }
     };
 }
