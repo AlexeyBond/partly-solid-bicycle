@@ -1,10 +1,10 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node;
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.UnsupportedScopeOperationException;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ComponentConnector;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +41,7 @@ public class ComponentNode<T> extends NodeBase {
 
     @Override
     public void remove(@NotNull Id<LogicNode> id)
-            throws UnsupportedScopeOperationException, IllegalStateException {
+            throws UnsupportedOperationException, IllegalStateException {
         // nothing to do
     }
 
@@ -65,5 +65,10 @@ public class ComponentNode<T> extends NodeBase {
     @Override
     protected void onDisconnected0(@NotNull LogicNode parent) {
         connector.onDisconnected(component, this);
+    }
+
+    @Override
+    public void accept(@NotNull NodeVisitor visitor) {
+        visitor.visitComponent(component);
     }
 }

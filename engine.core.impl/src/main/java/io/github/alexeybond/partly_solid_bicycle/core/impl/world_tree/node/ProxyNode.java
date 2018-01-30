@@ -3,6 +3,7 @@ package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,5 +59,10 @@ public class ProxyNode extends NodeBase {
     @Override
     public <T> T getComponent() throws NoSuchElementException {
         return real.getComponent();
+    }
+
+    @Override
+    public void accept(@NotNull NodeVisitor visitor) {
+        real.accept(visitor);
     }
 }

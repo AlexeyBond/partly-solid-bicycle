@@ -1,6 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree;
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.visitor.Visitable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +17,7 @@ import java.util.NoSuchElementException;
  * Actually there is no special "entity" class.
  * </p>
  */
-public interface LogicNode {
+public interface LogicNode extends Visitable<NodeVisitor> {
     /**
      * Get a child node with given identifier.
      *

@@ -47,6 +47,10 @@ public abstract class NodeBase implements LogicNode {
             throw new IllegalStateException();
         }
 
+        if (this.parent != parent) {
+            throw new IllegalArgumentException("Wrong parent node.");
+        }
+
         try {
             onDisconnected0(parent);
         } finally {

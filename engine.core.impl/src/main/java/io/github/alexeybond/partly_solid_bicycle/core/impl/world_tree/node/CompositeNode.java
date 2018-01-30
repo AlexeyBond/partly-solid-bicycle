@@ -2,10 +2,10 @@ package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node;
 
 import io.github.alexeybond.partly_solid_bicycle.core.impl.util.ExceptionAccumulator;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.scope.exceptions.UnsupportedScopeOperationException;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeChildResolver;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeVisitor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,13 +15,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-public class CompositeNodeImpl extends NodeBase {
+public class CompositeNode extends NodeBase {
     private Map<Id<LogicNode>, LogicNode> map = new HashMap<Id<LogicNode>, LogicNode>();
 
     @NotNull
     private NodeChildResolver childResolver;
 
-    public CompositeNodeImpl(@NotNull NodeChildResolver childResolver) {
+    public CompositeNode(@NotNull NodeChildResolver childResolver) {
         this.childResolver = childResolver;
     }
 
@@ -94,7 +94,7 @@ public class CompositeNodeImpl extends NodeBase {
 
     @Override
     public void remove(@NotNull Id<LogicNode> id)
-            throws UnsupportedScopeOperationException, IllegalStateException {
+            throws UnsupportedOperationException, IllegalStateException {
         LogicNode removed = map.remove(id);
 
         if (null != removed) {
@@ -149,5 +149,12 @@ public class CompositeNodeImpl extends NodeBase {
         }
 
         ExceptionAccumulator.<RuntimeException>flush(acc);
+    }
+
+    @Override
+    public void accept(@NotNull NodeVisitor visitor) {
+        for (Map.Entry<Id<LogicNode>, LogicNode> entry : map.entrySet()) {
+            visitor.visitChild(entry.getKey(), entry.getValue());
+        }
     }
 }

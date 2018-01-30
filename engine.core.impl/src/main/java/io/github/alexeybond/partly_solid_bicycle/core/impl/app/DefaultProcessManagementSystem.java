@@ -1,14 +1,10 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.app;
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.ProcessManager;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ecs.Engine;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ecs.System;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ecs.systems.ProcessManagementSystem;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Component;
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Optional;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,8 +14,7 @@ import java.util.List;
  */
 @Component(name = "processManager", kind = "system")
 public class DefaultProcessManagementSystem
-        extends DefaultProcessManager
-        implements ProcessManagementSystem {
+        extends DefaultProcessManager {
     private ProcessManager master;
 
     @Optional
@@ -51,8 +46,8 @@ public class DefaultProcessManagementSystem
     @Optional
     public List<List<String>> orderHints = Collections.emptyList();
 
-    @Override
-    public void onJoin(@NotNull Engine owner, @NotNull Id<System> id)
+    // ToDo: invoke from connector...
+    public void onConnect(@NotNull LogicNode owner)
             throws Exception {
         for (List<String> hint : orderHints) {
             for (int i = 1; i < hint.size(); i++) {
@@ -60,26 +55,12 @@ public class DefaultProcessManagementSystem
             }
         }
 
-        master = owner.getScope()
-                .<ProcessManagementSystem>get(owner.getScope().getIdSet().get(masterId)).get();
+        //master = null;
         master.addProcess(processName, this);
     }
 
-    @Override
-    public void onLeave(@NotNull Engine owner, @NotNull Id<System> id)
+    public void dispose()
             throws Exception {
         master.removeProcess(processName, this);
-    }
-
-    @Override
-    public void onDispose(@NotNull Engine owner, @NotNull Id<System> id)
-            throws Exception {
-        onLeave(owner, id);
-    }
-
-    @Nullable
-    @Override
-    public System forward(@NotNull Engine from, @NotNull Engine to) {
-        return this;
     }
 }
