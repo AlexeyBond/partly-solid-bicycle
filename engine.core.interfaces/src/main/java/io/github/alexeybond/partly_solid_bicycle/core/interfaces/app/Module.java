@@ -39,4 +39,19 @@ public interface Module {
      * Shutdown the components this module provides.
      */
     void shutdown();
+
+    /**
+     * Returns dependency information of this module.
+     * <p>
+     * Dependency information includes 3 sets of identifiers:
+     * <ul>
+     * <li>{@code provides} - the dependencies this module provides to other modules</li>
+     * <li>{@code depends} - the dependencies this module depends on</li>
+     * <li>{@code reverseDepends} - the dependencies that should not be initialized before this module loads</li>
+     * </ul>
+     * </p>
+     *
+     * @return dependency information of this module
+     */
+    Iterable<Iterable<String>> dependencyInfo();
 }

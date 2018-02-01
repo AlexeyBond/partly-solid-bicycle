@@ -3,7 +3,7 @@ package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotatio
 import com.squareup.javapoet.*
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.Companion
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.CompanionOwner
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.CompanionResolver
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.MutableClassCompanionResolver
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Component
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.ComponentCompanion
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.GeneratedModule
@@ -25,6 +25,8 @@ import kotlin.collections.HashMap
 @SupportedAnnotationTypes("*")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 class ComponentCompanionProcessor : AbstractProcessor() {
+    private val DEPENDENCY_INFO_FIELD_NAME = "_dependencyInfo";
+
     // companionCreators[env][type] = creator
     private val companionCreators: HashMap<String, HashMap<String, CompanionTypeCreator>> = HashMap()
 
@@ -240,38 +242,24 @@ class ComponentCompanionProcessor : AbstractProcessor() {
     }
 
     private fun generateCompanionOwners() {
-        // ****
-        // TODO:: Use IoC context to store companion resolvers.
-        // This will allow context isolation between different applications and application states
-        // ****
-
         components.forEach { componentType ->
             val className = ClassName.get(componentType)
 
             val companionOwnerName = companionOwnerClassName(className)
 
             val companionsFieldSpec = FieldSpec.builder(
-                    ParameterizedTypeName.get(
-                            java.util.Map::class.java,
-                            String::class.java,
-                            CompanionResolver::class.java),
-                    COMPANION_MAP_FIELD_NAME,
+                    MutableClassCompanionResolver::class.java,
+                    CLASS_COMPANION_RESOLVER_FIELD_NAME,
                     Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                    .initializer("new \$T()", HashMap::class.java)
+                    // TODO:: Avoid implicit dependency on implementation class
+                    .initializer("new io.github.alexeybond.partly_solid_bicycle.core.impl.common.companions.MutableClassCompanionResolverImpl()")
                     .build()
 
             val getCompanionMethodSpec = MethodSpec.methodBuilder("getCompanionObject")
                     .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                     .returns(ClassName.get(Companion::class.java))
                     .addParameter(ClassName.get(String::class.java), "name")
-                    .addCode("\$T resolver = $COMPANION_MAP_FIELD_NAME.get(name);\n",
-                            CompanionResolver::class.java)
-                    .beginControlFlow("if (null == resolver)")
-                    .addCode("throw new \$T(\$S + name + \$S);\n",
-                            IllegalArgumentException::class.java,
-                            "No companion of type '", "' found for component of class $className")
-                    .endControlFlow()
-                    .addCode("return resolver.resolve(this);\n")
+                    .addCode("return $CLASS_COMPANION_RESOLVER_FIELD_NAME.resolve(name).resolve(this);\n")
                     .build()
 
             val typeSpec = TypeSpec.classBuilder(companionOwnerName)
@@ -323,7 +311,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
                             val companionOwnerCN = companionOwnerClassName(componentCN as ClassName)
                             companionMap.forEach { (cType, cClass) ->
                                 initCodeBuilder = initCodeBuilder.add(
-                                        "\$T.$COMPANION_MAP_FIELD_NAME.put(\$S, \$T.$COMPANION_RESOLVER_FIELD_NAME);\n",
+                                        "\$T.$CLASS_COMPANION_RESOLVER_FIELD_NAME.register(\$S, \$T.$COMPANION_RESOLVER_FIELD_NAME);\n",
                                         companionOwnerCN, cType, cClass)
                             }
                         }
@@ -347,6 +335,8 @@ class ComponentCompanionProcessor : AbstractProcessor() {
                         .add(
                                 "});\n")
             }
+
+            initCodeBuilder = buildDependencyInfoInitializer(modElem, initCodeBuilder, processingEnv)
 
             val initCode = initCodeBuilder.build()
 
@@ -379,21 +369,49 @@ class ComponentCompanionProcessor : AbstractProcessor() {
                     .addAnnotation(Override::class.java)
                     .build()
 
+            val dependencyInfoMethodSpec = MethodSpec
+                    .methodBuilder("dependencyInfo")
+                    .returns(ParameterizedTypeName.get(ClassName.get(Iterable::class.java),
+                            ParameterizedTypeName.get(ClassName.get(Iterable::class.java),
+                                    ClassName.get(String::class.java))))
+                    .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                    .addAnnotation(Override::class.java)
+                    .addCode("return $DEPENDENCY_INFO_FIELD_NAME;\n")
+                    .build()
+
+            val dependencyInfoFieldSpec = FieldSpec
+                    .builder(
+                            ParameterizedTypeName.get(ClassName.get(Iterable::class.java),
+                                    ParameterizedTypeName.get(ClassName.get(Iterable::class.java),
+                                            ClassName.get(String::class.java))),
+                            DEPENDENCY_INFO_FIELD_NAME,
+                            Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL
+                    )
+                    .build();
+
             val typeSpec = TypeSpec.classBuilder(implCN)
                     .addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
                     .addSuperinterface(
                             io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.Module::class.java)
                     .addField(initializersMapFieldSpec)
+                    .addField(dependencyInfoFieldSpec)
                     .addStaticBlock(initCode)
                     .addMethod(initMethodSpec)
                     .addMethod(shutdownMethodSpec)
+                    .addMethod(dependencyInfoMethodSpec)
                     .build()
 
             JavaFile.builder(implCN.packageName(), typeSpec).build()
                     .writeTo(processingEnv.filer)
-
-//            reExtendClass(processingEnv, eu.getTypeElement(moduleCN.toString()), implCN)
         }
+    }
+
+    private fun buildDependencyInfoInitializer(
+            module: TypeElement,
+            cb: CodeBlock.Builder,
+            processingEnv: ProcessingEnvironment): CodeBlock.Builder {
+        // TODO:: Gather dependency info from module annotations...
+        return cb.add("$DEPENDENCY_INFO_FIELD_NAME = \$T.emptyList();\n", Collections::class.java)
     }
 
     private fun logCompanions() {

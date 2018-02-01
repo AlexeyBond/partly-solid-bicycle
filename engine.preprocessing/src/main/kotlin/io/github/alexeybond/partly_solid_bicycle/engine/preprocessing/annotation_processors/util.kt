@@ -6,6 +6,7 @@ import com.sun.tools.javac.processing.JavacProcessingEnvironment
 import com.sun.tools.javac.tree.JCTree
 import com.sun.tools.javac.tree.TreeMaker
 import com.sun.tools.javac.util.Names
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.AnnotationValue
@@ -20,9 +21,10 @@ import kotlin.reflect.KClass
 val COMPANION_RESOLVER_FIELD_NAME = "RESOLVER"
 
 /**
- * Name of static field of component class containing a map from companion type name to companion resolver.
+ * Name of static field of component class containing a instance of MutableClassCompanionResolver
+ * for that class.
  */
-val COMPANION_MAP_FIELD_NAME = "COMPANIONS"
+val CLASS_COMPANION_RESOLVER_FIELD_NAME = "COMPANIONS"
 
 fun companionClassName(componentClass: TypeElement, companionName: String): ClassName {
     val ccn = ClassName.get(componentClass)
@@ -53,6 +55,15 @@ internal fun AnnotationMirror.getValue(eu: Elements, param: String): AnnotationV
 
 inline fun <reified T> AnnotationValue.getListValue(): List<T> {
     return (value as List<*>).map { x -> (x as AnnotationValue).value as T }
+}
+
+/**
+ * Checks if a type is subclass of [LogicNode].
+ */
+fun isNodeClass(type: TypeElement, pe: ProcessingEnvironment): Boolean {
+    return pe.typeUtils.isSubtype(
+            type.asType(),
+            pe.elementUtils.getTypeElement(LogicNode::class.java.canonicalName).asType())
 }
 
 fun reExtendClass(
