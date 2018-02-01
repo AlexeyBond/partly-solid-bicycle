@@ -21,10 +21,16 @@ import kotlin.reflect.KClass
 val COMPANION_RESOLVER_FIELD_NAME = "RESOLVER"
 
 /**
- * Name of static field of component class containing a instance of MutableClassCompanionResolver
+ * Name of static field of component class containing a instance of [MutableClassCompanionResolver]
  * for that class.
  */
 val CLASS_COMPANION_RESOLVER_FIELD_NAME = "COMPANIONS"
+
+/**
+ * Name of static field of component class containing a instance of [GenericFactory] producing
+ * instances of that class.
+ */
+val CLASS_FACTORY_FIELD_NAME = "FACTORY"
 
 fun companionClassName(componentClass: TypeElement, companionName: String): ClassName {
     val ccn = ClassName.get(componentClass)

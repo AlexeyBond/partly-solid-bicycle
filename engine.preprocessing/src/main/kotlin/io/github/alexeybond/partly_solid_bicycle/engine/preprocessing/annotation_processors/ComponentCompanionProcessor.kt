@@ -4,6 +4,9 @@ import com.squareup.javapoet.*
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.Companion
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.CompanionOwner
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.MutableClassCompanionResolver
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.factory.GenericFactory
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ioc.IoC
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ioc.IoCStrategy
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Component
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.ComponentCompanion
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.GeneratedModule
@@ -255,6 +258,26 @@ class ComponentCompanionProcessor : AbstractProcessor() {
                     .initializer("new io.github.alexeybond.partly_solid_bicycle.core.impl.common.companions.MutableClassCompanionResolverImpl()")
                     .build()
 
+            val T = "\$T" // shitshitshit
+
+            val factoryFieldSpec = FieldSpec.builder(
+                    ParameterizedTypeName.get(
+                            ClassName.get(GenericFactory::class.java),
+                            companionOwnerName,
+                            ClassName.get(Void::class.java)),
+                    CLASS_FACTORY_FIELD_NAME,
+                    Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                    .initializer("""new $T
+                            |       <$T, Void>() {
+                            |   @Override
+                            |   public $T create(Void arg) {
+                            |       return new $T();
+                            |   }
+                            }""".trimMargin(),
+                            GenericFactory::class.java,
+                            companionOwnerName, companionOwnerName, companionOwnerName)
+                    .build()
+
             val getCompanionMethodSpec = MethodSpec.methodBuilder("getCompanionObject")
                     .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                     .returns(ClassName.get(Companion::class.java))
@@ -271,6 +294,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
                                     className
                             ))
                     .addField(companionsFieldSpec)
+                    .addField(factoryFieldSpec)
                     .addMethod(getCompanionMethodSpec)
                     .build()
 
@@ -318,15 +342,27 @@ class ComponentCompanionProcessor : AbstractProcessor() {
 
                 moduleComponents[moduleCN]
                         ?.get(env)
-                        ?.forEach { (kind, typeMap) ->
-                            initCodeBuilder = initCodeBuilder.add(
-                                    "// begin kind \$S\n",
-                                    kind)
-                            typeMap.forEach { (type, cls) ->
-                                initCodeBuilder = initCodeBuilder.add(
-                                        "// register \$T as \$S\n",
-                                        cls, type
-                                )
+                        ?.run {
+                            initCodeBuilder = initCodeBuilder
+                                    .add("\$T componentNodeFactoryStrategy = \$T.resolveStrategy(\$S);\n",
+                                            IoCStrategy::class.java, IoC::class.java,
+                                            "create component node factory")
+                                    .add("\$T customNodeFactoryStrategy = \$T.resolveStrategy(\$S);\n",
+                                            IoCStrategy::class.java, IoC::class.java,
+                                            "create custom node factory")
+                                    .add("\$T registrationStrategy = \$T.resolveStrategy(\$S);\n",
+                                            IoCStrategy::class.java, IoC::class.java,
+                                            "register node factory")
+                            forEach { (kind, typeMap) ->
+                                typeMap.forEach { (type, cls) ->
+                                    val companionOwnerCls = companionOwnerClassName(cls as ClassName)
+                                    val nodeClass = isNodeClass(eu.getTypeElement(cls.toString()), processingEnv)
+                                    val factoryStrategyVar = if (nodeClass) "customNodeFactoryStrategy" else "componentNodeFactoryStrategy"
+                                    initCodeBuilder = initCodeBuilder.add(
+                                            "registrationStrategy.resolve($factoryStrategyVar.resolve(\$T.$CLASS_FACTORY_FIELD_NAME, \$T.$CLASS_COMPANION_RESOLVER_FIELD_NAME), \$S, \$S);\n",
+                                            companionOwnerCls, companionOwnerCls,
+                                            type, kind)
+                                }
                             }
                         }
 
@@ -351,7 +387,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
             val initMethodSpec = MethodSpec
                     .methodBuilder("init")
                     .addParameter(ParameterizedTypeName.get(
-                            Iterable::class.java, Object::class.java), "envs")
+                            Collection::class.java, Object::class.java), "envs")
                     .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                     .addAnnotation(Override::class.java)
                     .beginControlFlow("for (\$T env : envs)",
