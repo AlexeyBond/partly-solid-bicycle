@@ -1,7 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node;
 
-import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.NullChildResolver;
-import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.PredefinedChildListResolver;
+import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.child_resolver.NullChildResolver;
+import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.child_resolver.PredefinedChildListResolver;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.factory.IdentityNodeFactory;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;

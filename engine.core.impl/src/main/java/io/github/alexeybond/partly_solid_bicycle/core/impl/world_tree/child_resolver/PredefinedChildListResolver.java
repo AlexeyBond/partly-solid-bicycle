@@ -1,4 +1,4 @@
-package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree;
+package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.child_resolver;
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
