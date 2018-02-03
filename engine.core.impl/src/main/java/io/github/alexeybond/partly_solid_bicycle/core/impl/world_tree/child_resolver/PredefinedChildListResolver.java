@@ -6,9 +6,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.Node
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 public class PredefinedChildListResolver<A> implements NodeChildResolver {
     @NotNull
@@ -57,8 +55,12 @@ public class PredefinedChildListResolver<A> implements NodeChildResolver {
 
     @NotNull
     @Override
-    public Iterable<Id<LogicNode>> getUnresolvedIds() {
-        // TODO:: Concat with next.getUnresolvedIds()
-        return new ArrayList<Id<LogicNode>>(childArgs.keySet());
+    public Collection<Id<LogicNode>> getUnresolvedIds() {
+        Collection<Id<LogicNode>> nextUnresolved = next.getUnresolvedIds();
+        ArrayList<Id<LogicNode>> list
+                = new ArrayList<Id<LogicNode>>(nextUnresolved.size() + childArgs.size());
+        list.addAll(nextUnresolved);
+        list.addAll(childArgs.keySet());
+        return Collections.unmodifiableList(list);
     }
 }

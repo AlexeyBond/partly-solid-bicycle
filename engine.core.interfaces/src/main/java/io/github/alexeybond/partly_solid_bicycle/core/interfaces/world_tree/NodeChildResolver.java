@@ -3,6 +3,7 @@ package io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.NoSuchElementException;
 
 /**
@@ -34,5 +35,5 @@ public interface NodeChildResolver {
      * @return iterable of all known identifiers of unresolved children
      */
     @NotNull
-    Iterable<Id<LogicNode>> getUnresolvedIds();
+    Collection<Id<LogicNode>> getUnresolvedIds();
 }

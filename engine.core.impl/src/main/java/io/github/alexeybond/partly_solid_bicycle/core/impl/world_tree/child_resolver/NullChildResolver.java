@@ -5,6 +5,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.Logi
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeChildResolver;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.NoSuchElementException;
 
@@ -25,7 +26,7 @@ public enum NullChildResolver implements NodeChildResolver {
 
     @NotNull
     @Override
-    public Iterable<Id<LogicNode>> getUnresolvedIds() {
+    public Collection<Id<LogicNode>> getUnresolvedIds() {
         return Collections.emptyList();
     }
 }
