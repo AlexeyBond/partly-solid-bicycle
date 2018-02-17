@@ -7,11 +7,11 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.factory.
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ComponentConnector;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.adapter.NodeFactoryAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DeclarativeComponentNodeFactory<TC> implements NodeFactory<InputDataObject> {
+public class DeclarativeComponentNodeFactory<TC> extends NodeFactoryAdapter<InputDataObject> {
     @NotNull
     private final GenericFactory<TC, Void> factory;
 

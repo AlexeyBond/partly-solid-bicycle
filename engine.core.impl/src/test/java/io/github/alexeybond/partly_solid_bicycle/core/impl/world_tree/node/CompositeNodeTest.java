@@ -1,11 +1,12 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node;
 
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.child_resolver.NullChildResolver;
-import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.child_resolver.PredefinedChildListResolver;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.factory.IdentityNodeFactory;
+import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.populator.NullPopulator;
+import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.populator.PredefinedArgumentsPopulator;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeChildResolver;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodePopulator;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeVisitor;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,32 +39,31 @@ public class CompositeNodeTest {
 
     @Test(expected = NoSuchElementException.class)
     public void testGetComponentThrows() {
-        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE);
-        node.onConnected(parentMock);
+        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE, NullPopulator.INSTANCE);
+        node.onConnected(parentMock, idMocks[0]);
         node.getComponent();
     }
 
     @Test
-    public void testCreateChildrenProvidedByChildResolver() {
-        NodeChildResolver resolver = new PredefinedChildListResolver<LogicNode>(
-                NullChildResolver.INSTANCE,
+    public void testCreateChildrenProvidedByPopulator() {
+        NodePopulator populator = new PredefinedArgumentsPopulator<LogicNode>(
+                IdentityNodeFactory.INSTANCE,
                 new HashMap<Id<LogicNode>, LogicNode>() {{
                     put(idMocks[0], childMocks[0]);
                     put(idMocks[1], childMocks[1]);
                     put(idMocks[2], childMocks[2]);
-                }},
-                IdentityNodeFactory.INSTANCE
+                }}
         );
 
-        LogicNode node = new CompositeNode(resolver);
+        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE, populator);
 
         verifyZeroInteractions(childMocks[0], childMocks[1], childMocks[2]);
 
-        node.onConnected(parentMock);
+        node.onConnected(parentMock, idMocks[0]);
 
-        verify(childMocks[0]).onConnected(same(node));
-        verify(childMocks[1]).onConnected(same(node));
-        verify(childMocks[2]).onConnected(same(node));
+        verify(childMocks[0]).onConnected(same(node), same(idMocks[0]));
+        verify(childMocks[1]).onConnected(same(node), same(idMocks[1]));
+        verify(childMocks[2]).onConnected(same(node), same(idMocks[2]));
 
         assertSame(childMocks[0], node.get(idMocks[0]));
         assertSame(childMocks[1], node.get(idMocks[1]));
@@ -72,15 +72,15 @@ public class CompositeNodeTest {
 
     @Test
     public void testGetOrAdd() {
-        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE);
-        node.onConnected(parentMock);
+        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE, NullPopulator.INSTANCE);
+        node.onConnected(parentMock, idMocks[0]);
 
         LogicNode child = node.getOrAdd(idMocks[0], IdentityNodeFactory.INSTANCE, childMocks[0]);
 
         assertSame(childMocks[0], child);
         assertSame(childMocks[0], node.get(idMocks[0]));
 
-        verify(childMocks[0]).onConnected(same(node));
+        verify(childMocks[0]).onConnected(same(node), same(idMocks[0]));
         verifyNoMoreInteractions(childMocks[0]);
 
         child = node.getOrAdd(idMocks[0], IdentityNodeFactory.INSTANCE, childMocks[1]);
@@ -93,16 +93,16 @@ public class CompositeNodeTest {
 
     @Test
     public void testDisconnect() {
-        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE);
-        node.onConnected(parentMock);
+        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE, NullPopulator.INSTANCE);
+        node.onConnected(parentMock, idMocks[0]);
 
         node.getOrAdd(idMocks[0], IdentityNodeFactory.INSTANCE, childMocks[0]);
         node.getOrAdd(idMocks[1], IdentityNodeFactory.INSTANCE, childMocks[1]);
         node.getOrAdd(idMocks[2], IdentityNodeFactory.INSTANCE, childMocks[2]);
 
-        verify(childMocks[0]).onConnected(same(node));
-        verify(childMocks[1]).onConnected(same(node));
-        verify(childMocks[2]).onConnected(same(node));
+        verify(childMocks[0]).onConnected(same(node), same(idMocks[0]));
+        verify(childMocks[1]).onConnected(same(node), same(idMocks[1]));
+        verify(childMocks[2]).onConnected(same(node), same(idMocks[2]));
 
         verifyNoMoreInteractions(childMocks[0], childMocks[1], childMocks[2]);
 
@@ -117,16 +117,16 @@ public class CompositeNodeTest {
 
     @Test
     public void testRemove() {
-        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE);
-        node.onConnected(parentMock);
+        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE, NullPopulator.INSTANCE);
+        node.onConnected(parentMock, idMocks[0]);
 
         node.getOrAdd(idMocks[0], IdentityNodeFactory.INSTANCE, childMocks[0]);
         node.getOrAdd(idMocks[1], IdentityNodeFactory.INSTANCE, childMocks[1]);
         node.getOrAdd(idMocks[2], IdentityNodeFactory.INSTANCE, childMocks[2]);
 
-        verify(childMocks[0]).onConnected(same(node));
-        verify(childMocks[1]).onConnected(same(node));
-        verify(childMocks[2]).onConnected(same(node));
+        verify(childMocks[0]).onConnected(same(node), same(idMocks[0]));
+        verify(childMocks[1]).onConnected(same(node), same(idMocks[1]));
+        verify(childMocks[2]).onConnected(same(node), same(idMocks[2]));
 
         verifyNoMoreInteractions(childMocks[0], childMocks[1], childMocks[2]);
 
@@ -149,8 +149,8 @@ public class CompositeNodeTest {
 
     @Test
     public void testAcceptVisitor() {
-        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE);
-        node.onConnected(parentMock);
+        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE, NullPopulator.INSTANCE);
+        node.onConnected(parentMock, idMocks[0]);
 
         node.getOrAdd(idMocks[0], IdentityNodeFactory.INSTANCE, childMocks[0]);
         node.getOrAdd(idMocks[1], IdentityNodeFactory.INSTANCE, childMocks[1]);

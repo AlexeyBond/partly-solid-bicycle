@@ -5,8 +5,6 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.Logi
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeChildResolver;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.NoSuchElementException;
 
 public enum NullChildResolver implements NodeChildResolver {
@@ -16,17 +14,5 @@ public enum NullChildResolver implements NodeChildResolver {
     @Override
     public LogicNode resolve(@NotNull Id<LogicNode> id) throws NoSuchElementException {
         throw new NoSuchElementException("No such node: " + id.toString());
-    }
-
-    @NotNull
-    @Override
-    public NodeChildResolver next() {
-        return this;
-    }
-
-    @NotNull
-    @Override
-    public Collection<Id<LogicNode>> getUnresolvedIds() {
-        return Collections.emptyList();
     }
 }

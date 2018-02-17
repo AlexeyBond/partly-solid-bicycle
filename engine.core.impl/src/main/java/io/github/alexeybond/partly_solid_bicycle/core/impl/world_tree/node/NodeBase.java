@@ -1,6 +1,8 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node;
 
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.TreeContext;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class NodeBase implements LogicNode {
@@ -21,9 +23,13 @@ public abstract class NodeBase implements LogicNode {
     }
 
     @Override
-    public final void onConnected(@NotNull LogicNode parent) {
+    public final void onConnected(@NotNull LogicNode parent, @NotNull Id<LogicNode> id) {
         if (null != this.parent) {
             throw new IllegalStateException("Node is already connected.");
+        }
+
+        if (this == parent) {
+            throw new IllegalArgumentException("This node cannot connect to itself.");
         }
 
         this.parent = parent;
@@ -31,7 +37,7 @@ public abstract class NodeBase implements LogicNode {
         this.connecting = true;
 
         try {
-            onConnected0(parent);
+            onConnected0(parent, id);
         } finally {
             this.connecting = false;
         }
@@ -58,7 +64,13 @@ public abstract class NodeBase implements LogicNode {
         }
     }
 
-    protected abstract void onConnected0(@NotNull LogicNode parent);
+    @NotNull
+    @Override
+    public TreeContext getTreeContext() {
+        return getParent().getTreeContext();
+    }
+
+    protected abstract void onConnected0(@NotNull LogicNode parent, Id<LogicNode> id);
 
     protected abstract void onDisconnected0(@NotNull LogicNode parent);
 }

@@ -63,13 +63,17 @@ inline fun <reified T> AnnotationValue.getListValue(): List<T> {
     return (value as List<*>).map { x -> (x as AnnotationValue).value as T }
 }
 
+fun isSubclass(type: TypeElement, clazz: Class<*>, pe: ProcessingEnvironment): Boolean {
+    return pe.typeUtils.isSubtype(
+            type.asType(),
+            pe.elementUtils.getTypeElement(clazz.canonicalName).asType());
+}
+
 /**
  * Checks if a type is subclass of [LogicNode].
  */
 fun isNodeClass(type: TypeElement, pe: ProcessingEnvironment): Boolean {
-    return pe.typeUtils.isSubtype(
-            type.asType(),
-            pe.elementUtils.getTypeElement(LogicNode::class.java.canonicalName).asType())
+    return isSubclass(type, LogicNode::class.java, pe)
 }
 
 fun reExtendClass(

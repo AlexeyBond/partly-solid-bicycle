@@ -2,6 +2,7 @@ package io.github.alexeybond.partly_solid_bicycle.core.impl.app;
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.ProcessManager;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeAttachmentListener;
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Component;
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -14,13 +15,15 @@ import java.util.List;
  */
 @Component(name = "processManager", kind = "system")
 public class DefaultProcessManagementSystem
-        extends DefaultProcessManager {
+        extends DefaultProcessManager
+        implements NodeAttachmentListener {
     private ProcessManager master;
 
     @Optional
-    public String masterId = "processManager";
+    public String masterId = "rootProcessManager";
 
-    public String processName;
+    @Optional
+    public String processName = "default";
 
     /**
      * List of process order hints.
@@ -46,21 +49,20 @@ public class DefaultProcessManagementSystem
     @Optional
     public List<List<String>> orderHints = Collections.emptyList();
 
-    // ToDo: invoke from connector...
-    public void onConnect(@NotNull LogicNode owner)
-            throws Exception {
+    @Override
+    public void onAttached(@NotNull LogicNode node) {
         for (List<String> hint : orderHints) {
             for (int i = 1; i < hint.size(); i++) {
                 orderHint(hint.get(i - 1), hint.get(i));
             }
         }
 
-        //master = null;
+        master = node.get(node.getTreeContext().getIdSet().get(masterId)).getComponent();
         master.addProcess(processName, this);
     }
 
-    public void dispose()
-            throws Exception {
+    @Override
+    public void onDetached(@NotNull LogicNode node) {
         master.removeProcess(processName, this);
     }
 }

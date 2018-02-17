@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 /**
  * A node of a logical tree.
  * <p>
- * A node may be just a container for a set of child nodes or contain a component.
+ * A node may be just a container for a set of child nodes and/or have a attached component.
  * </p>
  * <p>
  * A node may represent an entity, collection of entities or subset of entity components.
@@ -40,6 +40,11 @@ public interface LogicNode extends Visitable<NodeVisitor> {
     @NotNull
     <A> LogicNode getOrAdd(@NotNull Id<LogicNode> id, @NotNull NodeFactory<A> factory, @Nullable A arg)
             throws RuntimeException, UnsupportedOperationException;
+
+    /**
+     * Populate this node with child nodes provided by given populator.
+     */
+    void populate(@NotNull NodePopulator populator);
 
     /**
      * Remove child with given id.
@@ -73,8 +78,8 @@ public interface LogicNode extends Visitable<NodeVisitor> {
 
     /**
      * @param <T> component type
-     * @return a component associated with this node
-     * @throws NoSuchElementException if there is no component associated with this node
+     * @return a component attached to this node
+     * @throws NoSuchElementException if there is no component attached to this node
      */
     @NotNull
     <T> T getComponent() throws NoSuchElementException;
@@ -83,8 +88,9 @@ public interface LogicNode extends Visitable<NodeVisitor> {
      * Called when this node becomes a child of another node.
      *
      * @param parent the parent node
+     * @param id     identifier of this node within parent node
      */
-    void onConnected(@NotNull LogicNode parent);
+    void onConnected(@NotNull LogicNode parent, @NotNull Id<LogicNode> id);
 
     /**
      * Called when this node is disconnected from a parent node.
@@ -92,4 +98,11 @@ public interface LogicNode extends Visitable<NodeVisitor> {
      * @param parent the parent node
      */
     void onDisconnected(@NotNull LogicNode parent);
+
+    /**
+     * @return context of a tree this node belongs to
+     * @throws IllegalStateException if this node is not connected
+     */
+    @NotNull
+    TreeContext getTreeContext();
 }

@@ -1,28 +1,28 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.factory;
 
-import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.child_resolver.DeclarativeChildResolverMaker;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.child_resolver.NullChildResolver;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node.CompositeNode;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.IdSet;
+import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.populator.DeclarativePopulator;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeChildResolver;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodePopulator;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.adapter.NodeFactoryAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DeclarativeGroupNodeFactory implements NodeFactory<InputDataObject> {
+public class DeclarativeGroupNodeFactory extends NodeFactoryAdapter<InputDataObject> {
     @NotNull
     private final NodeFactory<InputDataObject> factory;
 
     @NotNull
-    private final IdSet<LogicNode> idSet;
+    private final String itemsField;
 
     public DeclarativeGroupNodeFactory(
             @NotNull NodeFactory<InputDataObject> factory,
-            @NotNull IdSet<LogicNode> idSet) {
+            @NotNull String itemsField) {
         this.factory = factory;
-        this.idSet = idSet;
+        this.itemsField = itemsField;
     }
 
     @NotNull
@@ -30,9 +30,10 @@ public class DeclarativeGroupNodeFactory implements NodeFactory<InputDataObject>
     public LogicNode create(@Nullable InputDataObject arg) {
         if (null == arg) throw new NullPointerException("arg");
 
-        NodeChildResolver childResolver = DeclarativeChildResolverMaker.make(
-                NullChildResolver.INSTANCE, factory, arg, idSet);
+        InputDataObject itemsData = arg.getField(itemsField);
 
-        return new CompositeNode(childResolver);
+        NodePopulator populator = new DeclarativePopulator(factory, itemsData);
+
+        return new CompositeNode(NullChildResolver.INSTANCE, populator);
     }
 }

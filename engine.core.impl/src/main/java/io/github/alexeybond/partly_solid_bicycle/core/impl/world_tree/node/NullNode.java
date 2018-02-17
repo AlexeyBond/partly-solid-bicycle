@@ -3,6 +3,7 @@ package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodePopulator;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,7 +12,7 @@ import java.util.NoSuchElementException;
 
 public class NullNode extends NodeBase {
     @Override
-    protected void onConnected0(@NotNull LogicNode parent) {
+    protected void onConnected0(@NotNull LogicNode parent, Id<LogicNode> id) {
 
     }
 
@@ -32,6 +33,11 @@ public class NullNode extends NodeBase {
             @NotNull Id<LogicNode> id,
             @NotNull NodeFactory<A> factory,
             @Nullable A arg) throws RuntimeException, UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void populate(@NotNull NodePopulator populator) {
         throw new UnsupportedOperationException();
     }
 

@@ -3,6 +3,7 @@ package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodePopulator;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +19,7 @@ public class ProxyNode extends NodeBase {
     }
 
     @Override
-    protected void onConnected0(@NotNull LogicNode parent) {
+    protected void onConnected0(@NotNull LogicNode parent, Id<LogicNode> id) {
 
     }
 
@@ -41,6 +42,11 @@ public class ProxyNode extends NodeBase {
             @Nullable A arg)
             throws RuntimeException, UnsupportedOperationException {
         return real.getOrAdd(id, factory, arg);
+    }
+
+    @Override
+    public void populate(@NotNull NodePopulator populator) {
+        real.populate(populator);
     }
 
     @Override

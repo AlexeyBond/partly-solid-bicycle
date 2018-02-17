@@ -1,11 +1,9 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node;
 
 import io.github.alexeybond.partly_solid_bicycle.core.impl.util.ExceptionAccumulator;
+import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.child_resolver.PopulatorChildResolver;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeChildResolver;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeVisitor;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,8 +19,14 @@ public class CompositeNode extends NodeBase {
     @NotNull
     private NodeChildResolver childResolver;
 
-    public CompositeNode(@NotNull NodeChildResolver childResolver) {
+    @NotNull
+    private final NodePopulator initialPopulator;
+
+    public CompositeNode(
+            @NotNull NodeChildResolver childResolver,
+            @NotNull NodePopulator initialPopulator) {
         this.childResolver = childResolver;
+        this.initialPopulator = initialPopulator;
     }
 
     @Contract("_->fail")
@@ -42,7 +46,7 @@ public class CompositeNode extends NodeBase {
         }
 
         try {
-            node.onConnected(this);
+            node.onConnected(this, id);
         } catch (RuntimeException e) {
             map.remove(id);
             throw e;
@@ -62,7 +66,6 @@ public class CompositeNode extends NodeBase {
 
         if (null == res) {
             res = childResolver.resolve(id);
-            childResolver = childResolver.next();
             put0(id, res);
         }
 
@@ -90,6 +93,18 @@ public class CompositeNode extends NodeBase {
         }
 
         return res;
+    }
+
+    @Override
+    public void populate(@NotNull NodePopulator populator) {
+        NodeChildResolver prevResolver = this.childResolver;
+        this.childResolver = new PopulatorChildResolver(this, prevResolver, populator);
+
+        try {
+            populator.populate(this);
+        } finally {
+            this.childResolver = prevResolver;
+        }
     }
 
     @Override
@@ -127,10 +142,8 @@ public class CompositeNode extends NodeBase {
     }
 
     @Override
-    protected void onConnected0(@NotNull LogicNode parent) {
-        for (Id<LogicNode> childId : childResolver.getUnresolvedIds()) {
-            get(childId);
-        }
+    protected void onConnected0(@NotNull LogicNode parent, Id<LogicNode> id) {
+        populate(initialPopulator);
     }
 
     @Override

@@ -44,7 +44,7 @@ public class DeclarativeNodeFactories implements Module {
 
                 IdSet<LogicNode> idSet = IoC.resolve("id set for node kind", kind);
 
-                factory.put("group", new DeclarativeGroupNodeFactory(factory, idSet));
+                factory.put("group", new DeclarativeGroupNodeFactory(factory, "items"));
 
                 return new Singleton(factory);
             }

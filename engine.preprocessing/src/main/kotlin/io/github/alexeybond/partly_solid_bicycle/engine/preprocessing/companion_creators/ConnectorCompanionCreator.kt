@@ -4,10 +4,13 @@ import com.squareup.javapoet.*
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.CompanionResolver
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.Loader
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.impl.SingletonCompanionResolver
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ComponentConnector
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeAttachmentListener
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotation_processors.COMPANION_RESOLVER_FIELD_NAME
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotation_processors.isNodeClass
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotation_processors.isSubclass
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.adaptor.CompanionTypeCreatorAdaptor
 import java.util.*
 import javax.annotation.processing.ProcessingEnvironment
@@ -17,6 +20,7 @@ import javax.lang.model.element.TypeElement
 class ConnectorCompanionCreator : CompanionTypeCreatorAdaptor() {
     private val COMPONENT_PARAM_NAME = "component"
     private val NODE_PARAM_NAME = "node"
+    private val ID_PARAM_NAME = "id"
 
     override fun getCompanionTypes(): MutableIterable<String> {
         return Collections.singleton("connector")
@@ -51,6 +55,8 @@ class ConnectorCompanionCreator : CompanionTypeCreatorAdaptor() {
                 .addAnnotation(Override::class.java)
                 .addParameter(ClassName.get(componentClass), COMPONENT_PARAM_NAME, Modifier.FINAL)
                 .addParameter(LogicNode::class.java, NODE_PARAM_NAME, Modifier.FINAL)
+                .addParameter(ParameterizedTypeName.get(Id::class.java, LogicNode::class.java),
+                        ID_PARAM_NAME, Modifier.FINAL)
                 .addCode(connectCBB.build())
                 .build()
 
@@ -64,7 +70,7 @@ class ConnectorCompanionCreator : CompanionTypeCreatorAdaptor() {
 
         val classBuilder = TypeSpec.classBuilder(className)
 
-        buildCode(processingEnvironment, classBuilder, connectCBB, disconnectCBB)
+        buildCode(componentClass, processingEnvironment, classBuilder, connectCBB, disconnectCBB)
 
         return classBuilder
                 .addModifiers(Modifier.PUBLIC)
@@ -77,11 +83,19 @@ class ConnectorCompanionCreator : CompanionTypeCreatorAdaptor() {
     }
 
     private fun buildCode(
+            componentClass: TypeElement,
             processingEnvironment: ProcessingEnvironment,
             classBuilder: TypeSpec.Builder,
             connectCodeBuilder: CodeBlock.Builder,
             disconnectCodeBuilder: CodeBlock.Builder
     ) {
-        // TODO:: Implement
+        // TODO:: Implement some more useful code generation e.g. references to nodes automatically filled on connect, methods called on events by subscriptions initialized on connect and removed on disconnect, etc.
+
+        if (isSubclass(componentClass, NodeAttachmentListener::class.java, processingEnvironment)) {
+            connectCodeBuilder.add(
+                    "$COMPONENT_PARAM_NAME.onAttached($NODE_PARAM_NAME);\n")
+            disconnectCodeBuilder.add(
+                    "$COMPONENT_PARAM_NAME.onDetached($NODE_PARAM_NAME);\n")
+        }
     }
 }
