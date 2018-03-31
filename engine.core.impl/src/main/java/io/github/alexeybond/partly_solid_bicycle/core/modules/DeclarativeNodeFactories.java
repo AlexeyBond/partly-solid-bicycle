@@ -22,6 +22,8 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.Node
 import java.util.Collection;
 import java.util.Collections;
 
+import static io.github.alexeybond.partly_solid_bicycle.core.impl.app.module.ModuleUtils.makeDependencyInfo;
+
 public class DeclarativeNodeFactories implements Module {
     @Override
     public void init(Collection<Object> env) {
@@ -102,8 +104,14 @@ public class DeclarativeNodeFactories implements Module {
 
     }
 
+    private static final Iterable<Iterable<String>> DEPENDENCY_INFO = makeDependencyInfo(
+            Collections.singleton("declarative_node_factory_strategies"),
+            Collections.<String>emptyList(),
+            Collections.<String>emptyList()
+    );
+
     @Override
     public Iterable<Iterable<String>> dependencyInfo() {
-        return Collections.emptyList();
+        return DEPENDENCY_INFO;
     }
 }

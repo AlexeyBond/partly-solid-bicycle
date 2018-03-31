@@ -447,7 +447,25 @@ class ComponentCompanionProcessor : AbstractProcessor() {
             cb: CodeBlock.Builder,
             processingEnv: ProcessingEnvironment): CodeBlock.Builder {
         // TODO:: Gather dependency info from module annotations...
-        return cb.add("$DEPENDENCY_INFO_FIELD_NAME = \$T.emptyList();\n", Collections::class.java)
+        val providedDependencies = ArrayList<String>()
+        val dependencies = ArrayList<String>(listOf(
+                // For "create component node factory", "create custom node factory", "register node factory"
+                "declarative_node_factory_strategies"
+        ))
+        val reverseDependencies = ArrayList<String>()
+
+        fun stringVarargInitializer(list: List<String>): String {
+            return list.map { s -> s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\\n") }
+                    .map { "\"$it\"" }
+                    .joinToString(", ")
+        }
+
+        return cb.add("""$DEPENDENCY_INFO_FIELD_NAME = ${"\$T"}.<Iterable<String>>asList(
+            |   ${"\$T"}.<String>asList(${stringVarargInitializer(providedDependencies)}),
+            |   ${"\$T"}.<String>asList(${stringVarargInitializer(dependencies)}),
+            |   ${"\$T"}.<String>asList(${stringVarargInitializer(reverseDependencies)})
+            |);""".trimMargin(),
+                Arrays::class.java, Arrays::class.java, Arrays::class.java, Arrays::class.java)
     }
 
     private fun logCompanions() {
