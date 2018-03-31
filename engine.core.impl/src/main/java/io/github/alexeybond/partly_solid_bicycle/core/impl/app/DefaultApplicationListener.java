@@ -1,6 +1,8 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.app;
 
 import com.badlogic.gdx.ApplicationListener;
+import io.github.alexeybond.partly_solid_bicycle.core.impl.app.module.ModuleSet;
+import io.github.alexeybond.partly_solid_bicycle.core.impl.app.module.ModuleSetBuilder;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.app.state.MainState;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.ApplicationState;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ioc.IoC;
@@ -12,7 +14,11 @@ public class DefaultApplicationListener implements ApplicationListener {
     private final MainState state;
 
     @NotNull
-    private final IoCContainer container;
+    private final ModuleSetBuilder moduleSetBuilder;
+
+    private ModuleSet moduleSet;
+
+    private IoCContainer container;
 
     private void setupContext() {
         IoC.use(container);
@@ -20,14 +26,15 @@ public class DefaultApplicationListener implements ApplicationListener {
 
     public DefaultApplicationListener(
             @NotNull ApplicationState initialState,
-            @NotNull IoCContainer container) {
+            @NotNull ModuleSetBuilder moduleSetBuilder) {
         this.state = new MainState(initialState);
-        this.container = container;
+        this.moduleSetBuilder = moduleSetBuilder;
     }
 
     @Override
     public void create() {
-
+        moduleSet = moduleSetBuilder.bootstrap();
+        container = IoC.container();
     }
 
     @Override
@@ -58,5 +65,9 @@ public class DefaultApplicationListener implements ApplicationListener {
     public void dispose() {
         setupContext();
         state.dispose();
+        moduleSet.close();
+        moduleSet = null;
+        IoC.use((IoCContainer) null);
+        container = null;
     }
 }

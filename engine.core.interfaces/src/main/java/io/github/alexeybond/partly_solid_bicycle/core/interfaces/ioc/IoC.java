@@ -21,11 +21,16 @@ public enum IoC {
     @NotNull
     public static IoCStrategy resolveStrategy(@NotNull Object key)
             throws StrategyNotFoundException {
-        return containerHolder.get().resolveStrategy(key);
+        return container().resolveStrategy(key);
     }
 
     public static void register(@NotNull Object key, IoCStrategy strategy) {
-        containerHolder.get().register(key, strategy);
+        container().register(key, strategy);
+    }
+
+    @NotNull
+    public static IoCContainer container() {
+        return containerHolder.get();
     }
 
     public static void use(@NotNull IoCContainerHolder holder) {
