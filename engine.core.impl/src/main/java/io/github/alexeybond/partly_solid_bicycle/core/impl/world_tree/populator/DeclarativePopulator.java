@@ -76,6 +76,6 @@ public class DeclarativePopulator implements NodePopulator {
             return null;
         }
 
-        return node.getOrAdd(childId, factory, itemData);
+        return factory.create(itemData);
     }
 }

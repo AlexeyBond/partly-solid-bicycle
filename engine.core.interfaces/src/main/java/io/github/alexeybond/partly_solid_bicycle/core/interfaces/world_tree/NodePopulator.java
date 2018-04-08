@@ -22,8 +22,8 @@ public interface NodePopulator {
      *
      * @param node    the parent node
      * @param childId child node id
-     * @return child node (added by {@link LogicNode#getOrAdd(Id, NodeFactory, Object)} call) or {@code null}
-     * if this populator does not know how to resolve child with given identifier
+     * @return child node or {@code null} if this populator does not know how to resolve child with
+     * given identifier; the returned node (if not {@code null}) is not yet connected to parent
      */
     @Nullable
     LogicNode resolve(@NotNull LogicNode node, @NotNull Id<LogicNode> childId);

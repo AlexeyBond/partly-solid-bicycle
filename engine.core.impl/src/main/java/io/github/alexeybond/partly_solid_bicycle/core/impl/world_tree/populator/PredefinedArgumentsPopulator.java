@@ -44,7 +44,7 @@ public class PredefinedArgumentsPopulator<A> implements NodePopulator {
         A a = arguments.get(childId);
 
         if (null != a) {
-            return node.getOrAdd(childId, factory, a);
+            return factory.create(a);
         }
 
         return null;
