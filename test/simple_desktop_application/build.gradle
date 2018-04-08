@@ -34,7 +34,7 @@ compileTestKotlin {
 }
 
 task run(dependsOn: classes, type: JavaExec) {
-    main = "io.github.alexeybond.partly_solid_bicycle.test.simple_desktop_application.SimpleAppKt"
+    main = "io.github.alexeybond.partly_solid_bicycle.test.simple_desktop_application.ModulesAppKt"
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
     workingDir = project.projectDir.toPath().resolve("workdir").toFile()
@@ -44,4 +44,5 @@ dependencies {
     compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
     compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     compile project(':engine.core.impl')
+    compile project(':engine.game2d.impl')
 }

@@ -1,0 +1,13 @@
+{
+  "screens": {
+    "class": "group",
+    "items": {
+      "initial": {
+        "class": "defaultScreen",
+        "events": {
+        },
+        "screen": "custom screen"
+      }
+    }
+  }
+}

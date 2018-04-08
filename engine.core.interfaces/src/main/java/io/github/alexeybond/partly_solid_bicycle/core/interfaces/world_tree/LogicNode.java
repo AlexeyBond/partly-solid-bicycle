@@ -72,6 +72,7 @@ public interface LogicNode extends Visitable<NodeVisitor> {
 
     /**
      * @return the parent node of this node
+     * @throws IllegalStateException if this node is not connected
      */
     @NotNull
     LogicNode getParent();

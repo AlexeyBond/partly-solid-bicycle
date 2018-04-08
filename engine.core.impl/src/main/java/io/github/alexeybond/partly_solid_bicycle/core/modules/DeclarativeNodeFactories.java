@@ -1,5 +1,6 @@
 package io.github.alexeybond.partly_solid_bicycle.core.modules;
 
+import io.github.alexeybond.partly_solid_bicycle.core.impl.app.module.BaseModule;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.common.id.DefaultIdSet;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.ioc.strategies.LazyNamedItems;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.ioc.strategies.Singleton;
@@ -7,7 +8,6 @@ import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.factory.Co
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.factory.DeclarativeComponentNodeFactory;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.factory.DeclarativeCustomNodeFactory;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.factory.DeclarativeGroupNodeFactory;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.Module;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.ClassCompanionResolver;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.factory.GenericFactory;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.IdSet;
@@ -20,11 +20,15 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.Logi
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
 
 import java.util.Collection;
-import java.util.Collections;
 
-import static io.github.alexeybond.partly_solid_bicycle.core.impl.app.module.ModuleUtils.makeDependencyInfo;
+public class DeclarativeNodeFactories extends BaseModule {
+    {
+        provide("declarative_node_factory_strategies");
+        provide("node_id_sets");
 
-public class DeclarativeNodeFactories implements Module {
+        depend("ioc");
+    }
+
     @Override
     public void init(Collection<Object> env) {
         if (!env.contains("default")) {
@@ -102,16 +106,5 @@ public class DeclarativeNodeFactories implements Module {
     @Override
     public void shutdown() {
 
-    }
-
-    private static final Iterable<Iterable<String>> DEPENDENCY_INFO = makeDependencyInfo(
-            Collections.singleton("declarative_node_factory_strategies"),
-            Collections.<String>emptyList(),
-            Collections.<String>emptyList()
-    );
-
-    @Override
-    public Iterable<Iterable<String>> dependencyInfo() {
-        return DEPENDENCY_INFO;
     }
 }

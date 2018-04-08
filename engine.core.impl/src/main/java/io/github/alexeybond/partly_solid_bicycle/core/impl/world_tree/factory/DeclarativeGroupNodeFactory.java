@@ -1,7 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.factory;
 
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.child_resolver.NullChildResolver;
-import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node.CompositeNode;
+import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node.GroupNode;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.populator.DeclarativePopulator;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
@@ -34,6 +34,6 @@ public class DeclarativeGroupNodeFactory extends NodeFactoryAdapter<InputDataObj
 
         NodePopulator populator = new DeclarativePopulator(factory, itemsData);
 
-        return new CompositeNode(NullChildResolver.INSTANCE, populator);
+        return new GroupNode(NullChildResolver.INSTANCE, populator);
     }
 }

@@ -4,4 +4,6 @@ version '0.2.0-SNAPSHOT'
 dependencies {
     compileOnly project(':engine.preprocessing')
     compile project(':engine.game2d.interfaces')
+
+    compile project(':engine.core.impl')
 }

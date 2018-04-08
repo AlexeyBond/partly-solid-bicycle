@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-public class CompositeNode extends NodeBase {
+public class GroupNode extends NodeBase {
     private Map<Id<LogicNode>, LogicNode> map = new HashMap<Id<LogicNode>, LogicNode>();
 
     @NotNull
@@ -22,7 +22,7 @@ public class CompositeNode extends NodeBase {
     @NotNull
     private final NodePopulator initialPopulator;
 
-    public CompositeNode(
+    public GroupNode(
             @NotNull NodeChildResolver childResolver,
             @NotNull NodePopulator initialPopulator) {
         this.childResolver = childResolver;

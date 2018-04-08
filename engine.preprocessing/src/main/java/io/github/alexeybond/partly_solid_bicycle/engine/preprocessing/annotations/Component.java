@@ -1,7 +1,5 @@
 package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations;
 
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.Module;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -37,5 +35,9 @@ public @interface Component {
     /**
      * @return modules this component should be registered by or empty array for default module
      */
-    Class<? extends Module>[] modules() default {};
+    /*
+     It's impossible to use <? extends Module> instead of just <?> as generated modules do not
+     implement Module interface at the moment when the annotation is parsed :(
+     */
+    Class<?>[] modules() default {};
 }

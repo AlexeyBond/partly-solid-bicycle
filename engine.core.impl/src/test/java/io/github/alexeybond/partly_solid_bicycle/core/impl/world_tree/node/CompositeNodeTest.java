@@ -39,7 +39,7 @@ public class CompositeNodeTest {
 
     @Test(expected = NoSuchElementException.class)
     public void testGetComponentThrows() {
-        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE, NullPopulator.INSTANCE);
+        LogicNode node = new GroupNode(NullChildResolver.INSTANCE, NullPopulator.INSTANCE);
         node.onConnected(parentMock, idMocks[0]);
         node.getComponent();
     }
@@ -55,7 +55,7 @@ public class CompositeNodeTest {
                 }}
         );
 
-        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE, populator);
+        LogicNode node = new GroupNode(NullChildResolver.INSTANCE, populator);
 
         verifyZeroInteractions(childMocks[0], childMocks[1], childMocks[2]);
 
@@ -72,7 +72,7 @@ public class CompositeNodeTest {
 
     @Test
     public void testGetOrAdd() {
-        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE, NullPopulator.INSTANCE);
+        LogicNode node = new GroupNode(NullChildResolver.INSTANCE, NullPopulator.INSTANCE);
         node.onConnected(parentMock, idMocks[0]);
 
         LogicNode child = node.getOrAdd(idMocks[0], IdentityNodeFactory.INSTANCE, childMocks[0]);
@@ -93,7 +93,7 @@ public class CompositeNodeTest {
 
     @Test
     public void testDisconnect() {
-        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE, NullPopulator.INSTANCE);
+        LogicNode node = new GroupNode(NullChildResolver.INSTANCE, NullPopulator.INSTANCE);
         node.onConnected(parentMock, idMocks[0]);
 
         node.getOrAdd(idMocks[0], IdentityNodeFactory.INSTANCE, childMocks[0]);
@@ -117,7 +117,7 @@ public class CompositeNodeTest {
 
     @Test
     public void testRemove() {
-        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE, NullPopulator.INSTANCE);
+        LogicNode node = new GroupNode(NullChildResolver.INSTANCE, NullPopulator.INSTANCE);
         node.onConnected(parentMock, idMocks[0]);
 
         node.getOrAdd(idMocks[0], IdentityNodeFactory.INSTANCE, childMocks[0]);
@@ -149,7 +149,7 @@ public class CompositeNodeTest {
 
     @Test
     public void testAcceptVisitor() {
-        LogicNode node = new CompositeNode(NullChildResolver.INSTANCE, NullPopulator.INSTANCE);
+        LogicNode node = new GroupNode(NullChildResolver.INSTANCE, NullPopulator.INSTANCE);
         node.onConnected(parentMock, idMocks[0]);
 
         node.getOrAdd(idMocks[0], IdentityNodeFactory.INSTANCE, childMocks[0]);

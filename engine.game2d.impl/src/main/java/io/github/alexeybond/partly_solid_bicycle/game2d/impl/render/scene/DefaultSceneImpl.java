@@ -48,6 +48,6 @@ public class DefaultSceneImpl implements Scene {
 
     @Override
     public void draw(@NotNull DrawingState state) {
-        sceneRenderer.render(this, state);
+//        sceneRenderer.render(this, state);
     }
 }
