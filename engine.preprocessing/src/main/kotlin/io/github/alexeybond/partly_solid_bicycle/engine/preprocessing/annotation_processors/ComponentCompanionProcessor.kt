@@ -388,7 +388,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
                     .methodBuilder("init")
                     .addParameter(ParameterizedTypeName.get(
                             Collection::class.java, Object::class.java), "envs")
-                    .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                    .addModifiers(Modifier.PUBLIC)
                     .addAnnotation(Override::class.java)
                     .beginControlFlow("for (\$T env : envs)",
                             Object::class.java)
@@ -401,7 +401,7 @@ class ComponentCompanionProcessor : AbstractProcessor() {
 
             val shutdownMethodSpec = MethodSpec
                     .methodBuilder("shutdown")
-                    .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                    .addModifiers(Modifier.PUBLIC)
                     .addAnnotation(Override::class.java)
                     .build()
 
@@ -453,6 +453,11 @@ class ComponentCompanionProcessor : AbstractProcessor() {
                 "declarative_node_factory_strategies"
         ))
         val reverseDependencies = ArrayList<String>()
+
+        val annotation = module.getAnnotation(GeneratedModule::class.java);
+        providedDependencies.addAll(annotation.provided)
+        dependencies.addAll(annotation.depends)
+        reverseDependencies.addAll(annotation.reverseDepends)
 
         fun stringVarargInitializer(list: List<String>): String {
             return list.map { s -> s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\\n") }

@@ -1,11 +1,14 @@
 package io.github.alexeybond.partly_solid_bicycle.test.simple_desktop_application
 
+import com.badlogic.gdx.Gdx
 import io.github.alexeybond.partly_solid_bicycle.core.impl.app.DefaultApplicationListener
 import io.github.alexeybond.partly_solid_bicycle.core.impl.app.module.BaseModule
 import io.github.alexeybond.partly_solid_bicycle.core.impl.app.state.IoCDrivenApplicationState
 import io.github.alexeybond.partly_solid_bicycle.core.impl.app.state.TerminalStates
+import io.github.alexeybond.partly_solid_bicycle.core.impl.events.sources.DummyEventSource
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.ApplicationState
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.factory.GenericFactory
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.events.EventListener
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ioc.IoC
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ioc.IoCStrategy
 import io.github.alexeybond.partly_solid_bicycle.core.modules.application.AppConfigModule
@@ -15,9 +18,23 @@ import io.github.alexeybond.partly_solid_bicycle.game2d.impl.modules.ScreenRende
 import io.github.alexeybond.partly_solid_bicycle.game2d.interfaces.render.app.screen.Screen
 import io.github.alexeybond.partly_solid_bicycle.game2d.interfaces.render.app.screen.ScreenContext
 import io.github.alexeybond.partly_solid_bicycle.game2d.interfaces.render.target.RenderTarget
+import java.util.*
+import kotlin.concurrent.timerTask
 
 class CustomScreen : Screen {
     override fun create(context: ScreenContext, runState: ApplicationState): ApplicationState {
+        val listener = context.screenRoot[listOf("events", "event1")]
+                .getComponent<EventListener<DummyEventSource>>()
+        val source = DummyEventSource(1)
+        source.subscribe(listener)
+
+        Timer(true).schedule(timerTask {
+            Gdx.app.postRunnable {
+                source.trigger(null)
+            }
+        },
+                2000)
+
         println("Custom screen created")
         return runState
     }

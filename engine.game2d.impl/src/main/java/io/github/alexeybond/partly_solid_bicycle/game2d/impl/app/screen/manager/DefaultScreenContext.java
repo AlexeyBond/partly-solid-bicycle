@@ -66,11 +66,14 @@ public class DefaultScreenContext implements ScreenContext {
     }
 
     @Override
-    public void push(@NotNull String label, @NotNull GenericFactory<Screen, ScreenContext> factory) {
+    public void push(
+            @NotNull String label,
+            @NotNull String newLabel,
+            @NotNull GenericFactory<Screen, ScreenContext> factory) {
         if (label.equals(this.label)) {
             state.enqueue(
                     constructNewScreen(
-                            label,
+                            newLabel,
                             factory,
                             state,
                             this,
@@ -78,18 +81,21 @@ public class DefaultScreenContext implements ScreenContext {
                             target)
             );
         } else {
-            prevContext.push(label, factory);
+            prevContext.push(label, newLabel, factory);
             enqueueDispose(prevState);
         }
     }
 
     @Override
-    public void replace(@NotNull String label, @NotNull GenericFactory<Screen, ScreenContext> factory) {
+    public void replace(
+            @NotNull String label,
+            @NotNull String newLabel,
+            @NotNull GenericFactory<Screen, ScreenContext> factory) {
         ApplicationState next = prevState;
 
         if (label.equals(this.label)) {
             next = constructNewScreen(
-                    label,
+                    newLabel,
                     factory,
                     prevState,
                     prevContext,
@@ -97,7 +103,7 @@ public class DefaultScreenContext implements ScreenContext {
                     target
             );
         } else {
-            prevContext.replace(label, factory);
+            prevContext.replace(label, newLabel, factory);
         }
 
         enqueueDispose(next);

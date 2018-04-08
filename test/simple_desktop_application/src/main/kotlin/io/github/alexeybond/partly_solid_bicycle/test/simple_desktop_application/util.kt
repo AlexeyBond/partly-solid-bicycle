@@ -5,6 +5,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
 import com.badlogic.gdx.utils.Json
 import io.github.alexeybond.partly_solid_bicycle.core.impl.app.module.ModuleSetBuilder
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode
 import io.github.alexeybond.partly_solid_bicycle.core.modules.CoreDefault
 import io.github.alexeybond.partly_solid_bicycle.core.modules.DeclarativeNodeFactories
 import io.github.alexeybond.partly_solid_bicycle.core.modules.application.AppRootModule
@@ -37,4 +38,13 @@ fun ModuleSetBuilder.defaultDemoModules() {
     add(DeclarativeNodeFactories())
     add(CoreDefault())
     add(AppRootModule())
+}
+
+operator fun LogicNode.get(path: List<String>): LogicNode {
+    val idSet = treeContext.idSet
+    var node = this
+
+    for (step in path) node = node[idSet[step]]
+
+    return node
 }

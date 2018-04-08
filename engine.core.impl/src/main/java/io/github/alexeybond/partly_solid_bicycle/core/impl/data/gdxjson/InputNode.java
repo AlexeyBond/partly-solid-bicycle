@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.DataObjectVisitor;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions.InvalidInputDataTypeException;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions.UndefinedFieldException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -113,7 +114,11 @@ abstract class InputNode implements InputDataObject {
 
             @Override
             public InputDataObject getField(String field) throws InvalidInputDataTypeException {
-                return map.get(field, NULL);
+                InputDataObject value = map.get(field);
+
+                if (null == value) throw new UndefinedFieldException(field);
+
+                return value;
             }
         };
     }

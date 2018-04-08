@@ -10,13 +10,13 @@ class NullScreenContext implements ScreenContext {
     private static final String LABEL = "null";
 
     @Override
-    public void push(@NotNull String label, @NotNull GenericFactory<Screen, ScreenContext> factory) {
+    public void push(@NotNull String label, @NotNull String newLabel, @NotNull GenericFactory<Screen, ScreenContext> factory) {
         // TODO:: M.b. implement #push in root screen context and simplify #replace implementation using call of previous context's #push...
         throw new IllegalArgumentException("No such screen label: '" + label + "'");
     }
 
     @Override
-    public void replace(@NotNull String label, @NotNull GenericFactory<Screen, ScreenContext> factory) {
+    public void replace(@NotNull String label, @NotNull String newLabel, @NotNull GenericFactory<Screen, ScreenContext> factory) {
         throw new IllegalArgumentException("No such screen label: '" + label + "'");
     }
 

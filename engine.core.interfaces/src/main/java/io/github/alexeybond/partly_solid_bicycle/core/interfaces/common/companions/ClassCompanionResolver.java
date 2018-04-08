@@ -13,6 +13,7 @@ public interface ClassCompanionResolver<TO> {
      * @param type companion type name
      * @param <TC> companion type
      * @return {@link CompanionResolver} that will resolve a companion of given type for any instance of {@link TO}
+     * @throws IllegalArgumentException if there is no resolver for required type of companion
      */
     @NotNull
     <TC extends Companion<TO>> CompanionResolver<TO, TC> resolve(@NotNull String type);

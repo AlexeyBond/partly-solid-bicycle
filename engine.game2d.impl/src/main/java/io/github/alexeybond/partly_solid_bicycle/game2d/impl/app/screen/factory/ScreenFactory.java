@@ -1,21 +1,25 @@
-package io.github.alexeybond.partly_solid_bicycle.game2d.impl.app.screen;
+package io.github.alexeybond.partly_solid_bicycle.game2d.impl.app.screen.factory;
 
 import io.github.alexeybond.partly_solid_bicycle.core.impl.data.NullInputDataObject;
+import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.factory.NodeFactories;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.factory.GenericFactory;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.IdSet;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.adapter.DataObjectVisitorAdapter;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ioc.IoC;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ioc.IoCStrategy;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeAttachmentListener;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.TreeContext;
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Component;
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Optional;
 import io.github.alexeybond.partly_solid_bicycle.game2d.impl.modules.ScreenFactoryModule;
 import io.github.alexeybond.partly_solid_bicycle.game2d.interfaces.render.app.screen.Screen;
 import io.github.alexeybond.partly_solid_bicycle.game2d.interfaces.render.app.screen.ScreenContext;
+import io.github.alexeybond.partly_solid_bicycle.game2d.interfaces.render.app.screen.ScreenEventAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -45,7 +49,7 @@ import java.util.Map;
         kind = "applicationComponent",
         modules = {ScreenFactoryModule.class})
 public class ScreenFactory implements NodeAttachmentListener, GenericFactory<Screen, ScreenContext> {
-    private Map<String, ScreenEventAction> eventReactions;
+    private Map<String, ScreenEventAction> eventReactions = new HashMap<String, ScreenEventAction>();
 
     public InputDataObject events;
 
@@ -57,8 +61,8 @@ public class ScreenFactory implements NodeAttachmentListener, GenericFactory<Scr
 
     @Override
     public void onAttached(@NotNull LogicNode node) {
-        LogicNode parent = node.getParent();
-        TreeContext treeContext = parent.getTreeContext();
+        final LogicNode parent = node.getParent();
+        final IoCStrategy actionsStrategy = IoC.resolveStrategy("screen event action");
 
         events.accept(new DataObjectVisitorAdapter() {
             @Override
@@ -75,7 +79,13 @@ public class ScreenFactory implements NodeAttachmentListener, GenericFactory<Scr
 
             @Override
             public void visitField(String field, InputDataObject value) {
-                // TODO:: Prepare event reaction for name from `field`
+                ScreenEventAction action = (ScreenEventAction) actionsStrategy.resolve(
+                        value.getField("action").getString(),
+                        value,
+                        parent
+                );
+
+                eventReactions.put(field, action);
             }
         });
     }
@@ -88,8 +98,31 @@ public class ScreenFactory implements NodeAttachmentListener, GenericFactory<Scr
     @NotNull
     @Override
     public Screen create(@Nullable ScreenContext context) {
+        if (null == context) throw new NullPointerException("context");
+
         GenericFactory<Screen, ScreenContext> factory = IoC.resolve(screen, screenConfig);
-        // TODO:: Create a screen with prepared event reactions
+
+        initListeners(context);
+
         return factory.create(context);
+    }
+
+    private void initListeners(@NotNull ScreenContext context) {
+        LogicNode screenRoot = context.getScreenRoot();
+        IdSet<LogicNode> idSet = screenRoot.getTreeContext().getIdSet();
+
+        LogicNode eventsNode = screenRoot.getOrAdd(
+                idSet.get("events"),
+                NodeFactories.EMPTY_GROUP,
+                null
+        );
+
+        for (Map.Entry<String, ScreenEventAction> entry : eventReactions.entrySet()) {
+            eventsNode.getOrAdd(
+                    idSet.get(entry.getKey()),
+                    NodeFactories.SIMPLE_COMPONENT,
+                    new ScreenEventActionEventListener(entry.getValue(), context)
+            );
+        }
     }
 }

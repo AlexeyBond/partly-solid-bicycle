@@ -61,4 +61,10 @@ public @interface GeneratedModule {
      * @return {@code true} iff the module should be used as default module for current project
      */
     boolean useAsDefault() default false;
+
+    String[] provided() default {};
+
+    String[] depends() default {};
+
+    String[] reverseDepends() default {};
 }

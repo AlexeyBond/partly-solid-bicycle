@@ -32,7 +32,7 @@ public class ComponentNode<T> extends NodeBase {
     public <A> LogicNode getOrAdd(
             @NotNull Id<LogicNode> id,
             @NotNull NodeFactory<A> factory,
-            @Nullable A arg) throws RuntimeException, UnsupportedOperationException {
+            @Nullable A arg) throws RuntimeException {
         throw new UnsupportedOperationException();
     }
 
@@ -55,6 +55,7 @@ public class ComponentNode<T> extends NodeBase {
 
     @NotNull
     @Override
+    @SuppressWarnings({"unchecked"})
     public <TT> TT getComponent() throws NoSuchElementException {
         return (TT) component;
     }

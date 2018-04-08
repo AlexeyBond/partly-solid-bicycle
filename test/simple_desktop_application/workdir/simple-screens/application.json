@@ -5,8 +5,21 @@
       "initial": {
         "class": "defaultScreen",
         "events": {
+          "event1": {
+            "action": "replace",
+            "screen": "secondary"
+          }
         },
         "screen": "custom screen"
+      },
+      "secondary": {
+        "class": "defaultScreen",
+        "screen": "custom screen",
+        "events": {
+          "event1": {
+            "action": "terminate"
+          }
+        }
       }
     }
   }

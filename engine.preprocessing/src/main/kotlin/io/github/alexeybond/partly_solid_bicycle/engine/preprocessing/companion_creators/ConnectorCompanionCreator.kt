@@ -2,7 +2,6 @@ package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.companion
 
 import com.squareup.javapoet.*
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.CompanionResolver
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.Loader
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.impl.SingletonCompanionResolver
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ComponentConnector
@@ -16,6 +15,7 @@ import java.util.*
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
+import javax.tools.Diagnostic
 
 class ConnectorCompanionCreator : CompanionTypeCreatorAdaptor() {
     private val COMPONENT_PARAM_NAME = "component"
@@ -33,13 +33,17 @@ class ConnectorCompanionCreator : CompanionTypeCreatorAdaptor() {
             className: ClassName,
             componentClass: TypeElement): TypeSpec? {
         if (isNodeClass(componentClass, processingEnvironment)) {
+            processingEnvironment.messager.printMessage(
+                    Diagnostic.Kind.NOTE,
+                    "Skipping creation of 'connector' companion for ${componentClass.qualifiedName.toString()}",
+                    componentClass)
             return null
         }
 
         val resolverField = FieldSpec.builder(
                 ParameterizedTypeName.get(ClassName.get(CompanionResolver::class.java),
                         TypeName.get(componentClass.asType()),
-                        ParameterizedTypeName.get(ClassName.get(Loader::class.java),
+                        ParameterizedTypeName.get(ClassName.get(ComponentConnector::class.java),
                                 TypeName.get(componentClass.asType()))),
                 COMPANION_RESOLVER_FIELD_NAME)
                 .addModifiers(Modifier.STATIC, Modifier.FINAL, Modifier.PUBLIC)
@@ -49,6 +53,9 @@ class ConnectorCompanionCreator : CompanionTypeCreatorAdaptor() {
 
         val connectCBB = CodeBlock.builder()
         val disconnectCBB = CodeBlock.builder()
+        val classBuilder = TypeSpec.classBuilder(className)
+
+        buildCode(componentClass, processingEnvironment, classBuilder, connectCBB, disconnectCBB)
 
         val connectMethod = MethodSpec.methodBuilder("onConnected")
                 .addModifiers(Modifier.PUBLIC)
@@ -67,10 +74,6 @@ class ConnectorCompanionCreator : CompanionTypeCreatorAdaptor() {
                 .addParameter(LogicNode::class.java, NODE_PARAM_NAME, Modifier.FINAL)
                 .addCode(disconnectCBB.build())
                 .build()
-
-        val classBuilder = TypeSpec.classBuilder(className)
-
-        buildCode(componentClass, processingEnvironment, classBuilder, connectCBB, disconnectCBB)
 
         return classBuilder
                 .addModifiers(Modifier.PUBLIC)

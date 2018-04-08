@@ -84,6 +84,22 @@ public class ModuleSet implements Closeable {
 
                 topologicalSort.edge(provider, module);
             }
+
+            for (String reverseDependency : moduleReverseDependencies(module)) {
+                Module provider = providers.get(reverseDependency);
+
+                if (null == provider) {
+                    String msg = "Module '" +
+                            module.toString() +
+                            "' has unsatisfied reverse dependency '" +
+                            reverseDependency + "'";
+
+                    err = ExceptionAccumulator.add(err, new IllegalStateException(msg));
+                    continue;
+                }
+
+                topologicalSort.edge(module, provider);
+            }
         }
 
         Collection<Module> sorted = null;
