@@ -23,7 +23,7 @@ import kotlin.concurrent.timerTask
 
 class CustomScreen : Screen {
     override fun create(context: ScreenContext, runState: ApplicationState): ApplicationState {
-        val listener = context.screenRoot[listOf("events", "event1")]
+        val listener = context.screenRoot["events", "event1"]
                 .getComponent<EventListener<DummyEventSource>>()
         val source = DummyEventSource(1)
         source.subscribe(listener)

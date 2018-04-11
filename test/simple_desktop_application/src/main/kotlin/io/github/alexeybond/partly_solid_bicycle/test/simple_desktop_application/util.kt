@@ -40,7 +40,7 @@ fun ModuleSetBuilder.defaultDemoModules() {
     add(AppRootModule())
 }
 
-operator fun LogicNode.get(path: List<String>): LogicNode {
+operator fun LogicNode.get(vararg path: String): LogicNode {
     val idSet = treeContext.idSet
     var node = this
 

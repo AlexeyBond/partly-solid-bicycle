@@ -5,6 +5,8 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.Queue;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject;
 
+import java.io.InputStream;
+
 /**
  * Parses JSON documents to trees of {@link InputDataObject}'s.
  *
@@ -69,19 +71,28 @@ public class GdxJsonDataReader extends JsonReader {
         push(addChild(name, InputNode.newObject()));
     }
 
-    public InputDataObject parseData(String string) {
+    private InputNode.RootNode prepare() {
         InputNode.RootNode rootNode = new InputNode.RootNode();
         curNode = rootNode;
         nodeStack.clear();
+        return rootNode;
+    }
+
+    public InputDataObject parseData(String string) {
+        InputNode.RootNode rootNode = prepare();
         parse(string);
         return rootNode.getChild();
     }
 
     public InputDataObject parseData(FileHandle file) {
-        InputNode.RootNode rootNode = new InputNode.RootNode();
-        curNode = rootNode;
-        nodeStack.clear();
+        InputNode.RootNode rootNode = prepare();
         parse(file);
+        return rootNode.getChild();
+    }
+
+    public InputDataObject parseData(InputStream is) {
+        InputNode.RootNode rootNode = prepare();
+        parse(is);
         return rootNode.getChild();
     }
 }

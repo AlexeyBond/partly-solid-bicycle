@@ -1,0 +1,21 @@
+{
+  "class": "group",
+  "items": {
+    "a": {
+      "class": "component-1",
+      "siblingName": "b"
+    },
+    "b": {
+      "class": "component-1",
+      "siblingName": "c"
+    },
+    "c": {
+      "class": "component-1",
+      "siblingName": "a"
+    },
+    "d": {
+      "class": "component-1",
+      "siblingName": "b"
+    }
+  }
+}

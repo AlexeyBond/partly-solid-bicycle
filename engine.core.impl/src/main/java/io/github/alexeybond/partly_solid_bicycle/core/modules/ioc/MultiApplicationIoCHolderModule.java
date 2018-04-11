@@ -13,7 +13,11 @@ public class MultiApplicationIoCHolderModule extends BaseModule {
 
     @Override
     public void init(Collection<Object> env) {
-        IoC.use(new MultiApplicationHolder());
+        try {
+            IoC.use(new MultiApplicationHolder());
+        } catch (IllegalStateException e) {
+            // already initialized, OK
+        }
     }
 
     @Override
