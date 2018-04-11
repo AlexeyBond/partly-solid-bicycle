@@ -9,7 +9,8 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.Logi
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodePopulator;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.NoSuchElementException;
 
 /**
  * Populates a node using declarative children description and a fixed factory.
@@ -65,15 +66,15 @@ public class DeclarativePopulator implements NodePopulator {
         });
     }
 
-    @Nullable
+    @NotNull
     @Override
-    public LogicNode resolve(@NotNull LogicNode node, @NotNull Id<LogicNode> childId) {
+    public LogicNode resolve(@NotNull Id<LogicNode> childId) {
         InputDataObject itemData;
 
         try {
             itemData = itemsData.getField(String.valueOf(childId.serializable()));
         } catch (UndefinedFieldException e) {
-            return null;
+            throw new NoSuchElementException();
         }
 
         return factory.create(itemData);

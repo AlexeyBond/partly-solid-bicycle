@@ -4,7 +4,8 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodePopulator;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.NoSuchElementException;
 
 public enum NullPopulator implements NodePopulator {
     INSTANCE;
@@ -14,9 +15,9 @@ public enum NullPopulator implements NodePopulator {
         // nothing to do
     }
 
-    @Nullable
     @Override
-    public LogicNode resolve(@NotNull LogicNode node, @NotNull Id<LogicNode> childId) {
-        return null;
+    @NotNull
+    public LogicNode resolve(@NotNull Id<LogicNode> childId) {
+        throw new NoSuchElementException();
     }
 }

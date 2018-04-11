@@ -1,7 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node;
 
 import io.github.alexeybond.partly_solid_bicycle.core.impl.util.ExceptionAccumulator;
-import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.child_resolver.PopulatorChildResolver;
+import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.child_resolver.CompositeChildResolver;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.*;
 import org.jetbrains.annotations.Contract;
@@ -98,7 +98,7 @@ public class GroupNode extends NodeBase {
     @Override
     public void populate(@NotNull NodePopulator populator) {
         NodeChildResolver prevResolver = this.childResolver;
-        this.childResolver = new PopulatorChildResolver(this, prevResolver, populator);
+        this.childResolver = new CompositeChildResolver(prevResolver, populator);
 
         try {
             populator.populate(this);

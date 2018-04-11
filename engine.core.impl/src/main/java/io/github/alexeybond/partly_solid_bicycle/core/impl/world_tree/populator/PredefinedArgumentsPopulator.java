@@ -5,10 +5,10 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.Logi
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodePopulator;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * Populates a node with children produced by one factory with different arguments.
@@ -38,15 +38,15 @@ public class PredefinedArgumentsPopulator<A> implements NodePopulator {
         }
     }
 
-    @Nullable
+    @NotNull
     @Override
-    public LogicNode resolve(@NotNull LogicNode node, @NotNull Id<LogicNode> childId) {
+    public LogicNode resolve(@NotNull Id<LogicNode> childId) {
         A a = arguments.get(childId);
 
         if (null != a) {
             return factory.create(a);
         }
 
-        return null;
+        throw new NoSuchElementException();
     }
 }
