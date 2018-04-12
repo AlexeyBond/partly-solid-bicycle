@@ -1,6 +1,5 @@
 package io.github.alexeybond.partly_solid_bicycle.game2d.impl.app.screen.factory;
 
-import io.github.alexeybond.partly_solid_bicycle.core.impl.data.NullInputDataObject;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.factory.NodeFactories;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.factory.GenericFactory;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.IdSet;
@@ -10,8 +9,8 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ioc.IoC;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.ioc.IoCStrategy;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeAttachmentListener;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Component;
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Optional;
 import io.github.alexeybond.partly_solid_bicycle.game2d.impl.modules.ScreenFactoryModule;
 import io.github.alexeybond.partly_solid_bicycle.game2d.interfaces.render.app.screen.Screen;
 import io.github.alexeybond.partly_solid_bicycle.game2d.interfaces.render.app.screen.ScreenContext;
@@ -28,6 +27,10 @@ import java.util.Map;
  * <pre>
  * "pauseScreen": {
  *     "class": "defaultScreen",
+ *     "screen": {
+ *         "class": "myScreen",
+ *         // ... screen attributes ... //
+ *     },
  *     "events": {
  *         "resume": {
  *             "action": "pop",
@@ -53,11 +56,7 @@ public class ScreenFactory implements NodeAttachmentListener, GenericFactory<Scr
 
     public InputDataObject events;
 
-    @Optional
-    public String screen = "default screen";
-
-    @Optional
-    public InputDataObject screenConfig = NullInputDataObject.INSTANCE;
+    public InputDataObject screen;
 
     @Override
     public void onAttached(@NotNull LogicNode node) {
@@ -100,14 +99,20 @@ public class ScreenFactory implements NodeAttachmentListener, GenericFactory<Scr
     public Screen create(@Nullable ScreenContext context) {
         if (null == context) throw new NullPointerException("context");
 
-        GenericFactory<Screen, ScreenContext> factory = IoC.resolve(screen, screenConfig);
+        NodeFactory<InputDataObject> screenNodeFactory = IoC.resolve(
+                "node factory for node kind", "screen");
 
-        initListeners(context);
+        LogicNode screenRoot = context.getScreenRoot();
+        LogicNode screenNode = screenRoot.getOrAdd(
+                screenRoot.getTreeContext().getIdSet().get("screen"),
+                screenNodeFactory, screen);
 
-        return factory.create(context);
+        initTree(context);
+
+        return screenNode.getComponent();
     }
 
-    private void initListeners(@NotNull ScreenContext context) {
+    private void initTree(@NotNull ScreenContext context) {
         LogicNode screenRoot = context.getScreenRoot();
         IdSet<LogicNode> idSet = screenRoot.getTreeContext().getIdSet();
 

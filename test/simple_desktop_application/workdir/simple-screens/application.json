@@ -10,11 +10,15 @@
             "screen": "secondary"
           }
         },
-        "screen": "custom screen"
+        "screen": {
+          "class": "custom screen"
+        }
       },
       "secondary": {
         "class": "defaultScreen",
-        "screen": "custom screen",
+        "screen": {
+          "class": "custom screen"
+        },
         "events": {
           "event1": {
             "action": "terminate"
