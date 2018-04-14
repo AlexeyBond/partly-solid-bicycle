@@ -1,4 +1,4 @@
-package io.github.alexeybond.partly_solid_bicycle.test.simple_desktop_application
+package io.github.alexeybond.partly_solid_bicycle.examples
 
 import com.badlogic.gdx.Gdx
 import io.github.alexeybond.partly_solid_bicycle.core.impl.app.DefaultApplicationListener
