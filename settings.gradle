@@ -7,4 +7,5 @@ include 'test:annotation_processing'
 include 'test:examples'
 include 'engine.game2d.interfaces'
 include 'engine.game2d.impl'
+include 'engine.preprocessing.annotations'
 

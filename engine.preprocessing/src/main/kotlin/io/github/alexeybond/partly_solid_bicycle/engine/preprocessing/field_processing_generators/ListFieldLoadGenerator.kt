@@ -55,7 +55,7 @@ class ListFieldLoadGenerator : FieldLoadGenerator {
             |for (${InputDataObject::class.java.canonicalName} $rawElemVarName: $rvalueExpr.getList()) {
             |   ${elemType} $loadedElemVarName;
             |   $itemLoadStmt
-            |   $listVarName.add($loadedElemVarName);
+            |   $listVarName.process($loadedElemVarName);
             |}
             |$lvalueExpr = $listVarName;
             |

@@ -22,6 +22,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
     compile project(':engine.core.interfaces')
+    compile project(':engine.preprocessing.annotations')
 
     compile 'com.squareup:javapoet:1.9.0'
 
