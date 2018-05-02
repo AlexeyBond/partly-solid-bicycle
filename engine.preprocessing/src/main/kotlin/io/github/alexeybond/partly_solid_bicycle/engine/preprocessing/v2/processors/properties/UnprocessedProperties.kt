@@ -20,7 +20,7 @@ class UnprocessedProperties : ItemProcessor {
 
         propertyInfo.declaringElements.forEach { elem ->
             context.context.env.messager.printMessage(
-                    Diagnostic.Kind.ERROR,
+                    Diagnostic.Kind.WARNING,
                     "Component property '${propertyInfo.name}' was not processed by any property processor",
                     elem
             )

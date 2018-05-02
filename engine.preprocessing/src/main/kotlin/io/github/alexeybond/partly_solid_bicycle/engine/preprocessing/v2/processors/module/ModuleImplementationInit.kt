@@ -2,8 +2,10 @@ package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.proces
 
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.TypeSpec
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.Module
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ItemContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.ItemProcessor
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.add
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.DeclaredType
 import javax.lang.model.type.TypeKind
@@ -32,6 +34,10 @@ class ModuleImplementationInit : ItemProcessor {
 
         val implMutationAccumulator = context
                 .context.addGenerated(implClassName, TypeSpec.classBuilder(implClassName))
+
+        implMutationAccumulator.add {
+            addSuperinterface(Module::class.java)
+        }
 
         context["implClassName"] = implClassName
 

@@ -9,7 +9,7 @@ import javax.lang.model.element.TypeElement
 
 class ComponentPropertyEnumeration : ItemProcessor {
     override fun getPriority(): Int {
-        return Int.MIN_VALUE
+        return 0
     }
 
     override fun acceptsItemKind(itemKind: String): Boolean {

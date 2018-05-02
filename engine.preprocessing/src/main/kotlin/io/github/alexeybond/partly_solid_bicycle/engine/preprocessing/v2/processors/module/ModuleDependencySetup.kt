@@ -51,6 +51,16 @@ class ModuleDependencySetup : ItemProcessor {
             |   ${"\$T"}.<String>asList(${stringVarargInitializer(reverseDependencies)})
             |);""".trimMargin(),
                     Arrays::class.java, Arrays::class.java, Arrays::class.java, Arrays::class.java))
+
+            addMethod(MethodSpec
+                    .methodBuilder("dependencyInfo")
+                    .returns(ParameterizedTypeName.get(ClassName.get(Iterable::class.java),
+                            ParameterizedTypeName.get(ClassName.get(Iterable::class.java),
+                                    ClassName.get(String::class.java))))
+                    .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                    .addAnnotation(Override::class.java)
+                    .addCode("return $DEPENDENCY_INFO_FIELD_NAME;\n")
+                    .build())
         }
 
         return false
