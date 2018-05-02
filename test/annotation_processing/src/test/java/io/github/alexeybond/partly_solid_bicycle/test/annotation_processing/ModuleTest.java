@@ -1,7 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.test.annotation_processing;
 
-import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.Component4$$_companionOwner;
-import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.Component8$$_companionOwner;
+import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.Component4$_impl;
+import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.Component8$_impl;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.ioc.DefaultContainer;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.ioc.MultiApplicationHolder;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.Companion;
@@ -46,17 +46,17 @@ public class ModuleTest {
     @Test
     public void doTestSetupCompanions() {
         new Module1().init(Arrays.<Object>asList("default", "special1"));
-        Companion companion = new Component4$$_companionOwner().getCompanionObject("companion");
+        Companion companion = new Component4$_impl().getCompanionObject("companion");
 
         assertTrue(companion instanceof Component4.ASpecialCompanion1);
 
         new Module1().init(Arrays.<Object>asList("default", "special2"));
-        companion = new Component4$$_companionOwner().getCompanionObject("companion");
+        companion = new Component4$_impl().getCompanionObject("companion");
 
         assertTrue(companion instanceof Component4.ASpecialCompanion2);
 
         new Module1().init(Collections.<Object>singletonList("default"));
-        companion = new Component4$$_companionOwner().getCompanionObject("companion");
+        companion = new Component4$_impl().getCompanionObject("companion");
 
         assertTrue(companion instanceof Component4.ACompanion);
     }
@@ -69,7 +69,7 @@ public class ModuleTest {
                 .parseJSON("{class:component-8, field: Hello!}"));
 
         assertTrue(node.getComponent() instanceof Component8);
-        assertTrue(node.getComponent() instanceof Component8$$_companionOwner);
+        assertTrue(node.getComponent() instanceof Component8$_impl);
 
         assertEquals("Hello!", node.<Component8>getComponent().field);
     }

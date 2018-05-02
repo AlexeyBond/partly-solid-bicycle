@@ -25,6 +25,7 @@ abstract class AbstractCompanionInit : ItemProcessor {
 
     override fun processItem(context: ItemContext): Boolean {
         val componentCN: ClassName = context["className"]
+        val componentImplCN: ClassName = context["implClassName"]
 
         val companionCN = companionClassName(componentCN)
 
@@ -47,7 +48,7 @@ abstract class AbstractCompanionInit : ItemProcessor {
 
         val resolverInit = resolverInitCodeMutation(RESOLVER_FIELD_NAME, companionCN)
 
-        setupMethods(componentCN) { methodName, m ->
+        setupMethods(componentImplCN) { methodName, m ->
             val builder = MethodSpec.methodBuilder(methodName)
 
             m(builder)
@@ -67,7 +68,7 @@ abstract class AbstractCompanionInit : ItemProcessor {
             addField(FieldSpec.builder(
                     ParameterizedTypeName.get(
                             ClassName.get(CompanionResolver::class.java),
-                            componentCN,
+                            componentImplCN,
                             companionCN
                     ),
                     RESOLVER_FIELD_NAME)
@@ -77,7 +78,7 @@ abstract class AbstractCompanionInit : ItemProcessor {
 
             addStaticBlock(CodeBlock.builder().applyMutation(resolverInit).build())
 
-            addSuperinterfaces(getSuperinterfaces(componentCN))
+            addSuperinterfaces(getSuperinterfaces(componentImplCN))
 
             addModifiers(Modifier.PUBLIC, Modifier.FINAL)
         }
@@ -112,15 +113,15 @@ abstract class AbstractCompanionInit : ItemProcessor {
     protected open fun classSetup(componentCtx: ItemContext, companionCtx: ItemContext) {
     }
 
-    protected open fun getSuperinterfaces(componentCN: ClassName): List<TypeName> {
+    protected open fun getSuperinterfaces(implementationCN: ClassName): List<TypeName> {
         return listOf(ParameterizedTypeName.get(
                 ClassName.get(Companion::class.java),
-                componentCN
+                implementationCN
         ))
     }
 
     protected open fun setupMethods(
-            componentCN: ClassName,
+            implementationCN: ClassName,
             method: (String, MethodSpec.Builder.() -> Unit) -> Unit) {
     }
 }

@@ -16,19 +16,19 @@ class ConnectorCompanionInit : AbstractCompanionInit() {
     override val companionType: String = "connector"
     override val companionSuffix: String = ""
 
-    override fun getSuperinterfaces(componentCN: ClassName): List<TypeName> {
-        return super.getSuperinterfaces(componentCN) + listOf(
-                ParameterizedTypeName.get(CONNECTOR_CN, componentCN)
+    override fun getSuperinterfaces(implementationCN: ClassName): List<TypeName> {
+        return super.getSuperinterfaces(implementationCN) + listOf(
+                ParameterizedTypeName.get(CONNECTOR_CN, implementationCN)
         )
     }
 
     override fun setupMethods(
-            componentCN: ClassName,
+            implementationCN: ClassName,
             method: (String, MethodSpec.Builder.() -> Unit) -> Unit) {
         method("onConnected") {
             addParameter(
                     ParameterSpec
-                            .builder(componentCN, "component", Modifier.FINAL)
+                            .builder(implementationCN, "component", Modifier.FINAL)
                             .addAnnotation(NotNull::class.java)
                             .build()
             )
@@ -52,7 +52,7 @@ class ConnectorCompanionInit : AbstractCompanionInit() {
         method("onDisconnected") {
             addParameter(
                     ParameterSpec
-                            .builder(componentCN, "component", Modifier.FINAL)
+                            .builder(implementationCN, "component", Modifier.FINAL)
                             .addAnnotation(NotNull::class.java)
                             .build()
             )

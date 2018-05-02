@@ -14,18 +14,18 @@ class SaverCompanionInit : AbstractCompanionInit() {
     override val companionType: String = "saver"
     override val companionSuffix: String = ""
 
-    override fun getSuperinterfaces(componentCN: ClassName): List<TypeName> {
-        return super.getSuperinterfaces(componentCN) + listOf(
-                ParameterizedTypeName.get(SAVER_CN, componentCN)
+    override fun getSuperinterfaces(implementationCN: ClassName): List<TypeName> {
+        return super.getSuperinterfaces(implementationCN) + listOf(
+                ParameterizedTypeName.get(SAVER_CN, implementationCN)
         )
     }
 
     override fun setupMethods(
-            componentCN: ClassName,
+            implementationCN: ClassName,
             method: (String, MethodSpec.Builder.() -> Unit) -> Unit) {
         method("save") {
             addParameter(ParameterSpec
-                    .builder(componentCN, "src", Modifier.FINAL)
+                    .builder(implementationCN, "src", Modifier.FINAL)
                     .addAnnotation(NotNull::class.java)
                     .build())
 

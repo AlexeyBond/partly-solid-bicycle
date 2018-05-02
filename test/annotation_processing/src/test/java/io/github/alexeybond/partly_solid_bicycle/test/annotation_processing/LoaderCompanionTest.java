@@ -19,7 +19,7 @@ public class LoaderCompanionTest {
         dataObject.addField("name").setString("Metafoobar");
         dataObject.addField("data");
 
-        Component1 component = new Component1();
+        Component1$_impl component = new Component1$_impl();
 
         Component1_loader.RESOLVER.resolve(component).load(component, dataObject);
 
@@ -35,7 +35,7 @@ public class LoaderCompanionTest {
         DynamicNode dataObject = new DynamicNode();
         dataObject.addField("name").setString("buz");
 
-        Component1 component = new Component1();
+        Component1$_impl component = new Component1$_impl();
 
         Component1_loader.RESOLVER.resolve(component).load(component, dataObject);
     }
@@ -47,7 +47,7 @@ public class LoaderCompanionTest {
         dataObject.addField("y").setDouble(2.0);
         dataObject.addField("z").setDouble(42.);
 
-        Component1 component = new Component1();
+        Component1$_impl component = new Component1$_impl();
 
         Component1_loader.RESOLVER.resolve(component).load(component, dataObject);
 
@@ -68,7 +68,7 @@ public class LoaderCompanionTest {
         lst2 = lst1.addItem();
         lst2.addItem().setString("baz");
 
-        Component2 component = new Component2();
+        Component2$_impl component = new Component2$_impl();
 
         Component2_loader.RESOLVER.resolve(component).load(component, dataObject);
 
@@ -98,7 +98,7 @@ public class LoaderCompanionTest {
         lst2.addItem().setLong(100);
         lst2.addItem().setLong(200);
 
-        Component3 component = new Component3();
+        Component3$_impl component = new Component3$_impl();
 
         Component3_loader.RESOLVER.resolve(component).load(component, dataObject);
 
@@ -113,7 +113,7 @@ public class LoaderCompanionTest {
         dataObject.addField("s2").setString("bar");
         dataObject.addField("s3").setString("baz");
 
-        Component5 component = new Component5();
+        Component5$_impl component = new Component5$_impl();
 
         Component5_loader.RESOLVER.resolve(component).load(component, dataObject);
 
@@ -127,7 +127,7 @@ public class LoaderCompanionTest {
         DynamicNode dataObject = new DynamicNode();
         dataObject.addField("content").setString("1234");
 
-        Component6 component = new Component6();
+        Component6$_impl component = new Component6$_impl();
 
         String fieldInit = component.content;
 
@@ -144,7 +144,7 @@ public class LoaderCompanionTest {
         dataObject.addField("prop1").setString("hello, kotlin");
         dataObject.addField("prop2").addItem().setString("hello");
 
-        Component7 component = new Component7();
+        Component7$_impl component = new Component7$_impl();
 
         Component7_loader.RESOLVER.resolve(component).load(component, dataObject);
 

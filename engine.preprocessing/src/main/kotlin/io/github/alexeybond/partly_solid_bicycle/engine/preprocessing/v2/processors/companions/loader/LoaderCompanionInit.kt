@@ -14,17 +14,17 @@ class LoaderCompanionInit : AbstractCompanionInit() {
     override val companionType: String = "loader"
     override val companionSuffix: String = ""
 
-    override fun getSuperinterfaces(componentCN: ClassName): List<TypeName> {
-        return super.getSuperinterfaces(componentCN) + listOf<TypeName>(
-                ParameterizedTypeName.get(LOADER_CN, componentCN))
+    override fun getSuperinterfaces(implementationCN: ClassName): List<TypeName> {
+        return super.getSuperinterfaces(implementationCN) + listOf<TypeName>(
+                ParameterizedTypeName.get(LOADER_CN, implementationCN))
     }
 
     override fun setupMethods(
-            componentCN: ClassName,
+            implementationCN: ClassName,
             method: (String, MethodSpec.Builder.() -> Unit) -> Unit) {
         method("load") {
             addParameter(
-                    ParameterSpec.builder(componentCN, "dst", Modifier.FINAL)
+                    ParameterSpec.builder(implementationCN, "dst", Modifier.FINAL)
                             .addAnnotation(NotNull::class.java)
                             .build()
             )

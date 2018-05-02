@@ -1,6 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.test.annotation_processing;
 
-import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.Component10$$_companionOwner;
+import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.Component10$_impl;
+import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.Component9$_impl;
 import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.Component9_connector;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ComponentConnector;
@@ -15,8 +16,8 @@ public class ConnectorCompanionTest {
     public void doTestExplicitListener() {
         LogicNode node = mock(LogicNode.class);
         Id<LogicNode> id = mock(Id.class);
-        Component9 component = new Component9();
-        ComponentConnector<Component9> connector = Component9_connector.RESOLVER.resolve(component);
+        Component9$_impl component = new Component9$_impl();
+        ComponentConnector<Component9$_impl> connector = Component9_connector.RESOLVER.resolve(component);
 
         assertEquals(0, component.balance);
 
@@ -31,6 +32,6 @@ public class ConnectorCompanionTest {
 
     @Test(expected = RuntimeException.class)
     public void doTestNoConnectorForNodeClass() {
-        Component10$$_companionOwner.COMPANIONS.resolve("connector");
+        Component10$_impl.getClassCompanionResolver().resolve("connector");
     }
 }
