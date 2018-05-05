@@ -16,3 +16,4 @@ io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.com
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.component.ImplCompanionResolverInit
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.companions.loader.PropertyLoad
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.companions.connector.AttachmentListenerConnect
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.component.ComponentFactoryInit
