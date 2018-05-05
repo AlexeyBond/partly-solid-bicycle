@@ -15,8 +15,11 @@ class UnprocessedProperties : ItemProcessor {
     }
 
     override fun processItem(context: ItemContext): Boolean {
-        val componentContext: ItemContext = context["componentContext"]
         val propertyInfo: TypeProperty = context["info"]
+
+        if (null != context["processed"]) {
+            return false
+        }
 
         propertyInfo.declaringElements.forEach { elem ->
             context.context.env.messager.printMessage(

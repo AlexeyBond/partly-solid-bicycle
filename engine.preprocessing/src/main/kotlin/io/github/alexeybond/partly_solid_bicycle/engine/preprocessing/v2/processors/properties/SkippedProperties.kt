@@ -1,14 +1,12 @@
 package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.properties
 
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.TypeProperty
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.SkipProperty
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.getAnnotationMirror
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ItemContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.ItemProcessor
-import javax.lang.model.element.TypeElement
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
 
 class SkippedProperties : ItemProcessor {
-    private val ANNOTATION_CN = SkipProperty::class.java.canonicalName
-
     override fun getPriority(): Int {
         return Int.MIN_VALUE
     }
@@ -18,12 +16,10 @@ class SkippedProperties : ItemProcessor {
     }
 
     override fun processItem(context: ItemContext): Boolean {
-        val propertyInfo: TypeProperty = context["info"]
+        val env = context.context.env
+        val propertyInfo: PropertyInfo = context["info"]
 
-        if (propertyInfo.annotations.any {
-                    (it.annotationType.asElement() as TypeElement)
-                            .qualifiedName.toString() == ANNOTATION_CN
-                }) {
+        if (propertyInfo.getAnnotationMirror(env, SkipProperty::class) != null) {
             return true
         }
 

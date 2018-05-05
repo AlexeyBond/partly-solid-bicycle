@@ -1,0 +1,4 @@
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.operations.LoadBasicGenerator
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.operations.LoadArrayGenerator
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.operations.PropertyLoadGenerator
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.operations.LoadListGenerator

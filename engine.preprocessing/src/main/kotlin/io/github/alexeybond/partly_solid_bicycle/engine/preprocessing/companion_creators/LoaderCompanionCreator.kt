@@ -88,7 +88,7 @@ class LoaderCompanionCreator : CompanionTypeCreatorAdaptor() {
                 .forEach { property ->
                     // TODO:: Add annotation changing serialized field name
                     val serializedName = property.name
-                    val useSetter = property.hasSetter
+                    val useSetter = property.hasSetter()
                     val lvalue: String
                     val fieldVar = localVarName("fld")
                     val fieldExpr = "$PARAM_DATA.getField(\"$serializedName\")"
