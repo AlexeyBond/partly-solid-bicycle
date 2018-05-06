@@ -56,7 +56,7 @@ public class DeclarativeNodeFactories extends BaseModule {
             }
         }));
 
-        // (componentFactory: GenericFactory<T, InputDataObject>,
+        // (componentFactory: GenericFactory<T, Void>,
         //  companionResolver: ClassCompanionResolver<T>)
         //      -> NodeFactory<inputDataObject>
         IoC.register("create component node factory", new IoCStrategy() {
@@ -71,7 +71,7 @@ public class DeclarativeNodeFactories extends BaseModule {
             }
         });
 
-        // (componentFactory: GenericFactory<T extends LogicNode, InputDataObject>,
+        // (componentFactory: GenericFactory<T extends LogicNode, Void>,
         //  companionResolver: ClassCompanionResolver<T>)
         //      -> NodeFactory<inputDataObject>
         IoC.register("create custom node factory", new IoCStrategy() {

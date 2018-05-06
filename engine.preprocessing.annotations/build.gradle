@@ -1,0 +1,17 @@
+group 'io.github.alexeybond.partly_solid_bicycle'
+version '0.2.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    compileOnly project(':engine.core.interfaces')
+}

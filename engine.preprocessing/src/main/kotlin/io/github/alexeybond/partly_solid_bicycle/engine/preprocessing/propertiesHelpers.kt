@@ -1,5 +1,6 @@
 package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing
 
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
 import java.util.regex.Pattern
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.*
@@ -10,28 +11,64 @@ import javax.tools.Diagnostic
 import kotlin.reflect.KClass
 
 class TypeProperty(
-        val name: String,
-        val type: TypeMirror
-) {
-    var isReadable = false
-        private set
-    var isWritable = false
-        private set
-    var hasSetter = false
-        private set
-    var hasGetter = false
-        private set
-    var hasField = false
-        private set
-    val annotations: MutableList<AnnotationMirror> = ArrayList()
-    var declaringElements: MutableList<Element> = ArrayList()
+        private val name: String,
+        private val type: TypeMirror
+) : PropertyInfo {
+    override fun getGetterName(): String {
+        return getterName ?: throw IllegalStateException("No getter")
+    }
 
-    var getterName: String? = null
-        private set
-    var setterName: String? = null
-        private set
-    var fieldName: String? = null
-        private set
+    override fun getSetterName(): String {
+        return setterName ?: throw IllegalStateException("No setter")
+    }
+
+    override fun getName(): String {
+        return name
+    }
+
+    override fun getType(): TypeMirror {
+        return type
+    }
+
+    override fun isReadable(): Boolean {
+        return readable
+    }
+
+    override fun isWritable(): Boolean {
+        return writable
+    }
+
+    override fun hasField(): Boolean {
+        return hasField
+    }
+
+    override fun hasSetter(): Boolean {
+        return hasSetter
+    }
+
+    override fun hasGetter(): Boolean {
+        return hasGetter
+    }
+
+    override fun getDeclaringElements(): List<Element> {
+        return declaringElements
+    }
+
+    override fun getAnnotations(): List<AnnotationMirror> {
+        return annotations
+    }
+
+    private var readable = false
+    private var writable = false
+    private var hasSetter = false
+    private var hasGetter = false
+    private var hasField = false
+    private val annotations: MutableList<AnnotationMirror> = ArrayList()
+    private var declaringElements: MutableList<Element> = ArrayList()
+
+    private var getterName: String? = null
+    private var setterName: String? = null
+    private var fieldName: String? = null
 
     private fun addElement(element: Element) {
         declaringElements.add(element)
@@ -39,8 +76,8 @@ class TypeProperty(
     }
 
     internal fun addField(element: VariableElement) {
-        isReadable = true
-        isWritable = true
+        readable = true
+        writable = true
         hasField = true
         fieldName = element.simpleName.toString()
         addElement(element)
@@ -48,14 +85,14 @@ class TypeProperty(
 
     internal fun addSetter(element: ExecutableElement) {
         hasSetter = true
-        isWritable = true
+        writable = true
         setterName = element.simpleName.toString()
         addElement(element)
     }
 
     internal fun addGetter(element: ExecutableElement) {
         hasGetter = true
-        isReadable = true
+        readable = true
         getterName = element.simpleName.toString()
         addElement(element)
     }
@@ -168,7 +205,7 @@ fun <T : Element> TypeElement.iterateMembers(
             .forEach({ e -> action(e as T) })
 }
 
-fun <T : Annotation> TypeProperty.getAnnotationMirror(
+fun <T : Annotation> PropertyInfo.getAnnotationMirror(
         processingEnv: ProcessingEnvironment, clz: KClass<T>): AnnotationMirror? {
     val tu = processingEnv.typeUtils
     val type = processingEnv.elementUtils.getTypeElement(clz.java.canonicalName).asType()
@@ -176,3 +213,18 @@ fun <T : Annotation> TypeProperty.getAnnotationMirror(
             .find { a -> tu.isSameType(a.annotationType, type) }
 }
 
+fun PropertyInfo.generateAssignment(dstExpr: String, sourceExpr: String): String {
+    return if (hasSetter()) {
+        "$dstExpr.$setterName($sourceExpr);"
+    } else {
+        "$dstExpr.$name = $sourceExpr;"
+    }
+}
+
+fun PropertyInfo.generateRead(srcExpr: String): String {
+    return if (hasGetter()) {
+        "$srcExpr.$getterName()"
+    } else {
+        "$srcExpr.$name"
+    }
+}
