@@ -13,14 +13,14 @@ public class SuperRootNode implements LogicNode, TreeContext {
     private final IdSet<LogicNode> idSet;
 
     @NotNull
-    private final LogicNode rootNode;
+    private final ChildLogicNode rootNode;
 
     @NotNull
     private final Id<LogicNode> rootId;
 
     public SuperRootNode(
             @NotNull IdSet<LogicNode> idSet,
-            @NotNull LogicNode rootNode) {
+            @NotNull ChildLogicNode rootNode) {
         this.idSet = idSet;
         this.rootNode = rootNode;
 
@@ -76,16 +76,6 @@ public class SuperRootNode implements LogicNode, TreeContext {
     @Override
     public <T> T getComponent() throws NoSuchElementException {
         throw new NoSuchElementException();
-    }
-
-    @Override
-    public void onConnected(@NotNull LogicNode parent, @NotNull Id<LogicNode> id) {
-        throw new IllegalStateException();
-    }
-
-    @Override
-    public void onDisconnected(@NotNull LogicNode parent) {
-        throw new IllegalStateException();
     }
 
     @NotNull

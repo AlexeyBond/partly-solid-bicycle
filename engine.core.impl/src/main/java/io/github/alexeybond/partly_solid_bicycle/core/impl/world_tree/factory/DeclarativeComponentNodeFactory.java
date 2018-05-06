@@ -5,8 +5,8 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companio
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.companions.Loader;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.factory.GenericFactory;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ChildLogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ComponentConnector;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.adapter.NodeFactoryAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +32,7 @@ public class DeclarativeComponentNodeFactory<TC> extends NodeFactoryAdapter<Inpu
 
     @NotNull
     @Override
-    public LogicNode create(@Nullable InputDataObject arg) {
+    public ChildLogicNode create(@Nullable InputDataObject arg) {
         TC component = factory.create(null);
 
         loaderResolver.resolve(component).load(component, arg);

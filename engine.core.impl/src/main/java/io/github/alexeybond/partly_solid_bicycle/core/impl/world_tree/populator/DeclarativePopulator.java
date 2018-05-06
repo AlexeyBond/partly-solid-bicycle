@@ -5,6 +5,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.IdSet
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.adapter.DataObjectVisitorAdapter;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions.UndefinedFieldException;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ChildLogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodePopulator;
@@ -68,7 +69,7 @@ public class DeclarativePopulator implements NodePopulator {
 
     @NotNull
     @Override
-    public LogicNode resolve(@NotNull Id<LogicNode> childId) {
+    public ChildLogicNode resolve(@NotNull Id<LogicNode> childId) {
         InputDataObject itemData;
 
         try {

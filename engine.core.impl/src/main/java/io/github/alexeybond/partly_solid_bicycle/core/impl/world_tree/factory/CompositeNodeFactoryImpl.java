@@ -1,7 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.factory;
 
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ChildLogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.CompositeNodeFactory;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.adapter.NodeFactoryAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +20,7 @@ public abstract class CompositeNodeFactoryImpl<A, K>
 
     @NotNull
     @Override
-    public LogicNode create(@Nullable A arg) {
+    public ChildLogicNode create(@Nullable A arg) {
         K key = getKey(arg);
         NodeFactory<A> factory = map.get(key);
 

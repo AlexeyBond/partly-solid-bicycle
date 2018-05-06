@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 public class GroupNode extends NodeBase {
-    private Map<Id<LogicNode>, LogicNode> map = new HashMap<Id<LogicNode>, LogicNode>();
+    private Map<Id<LogicNode>, ChildLogicNode> map = new HashMap<Id<LogicNode>, ChildLogicNode>();
 
     @NotNull
     private NodeChildResolver childResolver;
@@ -38,7 +38,7 @@ public class GroupNode extends NodeBase {
         throw e;
     }
 
-    private void put0(@NotNull Id<LogicNode> id, @NotNull LogicNode node) {
+    private void put0(@NotNull Id<LogicNode> id, @NotNull ChildLogicNode node) {
         try {
             map.put(id, node);
         } catch (RuntimeException e) {
@@ -56,7 +56,7 @@ public class GroupNode extends NodeBase {
     @NotNull
     @Override
     public LogicNode get(@NotNull Id<LogicNode> id) throws NoSuchElementException {
-        LogicNode res;
+        ChildLogicNode res;
 
         try {
             res = map.get(id);
@@ -79,7 +79,7 @@ public class GroupNode extends NodeBase {
             @NotNull NodeFactory<A> factory,
             @Nullable A arg)
             throws RuntimeException, UnsupportedOperationException {
-        LogicNode res;
+        ChildLogicNode res;
 
         try {
             res = map.get(id);
@@ -110,7 +110,7 @@ public class GroupNode extends NodeBase {
     @Override
     public void remove(@NotNull Id<LogicNode> id)
             throws UnsupportedOperationException, IllegalStateException {
-        LogicNode removed = map.remove(id);
+        ChildLogicNode removed = map.remove(id);
 
         if (null != removed) {
             removed.onDisconnected(this);
@@ -120,14 +120,16 @@ public class GroupNode extends NodeBase {
     @Override
     public void remove(@NotNull LogicNode child)
             throws UnsupportedOperationException, IllegalStateException, IllegalArgumentException {
-        Iterator<Map.Entry<Id<LogicNode>, LogicNode>> entryIterator = map.entrySet().iterator();
+        Iterator<Map.Entry<Id<LogicNode>, ChildLogicNode>> entryIterator = map.entrySet().iterator();
 
         while (entryIterator.hasNext()) {
-            Map.Entry<Id<LogicNode>, LogicNode> entry = entryIterator.next();
+            Map.Entry<Id<LogicNode>, ChildLogicNode> entry = entryIterator.next();
 
-            if (entry.getValue() == child) {
+            ChildLogicNode myChild = entry.getValue();
+
+            if (myChild == child) {
                 entryIterator.remove();
-                child.onDisconnected(this);
+                myChild.onDisconnected(this);
                 return;
             }
         }
@@ -148,12 +150,12 @@ public class GroupNode extends NodeBase {
 
     @Override
     protected void onDisconnected0(@NotNull LogicNode parent) {
-        Map<Id<LogicNode>, LogicNode> map = this.map;
+        Map<Id<LogicNode>, ChildLogicNode> map = this.map;
         this.map = null;
 
         Throwable acc = ExceptionAccumulator.init();
 
-        for (Map.Entry<Id<LogicNode>, LogicNode> entry : map.entrySet()) {
+        for (Map.Entry<Id<LogicNode>, ChildLogicNode> entry : map.entrySet()) {
             try {
                 entry.getValue().onDisconnected(this);
             } catch (Exception e) {
@@ -166,7 +168,7 @@ public class GroupNode extends NodeBase {
 
     @Override
     public void accept(@NotNull NodeVisitor visitor) {
-        for (Map.Entry<Id<LogicNode>, LogicNode> entry : map.entrySet()) {
+        for (Map.Entry<Id<LogicNode>, ChildLogicNode> entry : map.entrySet()) {
             visitor.visitChild(entry.getKey(), entry.getValue());
         }
     }

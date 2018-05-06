@@ -6,7 +6,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node.Compo
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node.GroupNode;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node.NullNode;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.populator.NullPopulator;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ChildLogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,7 +15,7 @@ public enum NodeFactories implements NodeFactory<Object> {
     NULL {
         @NotNull
         @Override
-        public LogicNode create(@Nullable Object arg) {
+        public ChildLogicNode create(@Nullable Object arg) {
             return new NullNode();
         }
     },
@@ -23,7 +23,7 @@ public enum NodeFactories implements NodeFactory<Object> {
     EMPTY_GROUP {
         @NotNull
         @Override
-        public LogicNode create(@Nullable Object arg) {
+        public ChildLogicNode create(@Nullable Object arg) {
             return new GroupNode(NullChildResolver.INSTANCE, NullPopulator.INSTANCE);
         }
     },
@@ -31,7 +31,7 @@ public enum NodeFactories implements NodeFactory<Object> {
     SIMPLE_COMPONENT {
         @NotNull
         @Override
-        public LogicNode create(@Nullable Object component) {
+        public ChildLogicNode create(@Nullable Object component) {
             if (null == component) throw new NullPointerException("component");
 
             return new ComponentNode<Object>(component, NullConnector.get());

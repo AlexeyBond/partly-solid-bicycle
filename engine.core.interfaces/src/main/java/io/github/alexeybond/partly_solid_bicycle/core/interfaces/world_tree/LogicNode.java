@@ -50,10 +50,9 @@ public interface LogicNode extends Visitable<NodeVisitor> {
      * Remove child with given id.
      *
      * @param id child id
-     * @throws UnsupportedOperationException if this node does not support child removal
      * @throws IllegalStateException         if the child cannot be removed in current state of this node
      */
-    void remove(@NotNull Id<LogicNode> id) throws UnsupportedOperationException, IllegalStateException;
+    void remove(@NotNull Id<LogicNode> id) throws IllegalStateException;
 
     /**
      * Remove given child.
@@ -62,13 +61,11 @@ public interface LogicNode extends Visitable<NodeVisitor> {
      * </p>
      *
      * @param child the child to remove
-     * @throws UnsupportedOperationException if this node may have children but does not support
-     *                                       child removal
      * @throws IllegalStateException         if the child cannot be removed in current state of this node
      * @throws IllegalArgumentException      if given node is not a child of this node
      */
     void remove(@NotNull LogicNode child)
-            throws UnsupportedOperationException, IllegalStateException, IllegalArgumentException;
+            throws IllegalStateException, IllegalArgumentException;
 
     /**
      * @return the parent node of this node
@@ -84,21 +81,6 @@ public interface LogicNode extends Visitable<NodeVisitor> {
      */
     @NotNull
     <T> T getComponent() throws NoSuchElementException;
-
-    /**
-     * Called when this node becomes a child of another node.
-     *
-     * @param parent the parent node
-     * @param id     identifier of this node within parent node
-     */
-    void onConnected(@NotNull LogicNode parent, @NotNull Id<LogicNode> id);
-
-    /**
-     * Called when this node is disconnected from a parent node.
-     *
-     * @param parent the parent node
-     */
-    void onDisconnected(@NotNull LogicNode parent);
 
     /**
      * @return context of a tree this node belongs to

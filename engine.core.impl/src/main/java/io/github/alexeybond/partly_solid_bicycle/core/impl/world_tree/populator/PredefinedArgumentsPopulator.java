@@ -1,6 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.populator;
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ChildLogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodePopulator;
@@ -40,7 +41,7 @@ public class PredefinedArgumentsPopulator<A> implements NodePopulator {
 
     @NotNull
     @Override
-    public LogicNode resolve(@NotNull Id<LogicNode> childId) {
+    public ChildLogicNode resolve(@NotNull Id<LogicNode> childId) {
         A a = arguments.get(childId);
 
         if (null != a) {
