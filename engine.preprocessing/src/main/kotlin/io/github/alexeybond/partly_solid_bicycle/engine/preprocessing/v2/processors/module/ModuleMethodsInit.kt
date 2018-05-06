@@ -23,9 +23,9 @@ class ModuleMethodsInit : ItemProcessor {
     override fun processItem(context: ItemContext): Boolean {
         val moduleMutations: Mutations<TypeSpec.Builder> = context["implMutations"]
 
-        val staticInitBuilder = MutationAccumulatorImpl<CodeBlock.Builder>(CodeBlock.builder())
-        val initBuilder = MutationAccumulatorImpl<CodeBlock.Builder>(CodeBlock.builder())
-        val shutdownBuilder = MutationAccumulatorImpl<CodeBlock.Builder>(CodeBlock.builder())
+        val staticInitBuilder = MutationAccumulatorImpl<CodeBlock.Builder>(CodeBlock::builder)
+        val initBuilder = MutationAccumulatorImpl<CodeBlock.Builder>(CodeBlock::builder)
+        val shutdownBuilder = MutationAccumulatorImpl<CodeBlock.Builder>(CodeBlock::builder)
 
         context["codeMutations:staticInit"] = staticInitBuilder
         context["codeMutations:method:init"] = initBuilder

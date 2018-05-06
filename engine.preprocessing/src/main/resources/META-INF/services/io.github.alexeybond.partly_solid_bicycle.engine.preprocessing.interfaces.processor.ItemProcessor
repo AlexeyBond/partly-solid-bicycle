@@ -17,3 +17,9 @@ io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.com
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.companions.loader.PropertyLoad
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.companions.connector.AttachmentListenerConnect
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.component.ComponentFactoryInit
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.component.ComponentModuleAssociation
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.module.ModuleEnvInitializersInit
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.component.ComponentRegistration
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.component.ComponentTypeCheck
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.module.ModuleEnvInitializersPrelude
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.companions.CompanionRegistration

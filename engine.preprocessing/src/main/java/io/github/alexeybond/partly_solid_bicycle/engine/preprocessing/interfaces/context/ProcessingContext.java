@@ -6,6 +6,7 @@ import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import java.util.NoSuchElementException;
 
 /**
  * Context of annotation processing process.
@@ -37,4 +38,7 @@ public interface ProcessingContext {
 
     @NotNull
     ItemContext newItem(@NotNull String id);
+
+    @NotNull
+    ItemContext getItem(@NotNull String id) throws NoSuchElementException;
 }

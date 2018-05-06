@@ -31,7 +31,7 @@ class ProcessingContextImpl(
             )
         }
 
-        val ma = MutationAccumulatorImpl(builder)
+        val ma = MutationAccumulatorImpl { builder.build().toBuilder() }
 
         generatedClasses[className] = ma
 
@@ -59,6 +59,10 @@ class ProcessingContextImpl(
         items[id] = ctx
         ctx["_id_"] = id
         return ctx
+    }
+
+    override fun getItem(id: String): ItemContext {
+        return items[id] ?: throw NoSuchElementException("Item: '$id'")
     }
 
     fun writeOutClasses() {

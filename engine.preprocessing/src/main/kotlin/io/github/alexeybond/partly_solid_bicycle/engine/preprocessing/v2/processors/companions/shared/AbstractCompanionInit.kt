@@ -35,6 +35,9 @@ abstract class AbstractCompanionInit : ItemProcessor {
             set("kind", "component-companion")
             set("companionType", companionType)
             set("component", context)
+            set("envs", getEnvironments())
+            set("className", companionCN)
+            set("implClassName", companionCN)
         }
 
         context["companion:$companionType$companionSuffix"] = companionCtx
@@ -53,7 +56,7 @@ abstract class AbstractCompanionInit : ItemProcessor {
 
             m(builder)
 
-            val codeMutations = MutationAccumulatorImpl(CodeBlock.builder())
+            val codeMutations = MutationAccumulatorImpl(CodeBlock::builder)
 
             companionCM.add {
                 addMethod(builder
@@ -123,5 +126,9 @@ abstract class AbstractCompanionInit : ItemProcessor {
     protected open fun setupMethods(
             implementationCN: ClassName,
             method: (String, MethodSpec.Builder.() -> Unit) -> Unit) {
+    }
+
+    protected open fun getEnvironments(): List<String> {
+        return listOf("default")
     }
 }

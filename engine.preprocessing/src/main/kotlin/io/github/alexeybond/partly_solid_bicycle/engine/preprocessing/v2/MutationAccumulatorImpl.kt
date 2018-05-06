@@ -4,7 +4,7 @@ import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.mutation.MutationAccumulator
 
 class MutationAccumulatorImpl<T>(
-        val instance: T
+        val factory: () -> T
 ) : MutationAccumulator<T> {
     private val mutations = ArrayList<Mutation<T>>()
 
@@ -13,6 +13,7 @@ class MutationAccumulatorImpl<T>(
     }
 
     fun applyAll(): T {
+        val instance = factory()
         mutations.forEach { it.apply(instance) }
         return instance
     }
