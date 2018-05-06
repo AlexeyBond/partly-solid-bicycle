@@ -23,3 +23,4 @@ io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.com
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.component.ComponentTypeCheck
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.module.ModuleEnvInitializersPrelude
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.companions.CompanionRegistration
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.v2.processors.companions.ImplementedCompanionDiscover
