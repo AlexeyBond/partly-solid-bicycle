@@ -5,6 +5,7 @@ import com.squareup.javapoet.TypeSpec
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.add
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ItemContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.ItemProcessor
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.exceptions.ProcessingInterruptException
 import javax.lang.model.element.Modifier
 import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic
@@ -18,7 +19,7 @@ class ComponentImplInit : ItemProcessor {
         return "component" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val pCtx = context.context
         val componentCN: ClassName = context["className"]
         val componentElem: TypeElement = context["element"]
@@ -29,7 +30,7 @@ class ComponentImplInit : ItemProcessor {
                     "Component class should not be final",
                     componentElem
             )
-            return true
+            throw ProcessingInterruptException.INSTANCE
         }
 
         val implCN = implementationClassName(componentCN)
@@ -46,8 +47,6 @@ class ComponentImplInit : ItemProcessor {
 
         context["implClassName"] = implCN
         context["implMutations"] = implClassMutations
-
-        return false
     }
 
     private fun implementationClassName(componentCN: ClassName): ClassName {

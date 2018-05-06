@@ -23,7 +23,7 @@ class ImplementedCompanionDiscover : ItemProcessor {
         return "round" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val roundEnv: RoundEnvironment = context["roundEnv"]
         val pCtx = context.context
         val pEnv = pCtx.env
@@ -68,7 +68,5 @@ class ImplementedCompanionDiscover : ItemProcessor {
                         set("implClassName", companionCN)
                     }
                 }
-
-        return false
     }
 }

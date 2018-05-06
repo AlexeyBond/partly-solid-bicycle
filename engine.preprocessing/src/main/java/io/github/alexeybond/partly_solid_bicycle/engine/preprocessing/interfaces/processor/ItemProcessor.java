@@ -1,6 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor;
 
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ItemContext;
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.exceptions.ProcessingInterruptException;
 import org.jetbrains.annotations.NotNull;
 
 public interface ItemProcessor {
@@ -10,7 +11,7 @@ public interface ItemProcessor {
 
     /**
      * @param context item context
-     * @return {@code true} iff item processing should be stopped
+     * @throws ProcessingInterruptException if processing of the item should be stopped
      */
-    boolean processItem(@NotNull ItemContext context);
+    void processItem(@NotNull ItemContext context) throws ProcessingInterruptException;
 }

@@ -19,7 +19,7 @@ class ComponentModuleAssociation : ItemProcessor {
         return "component" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val pCtx = context.context
         val pEnv = pCtx.env
         val element: TypeElement = context["element"]
@@ -38,7 +38,7 @@ class ComponentModuleAssociation : ItemProcessor {
                         "No modules defined and there is no default module",
                         element, annotationMirror
                 )
-                return false
+                return
             }
         } else {
             moduleClasses.mapNotNull { classMirror ->
@@ -59,7 +59,5 @@ class ComponentModuleAssociation : ItemProcessor {
         }
 
         context["modules"] = moduleItems
-
-        return false
     }
 }

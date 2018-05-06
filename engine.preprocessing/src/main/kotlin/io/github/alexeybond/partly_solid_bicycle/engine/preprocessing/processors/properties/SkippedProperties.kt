@@ -4,6 +4,7 @@ import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotation
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.getAnnotationMirror
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ItemContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.ItemProcessor
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.exceptions.ProcessingInterruptException
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
 
 class SkippedProperties : ItemProcessor {
@@ -15,14 +16,12 @@ class SkippedProperties : ItemProcessor {
         return "component-property" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val env = context.context.env
         val propertyInfo: PropertyInfo = context["info"]
 
         if (propertyInfo.getAnnotationMirror(env, SkipProperty::class) != null) {
-            return true
+            throw ProcessingInterruptException.INSTANCE
         }
-
-        return false
     }
 }

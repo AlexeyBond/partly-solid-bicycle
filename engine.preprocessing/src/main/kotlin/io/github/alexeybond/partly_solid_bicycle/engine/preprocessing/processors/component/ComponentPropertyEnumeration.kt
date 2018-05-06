@@ -16,7 +16,7 @@ class ComponentPropertyEnumeration : ItemProcessor {
         return "component" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val pCtx = context.context
         val componentType: TypeElement = context["element"]
         val className: ClassName = context["className"]
@@ -28,7 +28,5 @@ class ComponentPropertyEnumeration : ItemProcessor {
                 set("componentContext", context)
             }
         })
-
-        return false
     }
 }

@@ -17,11 +17,11 @@ class PropertyLoad : ItemProcessor {
         return "component-property" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val propertyInfo: PropertyInfo = context["info"]
 
         if (!(propertyInfo.isReadable && propertyInfo.isWritable)) {
-            return false
+            return
         }
 
         val componentContext: ItemContext = context["componentContext"]
@@ -47,7 +47,5 @@ class PropertyLoad : ItemProcessor {
 
             context["processed"] = true
         }
-
-        return false
     }
 }

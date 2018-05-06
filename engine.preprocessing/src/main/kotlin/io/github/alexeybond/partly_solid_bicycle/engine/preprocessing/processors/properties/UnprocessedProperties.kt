@@ -14,11 +14,11 @@ class UnprocessedProperties : ItemProcessor {
         return "component-property" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val propertyInfo: TypeProperty = context["info"]
 
         if (null != context["processed"]) {
-            return false
+            return
         }
 
         propertyInfo.declaringElements.forEach { elem ->
@@ -28,7 +28,5 @@ class UnprocessedProperties : ItemProcessor {
                     elem
             )
         }
-
-        return false
     }
 }

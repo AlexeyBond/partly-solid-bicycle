@@ -14,7 +14,7 @@ class ComponentTypeCheck : ItemProcessor {
         return "component" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val pEnv = context.context.env
         val tm: TypeMirror = context["typeMirror"]
 
@@ -23,7 +23,5 @@ class ComponentTypeCheck : ItemProcessor {
                 .asType()
 
         context["isNodeType"] = pEnv.typeUtils.isSubtype(tm, nodeTm)
-
-        return false
     }
 }

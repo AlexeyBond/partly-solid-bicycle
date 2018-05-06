@@ -16,7 +16,7 @@ class ModuleImplementationInit : ItemProcessor {
         return "module" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val typeElement: TypeElement = context["element"]
         val className: ClassName = context["className"]
 
@@ -42,8 +42,6 @@ class ModuleImplementationInit : ItemProcessor {
         context["implClassName"] = implClassName
 
         context["implMutations"] = implMutationAccumulator
-
-        return false
     }
 
     override fun getPriority(): Int {

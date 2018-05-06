@@ -19,7 +19,7 @@ class ModuleDependencySetup : ItemProcessor {
         return "module" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val implMutator: Mutations<TypeSpec.Builder> = context["implMutations"]
 
         val providedDependencies: List<String> = context["dependencies:provided"] ?: emptyList()
@@ -62,7 +62,5 @@ class ModuleDependencySetup : ItemProcessor {
                     .addCode("return $DEPENDENCY_INFO_FIELD_NAME;\n")
                     .build())
         }
-
-        return false
     }
 }

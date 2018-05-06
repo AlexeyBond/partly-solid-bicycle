@@ -19,7 +19,7 @@ class ComponentDiscover : ItemProcessor {
         return "round" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val pCtx = context.context
         val pEnv = pCtx.env
         val roundEnv: RoundEnvironment = context["roundEnv"]
@@ -42,7 +42,5 @@ class ComponentDiscover : ItemProcessor {
                         set("typeMirror", componentElem.asType())
                     }
                 })
-
-        return false
     }
 }

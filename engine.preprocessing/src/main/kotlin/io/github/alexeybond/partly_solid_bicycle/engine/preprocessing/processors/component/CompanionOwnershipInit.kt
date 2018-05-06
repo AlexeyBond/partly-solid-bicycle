@@ -28,7 +28,7 @@ class CompanionOwnershipInit : ItemProcessor {
         return "component" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val implCN: ClassName = context["implClassName"]
         val implMutations: Mutations<TypeSpec.Builder> = context["implMutations"]
 
@@ -71,7 +71,5 @@ class CompanionOwnershipInit : ItemProcessor {
                     .addCode("return $RESOLVER_FIELD_NAME;")
                     .build())
         }
-
-        return false
     }
 }

@@ -24,7 +24,7 @@ class ModuleEnvInitializersInit : ItemProcessor {
         return "module" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val initMutations: Mutations<CodeBlock.Builder> = context["codeMutations:method:init"]
         val implMutations: Mutations<TypeSpec.Builder> = context["implMutations"]
 
@@ -52,7 +52,5 @@ class ModuleEnvInitializersInit : ItemProcessor {
         val initializerPreludeMutations = MutationAccumulatorImpl(CodeBlock::builder)
 
         context["envInitializerPreludeMutations"] = initializerPreludeMutations
-
-        return false
     }
 }

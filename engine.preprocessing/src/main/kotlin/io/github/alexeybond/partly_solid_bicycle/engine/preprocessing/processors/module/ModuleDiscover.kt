@@ -12,7 +12,7 @@ class ModuleDiscover : ItemProcessor {
         return itemKind == "round"
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val roundEnv: RoundEnvironment = context["roundEnv"]
         val pCtx = context.context
 
@@ -37,8 +37,6 @@ class ModuleDiscover : ItemProcessor {
                         }
                     }
                 })
-
-        return false
     }
 
     override fun getPriority(): Int {

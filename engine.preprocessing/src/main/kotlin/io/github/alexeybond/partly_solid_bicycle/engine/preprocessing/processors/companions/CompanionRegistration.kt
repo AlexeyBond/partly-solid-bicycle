@@ -16,7 +16,7 @@ class CompanionRegistration : ItemProcessor {
         return "component-companion" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val componentCtx: ItemContext = context["component"]
         val envs: List<String> = context["envs"]
         val modules: List<ItemContext> = componentCtx["modules"]
@@ -34,7 +34,5 @@ class CompanionRegistration : ItemProcessor {
                 modifyModuleInit(module, env, mut)
             }
         }
-
-        return false
     }
 }

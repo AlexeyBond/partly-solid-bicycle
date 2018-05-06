@@ -16,7 +16,7 @@ class ComponentRegistration : ItemProcessor {
         return "component" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val modules: List<ItemContext> = context["modules"]
         val implClassName: ClassName = context["implClassName"]
         val envs: List<String> = context["envs"]
@@ -38,7 +38,5 @@ class ComponentRegistration : ItemProcessor {
                 modifyModuleInit(module, env, mut)
             }
         }
-
-        return false
     }
 }

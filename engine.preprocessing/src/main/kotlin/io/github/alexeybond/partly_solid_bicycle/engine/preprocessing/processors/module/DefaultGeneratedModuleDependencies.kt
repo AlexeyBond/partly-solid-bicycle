@@ -12,13 +12,11 @@ class DefaultGeneratedModuleDependencies : ItemProcessor {
         return "module" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val dependencies: MutableList<String> = context["dependencies:direct"] ?: ArrayList()
 
         dependencies.add("declarative_node_factory_strategies")
 
         context["dependencies:direct"] = dependencies
-
-        return false
     }
 }

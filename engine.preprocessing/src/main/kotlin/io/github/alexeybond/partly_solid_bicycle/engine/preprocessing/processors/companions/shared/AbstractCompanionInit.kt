@@ -23,7 +23,7 @@ abstract class AbstractCompanionInit : ItemProcessor {
         return "component" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val componentCN: ClassName = context["className"]
         val componentImplCN: ClassName = context["implClassName"]
 
@@ -49,7 +49,7 @@ abstract class AbstractCompanionInit : ItemProcessor {
 
         classSetup(context, companionCtx)
 
-        val resolverInit = resolverInitCodeMutation(RESOLVER_FIELD_NAME, companionCN)
+        val resolverInit = resolverInitCodeMutation(RESOLVER_FIELD_NAME, companionCN, companionCtx)
 
         setupMethods(componentImplCN) { methodName, m ->
             val builder = MethodSpec.methodBuilder(methodName)
@@ -87,8 +87,6 @@ abstract class AbstractCompanionInit : ItemProcessor {
         }
 
         context.context.processItem(companionCtx)
-
-        return false
     }
 
     protected abstract val companionType: String
@@ -103,7 +101,10 @@ abstract class AbstractCompanionInit : ItemProcessor {
         )
     }
 
-    protected open fun resolverInitCodeMutation(resolverLvalue: String, companionCN: ClassName)
+    protected open fun resolverInitCodeMutation(
+            resolverLvalue: String,
+            companionCN: ClassName,
+            companionCtx: ItemContext)
             : CodeBlock.Builder.() -> Unit {
         return {
             add("$resolverLvalue = new \$T(new \$T());",

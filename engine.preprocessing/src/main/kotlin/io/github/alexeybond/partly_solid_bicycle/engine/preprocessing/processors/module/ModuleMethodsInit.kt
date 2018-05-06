@@ -20,7 +20,7 @@ class ModuleMethodsInit : ItemProcessor {
         return -1_000
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val moduleMutations: Mutations<TypeSpec.Builder> = context["implMutations"]
 
         val staticInitBuilder = MutationAccumulatorImpl<CodeBlock.Builder>(CodeBlock::builder)
@@ -50,7 +50,5 @@ class ModuleMethodsInit : ItemProcessor {
 
             addStaticBlock(staticInitBuilder.applyAll().build())
         }
-
-        return false
     }
 }

@@ -16,7 +16,7 @@ class ImplCompanionResolverInit : ItemProcessor {
         return "component" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val resolverFieldName: String = context["companionResolverField"]
         val implMutations: Mutations<TypeSpec.Builder> = context["implMutations"]
 
@@ -25,7 +25,5 @@ class ImplCompanionResolverInit : ItemProcessor {
             addStaticBlock(CodeBlock
                     .of("$resolverFieldName = new io.github.alexeybond.partly_solid_bicycle.core.impl.common.companions.MutableClassCompanionResolverImpl();"))
         }
-
-        return false
     }
 }

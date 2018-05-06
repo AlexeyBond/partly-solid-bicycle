@@ -19,8 +19,8 @@ class AttachmentListenerConnect : ItemProcessor {
         return "component-companion" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
-        if (context.get<String>("companionType") != "connector") return false
+    override fun processItem(context: ItemContext) {
+        if (context.get<String>("companionType") != "connector") return
 
         val componentCtx: ItemContext = context["component"]
 
@@ -28,7 +28,7 @@ class AttachmentListenerConnect : ItemProcessor {
         val componentElem: TypeElement = componentCtx["element"]
 
         if (!isSubclass(componentElem, NodeAttachmentListener::class.java, componentCtx.context.env))
-            return false
+            return
 
         val connectMut: Mutations<CodeBlock.Builder> =
                 context["codeMutations:method:onConnected"]
@@ -42,7 +42,5 @@ class AttachmentListenerConnect : ItemProcessor {
         disconnectMut.add {
             add("component.onDetached(node);\n")
         }
-
-        return false
     }
 }

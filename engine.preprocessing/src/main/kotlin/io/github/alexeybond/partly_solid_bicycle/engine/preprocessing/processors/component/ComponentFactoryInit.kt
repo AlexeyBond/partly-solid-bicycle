@@ -21,7 +21,7 @@ class ComponentFactoryInit : ItemProcessor {
         return "component" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val classMutations: Mutations<TypeSpec.Builder> = context["implMutations"]
         val className: ClassName = context["implClassName"]
 
@@ -59,7 +59,5 @@ class ComponentFactoryInit : ItemProcessor {
             """.trimIndent(),
                     factoryType, NotNull::class.java, className, className))
         }
-
-        return false
     }
 }

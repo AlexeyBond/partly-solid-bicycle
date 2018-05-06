@@ -13,7 +13,7 @@ class ConfiguredGeneratedModuleDependencies : ItemProcessor {
         return "module" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val providedDependencies: ArrayList<String> = context["dependencies:provided"] ?: ArrayList()
         val dependencies: MutableList<String> = context["dependencies:direct"] ?: ArrayList()
         val reverseDependencies: ArrayList<String> = context["dependencies:reverse"] ?: ArrayList()
@@ -26,7 +26,5 @@ class ConfiguredGeneratedModuleDependencies : ItemProcessor {
         context["dependencies:provided"] = providedDependencies
         context["dependencies:direct"] = dependencies
         context["dependencies:reverse"] = reverseDependencies
-
-        return false
     }
 }

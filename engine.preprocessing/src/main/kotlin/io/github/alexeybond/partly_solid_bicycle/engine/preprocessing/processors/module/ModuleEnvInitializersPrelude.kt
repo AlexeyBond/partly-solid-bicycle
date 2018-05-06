@@ -17,7 +17,7 @@ class ModuleEnvInitializersPrelude : ItemProcessor {
         return "module" == itemKind
     }
 
-    override fun processItem(context: ItemContext): Boolean {
+    override fun processItem(context: ItemContext) {
         val preludeMutations: Mutations<CodeBlock.Builder> = context["envInitializerPreludeMutations"]
 
         preludeMutations.add {
@@ -31,7 +31,5 @@ class ModuleEnvInitializersPrelude : ItemProcessor {
                     IoCStrategy::class.java, IoC::class.java,
                     "register node factory")
         }
-
-        return false
     }
 }

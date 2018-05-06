@@ -7,6 +7,7 @@ import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ProcessingContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.mutation.MutationAccumulator
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.ItemProcessor
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.exceptions.ProcessingInterruptException
 import javax.annotation.processing.ProcessingEnvironment
 import javax.tools.Diagnostic
 
@@ -48,7 +49,11 @@ class ProcessingContextImpl(
 
     override fun processItem(item: ItemContext) {
         processorsForKind(item["kind"]).forEach {
-            if (it.processItem(item)) return
+            try {
+                it.processItem(item)
+            } catch (e: ProcessingInterruptException) {
+                return
+            }
         }
     }
 
