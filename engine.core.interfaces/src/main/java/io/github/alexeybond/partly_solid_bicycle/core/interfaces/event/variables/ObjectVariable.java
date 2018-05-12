@@ -23,9 +23,11 @@ public interface ObjectVariable<T> extends Variable<ObjectVariable<T>> {
     /**
      * Set new value.
      * <p>
-     * Call of this method will cause notification of all
+     * Call of this method may cause notification of all
      * {@link io.github.alexeybond.partly_solid_bicycle.core.interfaces.event.Listener listeners}
      * subscribed to this variable.
+     * Listeners may be notified synchronously or asynchronously ({@link #set(Object, Executor)} allows
+     * to define {@link Executor} that will execute notification).
      *
      * @param value the new value
      */

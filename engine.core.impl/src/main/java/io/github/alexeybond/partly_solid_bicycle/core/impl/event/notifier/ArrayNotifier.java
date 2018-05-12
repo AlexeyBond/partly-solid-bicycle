@@ -2,10 +2,11 @@ package io.github.alexeybond.partly_solid_bicycle.core.impl.event.notifier;
 
 import io.github.alexeybond.partly_solid_bicycle.core.impl.util.ExceptionAccumulator;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.event.Listener;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.event.Notifier;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.event.Topic;
 import org.jetbrains.annotations.NotNull;
 
-public class ArrayNotifier<TEvent> implements Topic<TEvent> {
+public class ArrayNotifier<TEvent> implements Notifier<TEvent> {
     private static Listener[] NO_LISTENERS = new Listener[0];
 
     private Listener[] listeners;
@@ -79,7 +80,8 @@ public class ArrayNotifier<TEvent> implements Topic<TEvent> {
         }
     }
 
-    protected void notifyListeners(@NotNull TEvent event, @NotNull Topic<TEvent> topic) {
+    @Override
+    public void notifyListeners(@NotNull TEvent event, @NotNull Topic<TEvent> topic) {
         Listener[] listeners = this.listeners;
         int left = listeners.length - freeCount;
 

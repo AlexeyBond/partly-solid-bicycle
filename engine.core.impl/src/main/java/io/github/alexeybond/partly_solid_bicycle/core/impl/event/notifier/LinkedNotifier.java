@@ -2,10 +2,11 @@ package io.github.alexeybond.partly_solid_bicycle.core.impl.event.notifier;
 
 import io.github.alexeybond.partly_solid_bicycle.core.impl.util.ExceptionAccumulator;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.event.Listener;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.event.Notifier;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.event.Topic;
 import org.jetbrains.annotations.NotNull;
 
-public class LinkedNotifier<TEvent> implements Topic<TEvent> {
+public class LinkedNotifier<TEvent> implements Notifier<TEvent> {
     private final class ListenerRef {
         Listener<? super TEvent> listener;
 
@@ -37,7 +38,8 @@ public class LinkedNotifier<TEvent> implements Topic<TEvent> {
         }
     }
 
-    void notifyListeners(@NotNull TEvent event, @NotNull Topic<TEvent> topic) {
+    @Override
+    public void notifyListeners(@NotNull TEvent event, @NotNull Topic<TEvent> topic) {
         ListenerRef ref = terminal.next, prev = terminal;
 
         Throwable acc = ExceptionAccumulator.init();

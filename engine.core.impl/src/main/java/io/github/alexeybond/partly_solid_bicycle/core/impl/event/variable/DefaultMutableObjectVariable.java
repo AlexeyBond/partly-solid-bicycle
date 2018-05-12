@@ -3,23 +3,43 @@ package io.github.alexeybond.partly_solid_bicycle.core.impl.event.variable;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.common.executors.ImmediateSynchronousExecutor;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.event.notifier.ArrayNotifier;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.event.Listener;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.event.variables.MutableObjectVariable;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.event.variables.ObjectVariable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.Executor;
 
-public class DefaultObjectVariable<T>
+public class DefaultMutableObjectVariable<T>
         extends ArrayNotifier<ObjectVariable<T>>
-        implements ObjectVariable<T>, Runnable {
+        implements MutableObjectVariable<T>, Runnable {
     private static final Executor DEFAULT_EXECUTOR = ImmediateSynchronousExecutor.INSTANCE;
 
-    private T current;
-    private T next;
+    @NotNull
+    private T current, next;
     private boolean dirty = false;
     private boolean notifying = false;
 
-    protected DefaultObjectVariable(int capacity) {
+    public DefaultMutableObjectVariable(
+            Listener<ObjectVariable<T>>[] subArray,
+            @NotNull T current,
+            @NotNull T next) {
+        super(subArray);
+        this.current = current;
+        this.next = next;
+    }
+
+    public DefaultMutableObjectVariable(
+            int capacity,
+            @NotNull T current,
+            @NotNull T next) {
         super(capacity);
+        this.current = current;
+        this.next = next;
+    }
+
+    @Override
+    public T mutable() {
+        return next;
     }
 
     @Override
@@ -35,6 +55,7 @@ public class DefaultObjectVariable<T>
     @Override
     public void set(T value, @NotNull Executor notificationExecutor) {
         next = value;
+
         dirty = true;
 
         if (notifying) return;
@@ -49,12 +70,16 @@ public class DefaultObjectVariable<T>
 
     @Override
     public void run() {
+        if (notifying) return;
+
         try {
             notifying = true;
 
             while (dirty) {
-                dirty = false;
+                T cur = current;
                 current = next;
+                next = cur;
+                dirty = false;
 
                 notifyListeners(this, this);
             }
