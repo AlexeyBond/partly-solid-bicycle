@@ -1,6 +1,6 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.app;
 
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.ProcessManager;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.systems.pm.ProcessManager;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeAttachmentListener;
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Component;

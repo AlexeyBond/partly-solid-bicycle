@@ -1,7 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.app;
 
 import io.github.alexeybond.partly_solid_bicycle.core.impl.util.TopologicalSort;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.ProcessManager;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.systems.pm.ProcessManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
