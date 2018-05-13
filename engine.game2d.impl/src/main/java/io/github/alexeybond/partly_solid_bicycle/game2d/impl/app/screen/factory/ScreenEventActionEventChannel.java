@@ -1,21 +1,22 @@
 package io.github.alexeybond.partly_solid_bicycle.game2d.impl.app.screen.factory;
 
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.events.EventListener;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.events.EventSource;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.event.Channel;
 import io.github.alexeybond.partly_solid_bicycle.game2d.interfaces.render.app.screen.ScreenContext;
 import io.github.alexeybond.partly_solid_bicycle.game2d.interfaces.render.app.screen.ScreenEventAction;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-// TODO:: Should this actually implement EventListener... or some another interface?
-public class ScreenEventActionEventListener implements EventListener {
+/**
+ * Channel that receives events that should result in change of screens stack.
+ */
+public class ScreenEventActionEventChannel implements Channel<InputDataObject> {
     @NotNull
     private final ScreenEventAction action;
 
     @NotNull
     private final ScreenContext context;
 
-    public ScreenEventActionEventListener(
+    public ScreenEventActionEventChannel(
             @NotNull ScreenEventAction action,
             @NotNull ScreenContext context) {
         this.action = action;
@@ -23,7 +24,7 @@ public class ScreenEventActionEventListener implements EventListener {
     }
 
     @Override
-    public void onEvent(@NotNull EventSource source, @Nullable Object initializer) {
+    public void send(@NotNull InputDataObject event) {
         action.act(context);
     }
 }

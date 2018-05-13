@@ -126,7 +126,7 @@ public class ScreenFactory implements NodeAttachmentListener, GenericFactory<Scr
             eventsNode.getOrAdd(
                     idSet.get(entry.getKey()),
                     NodeFactories.SIMPLE_COMPONENT,
-                    new ScreenEventActionEventListener(entry.getValue(), context)
+                    new ScreenEventActionEventChannel(entry.getValue(), context)
             );
         }
     }
