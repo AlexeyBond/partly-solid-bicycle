@@ -22,13 +22,13 @@ import java.util.NoSuchElementException;
  */
 public class DeclarativePopulator implements NodePopulator {
     @NotNull
-    private final NodeFactory<InputDataObject> factory;
+    private final NodeFactory<? super InputDataObject> factory;
 
     @NotNull
     private final InputDataObject itemsData;
 
     public DeclarativePopulator(
-            @NotNull NodeFactory<InputDataObject> factory,
+            @NotNull NodeFactory<? super InputDataObject> factory,
             @NotNull InputDataObject itemsData) {
         this.factory = factory;
         this.itemsData = itemsData;

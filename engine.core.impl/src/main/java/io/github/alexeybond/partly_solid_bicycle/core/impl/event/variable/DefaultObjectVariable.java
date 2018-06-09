@@ -18,7 +18,7 @@ public class DefaultObjectVariable<T>
     private boolean dirty = false;
     private boolean notifying = false;
 
-    protected DefaultObjectVariable(int capacity) {
+    public DefaultObjectVariable(int capacity) {
         super(capacity);
     }
 
