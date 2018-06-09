@@ -1,4 +1,4 @@
-package io.github.alexeybond.partly_solid_bicycle.core.impl.app;
+package io.github.alexeybond.partly_solid_bicycle.core.impl.app.systems.pm;
 
 import io.github.alexeybond.partly_solid_bicycle.core.impl.util.TopologicalSort;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.systems.pm.ProcessManager;

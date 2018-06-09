@@ -1,4 +1,4 @@
-package io.github.alexeybond.partly_solid_bicycle.core.impl.app;
+package io.github.alexeybond.partly_solid_bicycle.core.impl.app.systems.pm;
 
 import org.junit.Before;
 import org.junit.Test;
