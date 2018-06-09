@@ -69,7 +69,7 @@ import java.util.NoSuchElementException;
  * </pre>
  * will produce
  * <pre>{@code
- * /settings <- Topic<InputDataObject>
+ * /settings <- StateTopic<InputDataObject>
  * /settings/input <- ObjectVariable<InputDataObject> = { "move_forward": ["K_D", "K_LEFT"], ... }
  * // and no more deeper nodes! //
  * // ... //
@@ -92,7 +92,7 @@ public class StorageNode extends GroupNode {
                 new InitialChildFactory(new Listener<ObjectVariable<InputDataObject>>() {
                     @Override
                     public void receive(
-                            @NotNull ObjectVariable<InputDataObject> variable,
+                            @NotNull ObjectVariable<InputDataObject> item,
                             @NotNull Topic<? extends ObjectVariable<InputDataObject>> topic) {
                         variable.set(variable.get());
                     }
