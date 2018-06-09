@@ -12,14 +12,14 @@ public class ArrayNotifier<TEvent> implements Notifier<TEvent> {
     private Listener[] listeners;
     private int firstCheckFree, freeCount;
 
-    protected ArrayNotifier(Listener<TEvent>[] subArray) {
+    public ArrayNotifier(Listener<TEvent>[] subArray) {
         this.firstCheckFree = 0;
         this.freeCount = subArray.length;
         this.listeners = subArray;
     }
 
     @SuppressWarnings({"unchecked"})
-    protected ArrayNotifier(int capacity) {
+    public ArrayNotifier(int capacity) {
         this(0 == capacity ? NO_LISTENERS : new Listener[capacity]);
     }
 
