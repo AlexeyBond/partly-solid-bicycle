@@ -1,8 +1,8 @@
 # Logical nodes
 
-Almost everything in PSB application (screens, entities, components, systems, configurations) is represented as a tree of `LogicalNode`s in runtime.
+Almost everything in PSB application (screens, entities, components, systems, configurations) is represented as a tree of `LogicNode`s in runtime.
 
-You may think of `LogicalNode`s tree as of a virtual filesystem in UNIX-like OS:
+You may think of `LogicNode`s tree as of a virtual filesystem in UNIX-like OS:
 
 * There is a root node (called also "application root").
     Application root is accessible as dependency through IoC container (dependency name is `"application root node"`, it requires no parameters and usually is a singleton).
