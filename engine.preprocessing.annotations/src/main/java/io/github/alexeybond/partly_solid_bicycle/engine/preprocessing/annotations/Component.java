@@ -18,6 +18,12 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Component {
     /**
+     * List of names the component is registered with.
+     * <p>
+     * The first (or the only one) name in list is called "canonical" name and is used when
+     * a component instance gets serialized to identify component class.
+     * </p>
+     *
      * @return names to register this component with
      */
     String[] name();
