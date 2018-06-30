@@ -1,5 +1,6 @@
 package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing
 
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.metadata.Metadata
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
 import java.util.regex.Pattern
@@ -76,7 +77,7 @@ class TypeProperty(
     private var setterName: String? = null
     private var fieldName: String? = null
 
-    private fun addElement(element: Element) {
+    internal fun addElement(element: Element) {
         declaringElements.add(element)
         annotations.addAll(element.annotationMirrors)
         metadataImpl.addDataFrom(element)
@@ -121,6 +122,11 @@ class TypeProperty(
 val GETTER_PATTERN = Pattern.compile("^get([A-Z])(.*)$")!!
 val SETTER_PATTERN = Pattern.compile("^set([A-Z])(.*)$")!!
 
+val STOP_CLASS_NAMES = setOf<String>(
+        java.lang.Object::class.java.canonicalName,
+        LogicNode::class.java.canonicalName
+)
+
 fun TypeElement.publicPropertirs(
         processingEnv: ProcessingEnvironment
 ): Iterable<TypeProperty> {
@@ -130,6 +136,12 @@ fun TypeElement.publicPropertirs(
     val objectClass = processingEnv.elementUtils.getTypeElement("java.lang.Object").asType()
 
     val properties = HashMap<String, TypeProperty>()
+
+    fun addProperty(name: String, type: TypeMirror): TypeProperty {
+        return properties.computeIfAbsent(name, {
+            TypeProperty(name, type, MetadataImpl(processingEnv, nullMetadata))
+        })
+    }
 
     this.iterateMembers<VariableElement>(
             processingEnv, objectClass,
@@ -141,10 +153,7 @@ fun TypeElement.publicPropertirs(
                 val name = variable.simpleName.toString()
                 val type = variable.asType()
 
-                val prop = properties.computeIfAbsent(name, {
-                    TypeProperty(name, type, MetadataImpl(processingEnv))
-                })
-                prop.addField(variable)
+                addProperty(name, type).addField(variable)
             }
     )
 
@@ -168,10 +177,7 @@ fun TypeElement.publicPropertirs(
                         return@l
                     }
 
-                    val prop = properties.computeIfAbsent(name, {
-                        TypeProperty(name, type, MetadataImpl(processingEnv))
-                    })
-                    prop.addGetter(method)
+                    addProperty(name, type).addGetter(method)
                 }
 
                 val setMatch = SETTER_PATTERN.matcher(method.simpleName)
@@ -190,11 +196,7 @@ fun TypeElement.publicPropertirs(
 
                     val type = parameters[0].asType()
 
-
-                    val prop = properties.computeIfAbsent(name, {
-                        TypeProperty(name, type, MetadataImpl(processingEnv))
-                    })
-                    prop.addSetter(method)
+                    addProperty(name, type).addSetter(method)
                 }
             }
     )
@@ -208,6 +210,9 @@ fun <T : Element> TypeElement.iterateMembers(
         filter: (Element) -> Boolean,
         action: (T) -> Unit
 ) {
+    if (this.qualifiedName.toString() in STOP_CLASS_NAMES)
+        return
+
     if (this.superclass.kind != TypeKind.NONE && !processingEnv.typeUtils.isSameType(stopClass, this.superclass)) {
         val superclassElement = ((this.superclass as DeclaredType).asElement() as TypeElement)
         superclassElement.iterateMembers<T>(processingEnv, stopClass, filter, action)
@@ -216,6 +221,66 @@ fun <T : Element> TypeElement.iterateMembers(
     this.enclosedElements
             .filter(filter)
             .forEach({ e -> action(e as T) })
+}
+
+class SyntheticPropertyInfo(
+        private val name: String,
+        private val type: TypeMirror,
+        private val readable: Boolean,
+        private val writable: Boolean,
+        private val getter: String?,
+        private val setter: String?,
+        private val hasField: Boolean,
+        private val declaringElements: List<Element>,
+        private val metadata: Metadata
+) : PropertyInfo {
+    override fun getName(): String {
+        return name
+    }
+
+    override fun getType(): TypeMirror {
+        return type
+    }
+
+    override fun isReadable(): Boolean {
+        return readable
+    }
+
+    override fun isWritable(): Boolean {
+        return writable
+    }
+
+    override fun hasField(): Boolean {
+        return hasField
+    }
+
+    override fun hasSetter(): Boolean {
+        return setter != null
+    }
+
+    override fun hasGetter(): Boolean {
+        return getter != null
+    }
+
+    override fun getSetterName(): String {
+        return setter ?: throw IllegalStateException("No setter")
+    }
+
+    override fun getGetterName(): String {
+        return setter ?: throw IllegalStateException("No setter")
+    }
+
+    override fun getDeclaringElements(): List<Element> {
+        return declaringElements
+    }
+
+    override fun getAnnotations(): List<AnnotationMirror> {
+        return listOf()
+    }
+
+    override fun getMetadata(): Metadata {
+        return metadata
+    }
 }
 
 fun <T : Annotation> PropertyInfo.getAnnotationMirror(

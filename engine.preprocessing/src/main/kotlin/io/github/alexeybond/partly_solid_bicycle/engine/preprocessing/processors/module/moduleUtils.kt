@@ -2,6 +2,7 @@ package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processor
 
 import com.squareup.javapoet.CodeBlock
 import com.squareup.javapoet.TypeSpec
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.DEFAULT_ORDER
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.MutationAccumulatorImpl
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.Mutations
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.add
@@ -14,7 +15,7 @@ fun modifyModuleInit(moduleItem: ItemContext, env: String, mut: Mutation<CodeBlo
     val initMutations: Mutations<CodeBlock.Builder> = moduleItem["envInitializerMutations:$env"]
             ?: createModuleEnvironmentInitializer(moduleItem, env)
 
-    initMutations.addMutation(mut)
+    initMutations.addMutation(mut, DEFAULT_ORDER)
 }
 
 fun createModuleEnvironmentInitializer(

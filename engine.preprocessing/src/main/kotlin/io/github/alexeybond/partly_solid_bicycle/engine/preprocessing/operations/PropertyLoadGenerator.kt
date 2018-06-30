@@ -29,7 +29,7 @@ class PropertyLoadGenerator : PropertyOperationGenerator {
                 )
         ) ?: return null
 
-        val isOptional = propertyInfo.metadata["property.isOptional"] != null
+        val isOptional = propertyInfo.metadata["property.isOptional"] == "true"
 
         val cb = CodeBlock.builder()
 

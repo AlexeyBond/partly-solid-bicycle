@@ -17,7 +17,7 @@ class SkippedProperties : ItemProcessor {
     override fun processItem(context: ItemContext) {
         val propertyInfo: PropertyInfo = context["info"]
 
-        if (propertyInfo.metadata["property.isSkipped"] != null) {
+        if (propertyInfo.metadata["property.isSkipped"] == "true") {
             throw ProcessingInterruptException.INSTANCE
         }
     }

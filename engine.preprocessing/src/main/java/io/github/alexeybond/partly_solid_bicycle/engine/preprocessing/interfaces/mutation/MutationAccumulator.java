@@ -3,5 +3,5 @@ package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interface
 import org.jetbrains.annotations.NotNull;
 
 public interface MutationAccumulator<T> {
-    void addMutation(@NotNull Mutation<T> mutation);
+    void addMutation(@NotNull Mutation<T> mutation, @NotNull Comparable<Object> order);
 }

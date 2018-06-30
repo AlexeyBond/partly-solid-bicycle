@@ -1,8 +1,8 @@
 package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.properties
 
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.TypeProperty
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ItemContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.ItemProcessor
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
 import javax.tools.Diagnostic
 
 class UnprocessedProperties : ItemProcessor {
@@ -15,7 +15,7 @@ class UnprocessedProperties : ItemProcessor {
     }
 
     override fun processItem(context: ItemContext) {
-        val propertyInfo: TypeProperty = context["info"]
+        val propertyInfo: PropertyInfo = context["info"]
 
         if (null != context["processed"]) {
             return

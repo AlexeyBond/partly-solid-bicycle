@@ -6,14 +6,16 @@ import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.Element
 
-class MetadataImpl(private val processingEnv: ProcessingEnvironment) : Metadata {
+class MetadataImpl(
+        processingEnv: ProcessingEnvironment,
+        private val base: Metadata) : Metadata {
     private val tu = processingEnv.typeUtils
-
     private val eu = processingEnv.elementUtils
+
     private val map: MutableMap<String, String> = HashMap()
 
     override fun get(key: String): String? {
-        return map[key]
+        return map[key] ?: base[key]
     }
 
     fun addData(pair: String, referenceAnnotation: AnnotationMirror? = null) {
@@ -29,7 +31,7 @@ class MetadataImpl(private val processingEnv: ProcessingEnvironment) : Metadata 
 
                     value = referenceAnnotation
                             .getValue(eu, paramName)
-                            .value as String
+                            .value.toString()
                 }
             }
 
@@ -64,3 +66,5 @@ class MetadataImpl(private val processingEnv: ProcessingEnvironment) : Metadata 
         element.annotationMirrors.forEach { addDataFrom(it) }
     }
 }
+
+val nullMetadata = Metadata { null }

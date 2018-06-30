@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  *     public LogicNode self;
  *
  *     // public property initialized by loader
- *     public String refPath;
+ *     public {@link io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNodePath LogicNodePath} refPath;
  *
  *     // property initialized by connector on connection event
  *    {@literal @}From("@refPath")
@@ -24,6 +24,10 @@ import java.lang.annotation.Target;
  *     // if type of property is not LogicalNode
  *    {@literal @}From("../transform")
  *     public TransformComponent transform;
+ *
+ *     //
+ *    {@literal @}From("@target|../target")
+ *     public LogicNode target;
  * }
  * </pre>
  */
@@ -31,4 +35,9 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD, ElementType.METHOD})
 public @interface From {
     String value();
+
+    Meta asMeta() default @Meta({
+            "property.bind=true",
+            "property.bindExpression=$value"
+    });
 }

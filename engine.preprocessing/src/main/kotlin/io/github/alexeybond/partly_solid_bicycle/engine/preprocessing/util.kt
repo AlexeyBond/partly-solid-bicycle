@@ -16,8 +16,12 @@ fun ProcessingContext.process(id: String, cb: ItemContext.() -> Unit): ItemConte
 
 typealias Mutations<T> = MutationAccumulator<T>
 
+fun <T> Mutations<T>.add(order: Comparable<Any>, mutation: T.() -> Unit) {
+    this.addMutation(mutation, order)
+}
+
 fun <T> Mutations<T>.add(mutation: T.() -> Unit) {
-    this.addMutation(mutation)
+    this.add(DEFAULT_ORDER, mutation)
 }
 
 fun <T> T.applyMutation(mutation: Mutation<T>): T {
@@ -71,3 +75,15 @@ fun escapeStringLiteral(value: String): String {
     }
     return result.toString()
 }
+
+class LinearOrder(private val id: Int, opposite_: LinearOrder? = null) : Comparable<Any> {
+    override fun compareTo(other: Any): Int {
+        if (other !is LinearOrder) return 0
+
+        return Integer.compare(id, other.id)
+    }
+
+    val opposite = opposite_ ?: LinearOrder(-id, this)
+}
+
+val DEFAULT_ORDER = LinearOrder(0)

@@ -1,6 +1,8 @@
 package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing
 
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.ItemProcessor
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.util.*
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.RoundEnvironment
@@ -34,10 +36,12 @@ class AnnotationProcessorImpl : AbstractProcessor() {
         try {
             doProcessRound(roundEnv)
         } catch (e: Exception) {
-            e.printStackTrace()
+            val sw = StringWriter()
+
+            PrintWriter(sw).use { e.printStackTrace(it) }
             processingEnv.messager.printMessage(
                     Diagnostic.Kind.ERROR,
-                    "Fatal error: exception occurred in PSB annotation processor:\n$e"
+                    "Fatal error: exception occurred in PSB annotation processor:\n${sw.buffer}"
             )
             // Do not rethrow exception to compiler as exception thrown to compiler
             // causes some strange behavior sometimes
