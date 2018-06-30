@@ -4,3 +4,4 @@ io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operations.Proper
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operations.LoadListGenerator
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operations.PropertySaveGenerator
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operations.SaveBasicGenerator
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operations.SaveListGenerator
