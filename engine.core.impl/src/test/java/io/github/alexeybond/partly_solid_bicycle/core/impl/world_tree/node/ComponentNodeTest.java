@@ -1,10 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node;
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ComponentConnector;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeVisitor;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
@@ -32,7 +29,7 @@ public class ComponentNodeTest {
 
     @Test
     public void testOnConnectedInvokesConnector() {
-        LogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
+        ChildLogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
 
         verifyZeroInteractions(connectorMock);
 
@@ -43,7 +40,7 @@ public class ComponentNodeTest {
 
     @Test
     public void testOnDisconnectedInvokesConnector() {
-        LogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
+        ChildLogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
 
         node.onConnected(parentMock, idMock);
         node.onDisconnected(parentMock);
@@ -59,21 +56,21 @@ public class ComponentNodeTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testOnDisconnectedThrowsWhenWrongParentReferencePassed() {
-        LogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
+        ChildLogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
         node.onConnected(parentMock, idMock);
         node.onDisconnected(mock(LogicNode.class));
     }
 
     @Test
     public void testGetParentWorksWhenConnected() {
-        LogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
+        ChildLogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
         node.onConnected(parentMock, idMock);
         assertSame(parentMock, node.getParent());
     }
 
     @Test(expected = IllegalStateException.class)
     public void testThrowsWhenConnectorDisconnectsItOnConnect() {
-        final LogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
+        final ChildLogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
 
         doAnswer(new Answer() {
             @Override
@@ -88,21 +85,21 @@ public class ComponentNodeTest {
 
     @Test(expected = IllegalStateException.class)
     public void testOnConnectThrowsWhenConnectedTwice() {
-        final LogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
+        final ChildLogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
         node.onConnected(parentMock, idMock);
         node.onConnected(parentMock, idMock);
     }
 
     @Test
     public void testReturnComponent() {
-        LogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
+        ChildLogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
         node.onConnected(parentMock, idMock);
         assertSame(componentMock, node.getComponent());
     }
 
     @Test(expected = NoSuchElementException.class)
     public void testGetThrows() {
-        LogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
+        ChildLogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
         node.onConnected(parentMock, idMock);
 
         node.get(mock(Id.class));
@@ -112,7 +109,7 @@ public class ComponentNodeTest {
     public void testGetOrAddThrows() {
         NodeFactory<Object> factoryMock = mock(NodeFactory.class);
 
-        LogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
+        ChildLogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
         node.onConnected(parentMock, idMock);
 
         try {
@@ -124,7 +121,7 @@ public class ComponentNodeTest {
 
     @Test
     public void testRemoveIdHasNoEffect() {
-        LogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
+        ChildLogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
         node.onConnected(parentMock, idMock);
 
         node.remove(mock(Id.class));
@@ -132,7 +129,7 @@ public class ComponentNodeTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testRemoveChildThrows() {
-        LogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
+        ChildLogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
         node.onConnected(parentMock, idMock);
 
         node.remove(mock(LogicNode.class));
@@ -140,13 +137,13 @@ public class ComponentNodeTest {
 
     @Test(expected = IllegalStateException.class)
     public void testOnDisconnectedThrowsWhenNotConnected() {
-        LogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
+        ChildLogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
         node.onDisconnected(parentMock);
     }
 
     @Test
     public void testAcceptVisitor() {
-        LogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
+        ChildLogicNode node = new ComponentNode<Object>(componentMock, connectorMock);
         node.onConnected(parentMock, idMock);
 
         NodeVisitor visitor = mock(NodeVisitor.class);

@@ -4,9 +4,10 @@ import com.badlogic.gdx.Gdx
 import io.github.alexeybond.partly_solid_bicycle.core.impl.app.DefaultApplicationListener
 import io.github.alexeybond.partly_solid_bicycle.core.impl.app.state.IoCDrivenApplicationState
 import io.github.alexeybond.partly_solid_bicycle.core.impl.app.state.TerminalStates
-import io.github.alexeybond.partly_solid_bicycle.core.impl.events.sources.DummyEventSource
+import io.github.alexeybond.partly_solid_bicycle.core.impl.data.NullInputDataObject
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.ApplicationState
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.events.EventListener
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.event.Channel
 import io.github.alexeybond.partly_solid_bicycle.core.modules.application.AppConfigModule
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Component
 import io.github.alexeybond.partly_solid_bicycle.game2d.impl.modules.InteractiveApplicationStateModule
@@ -25,14 +26,12 @@ import kotlin.concurrent.timerTask
 )
 open class CustomScreen : Screen {
     override fun create(context: ScreenContext, runState: ApplicationState): ApplicationState {
-        val listener = context.screenRoot["events", "event1"]
-                .getComponent<EventListener<DummyEventSource>>()
-        val source = DummyEventSource(1)
-        source.subscribe(listener)
+        val channel = context.screenRoot["events", "event1"]
+                .getComponent<Channel<InputDataObject>>()
 
         Timer(true).schedule(timerTask {
             Gdx.app.postRunnable {
-                source.trigger(null)
+                channel.send(NullInputDataObject.INSTANCE)
             }
         },
                 2000)

@@ -48,6 +48,7 @@ class PropertyLoadGenerator : PropertyOperationGenerator {
         return cb.build()
     }
 
+    private
     inline fun writeRead(cb: CodeBlock.Builder, optional: Boolean, fn: CodeBlock.Builder.() -> Unit) {
         if (optional) {
             cb.run {

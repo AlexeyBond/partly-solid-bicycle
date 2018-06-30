@@ -1,0 +1,1 @@
+package io.github.alexeybond.partly_solid_bicycle.core.impl.app.systems;

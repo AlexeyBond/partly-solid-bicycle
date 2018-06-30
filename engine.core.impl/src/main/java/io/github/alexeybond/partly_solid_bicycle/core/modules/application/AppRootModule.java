@@ -20,22 +20,24 @@ public class AppRootModule extends BaseModule {
         provide("application_root");
     }
 
+    private SuperRootNode superRoot;
+
     @Override
     public void init(Collection<Object> env) {
         IdSet<LogicNode> idSet = IoC.resolve("id set for node kind", "application");
-        IoC.register("application root node", new Singleton(
-                new SuperRootNode(
-                        idSet,
-                        new GroupNode(
-                                NullChildResolver.INSTANCE,
-                                NullPopulator.INSTANCE
-                        )
-                ).getRoot()
-        ));
+        superRoot = new SuperRootNode(
+                idSet,
+                new GroupNode(
+                        NullChildResolver.INSTANCE,
+                        NullPopulator.INSTANCE
+                )
+        );
+        IoC.register("application root node", new Singleton(superRoot.getRoot()));
     }
 
     @Override
     public void shutdown() {
-
+        superRoot.dispose();
+        superRoot = null;
     }
 }

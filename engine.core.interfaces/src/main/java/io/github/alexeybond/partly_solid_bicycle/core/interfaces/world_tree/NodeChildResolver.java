@@ -15,5 +15,5 @@ public interface NodeChildResolver {
      * @throws NoSuchElementException if this resolver cannot resolve child with given name
      */
     @NotNull
-    LogicNode resolve(@NotNull Id<LogicNode> id) throws NoSuchElementException;
+    ChildLogicNode resolve(@NotNull Id<LogicNode> id) throws NoSuchElementException;
 }

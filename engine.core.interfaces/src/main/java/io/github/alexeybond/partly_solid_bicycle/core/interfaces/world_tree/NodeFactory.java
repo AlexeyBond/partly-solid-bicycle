@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @param <A>
  */
-public interface NodeFactory<A> extends GenericFactory<LogicNode, A> {
+public interface NodeFactory<A> extends GenericFactory<ChildLogicNode, A> {
     @NotNull
-    LogicNode create(@Nullable A arg);
+    ChildLogicNode create(@Nullable A arg);
 }

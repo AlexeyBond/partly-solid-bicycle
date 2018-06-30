@@ -4,7 +4,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.child_reso
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node.GroupNode;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.populator.DeclarativePopulator;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ChildLogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodePopulator;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.adapter.NodeFactoryAdapter;
@@ -27,7 +27,7 @@ public class DeclarativeGroupNodeFactory extends NodeFactoryAdapter<InputDataObj
 
     @NotNull
     @Override
-    public LogicNode create(@Nullable InputDataObject arg) {
+    public ChildLogicNode create(@Nullable InputDataObject arg) {
         if (null == arg) throw new NullPointerException("arg");
 
         InputDataObject itemsData = arg.getField(itemsField);

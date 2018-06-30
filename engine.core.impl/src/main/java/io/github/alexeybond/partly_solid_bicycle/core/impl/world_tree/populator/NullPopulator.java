@@ -1,6 +1,7 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.populator;
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ChildLogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodePopulator;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +18,7 @@ public enum NullPopulator implements NodePopulator {
 
     @Override
     @NotNull
-    public LogicNode resolve(@NotNull Id<LogicNode> childId) {
+    public ChildLogicNode resolve(@NotNull Id<LogicNode> childId) {
         throw new NoSuchElementException();
     }
 }

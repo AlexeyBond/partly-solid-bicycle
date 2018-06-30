@@ -1,11 +1,12 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node;
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ChildLogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.TreeContext;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class NodeBase implements LogicNode {
+public abstract class NodeBase implements ChildLogicNode {
     private LogicNode parent;
 
     private boolean connecting;
