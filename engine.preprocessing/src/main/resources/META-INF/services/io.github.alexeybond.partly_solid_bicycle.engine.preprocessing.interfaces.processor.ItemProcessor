@@ -24,3 +24,5 @@ io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.compon
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.module.ModuleEnvInitializersPrelude
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.CompanionRegistration
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.ImplementedCompanionDiscover
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.saver.PropertySave
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.saver.SaveComponentClass
