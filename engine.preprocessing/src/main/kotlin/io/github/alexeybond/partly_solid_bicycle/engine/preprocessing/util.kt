@@ -35,3 +35,39 @@ fun isSubclass(type: TypeElement, clazz: Class<*>, pe: ProcessingEnvironment): B
             type.asType(),
             pe.elementUtils.getTypeElement(clazz.canonicalName).asType());
 }
+
+fun escapeStringLiteral(value: String): String {
+    // WARNING: Copy-paste from private part of JavaPoet
+    fun characterLiteralWithoutSingleQuotes(c: Char): String {
+        // see https://docs.oracle.com/javase/specs/jls/se7/html/jls-3.html#jls-3.10.6
+        when (c) {
+            '\b' -> return "\\b" /* \u0008: backspace (BS) */
+            '\t' -> return "\\t" /* \u0009: horizontal tab (HT) */
+            '\n' -> return "\\n" /* \u000a: linefeed (LF) */
+            '\u000c' -> return "\\f" /* \u000c: form feed (FF) */
+            '\r' -> return "\\r" /* \u000d: carriage return (CR) */
+            '\"' -> return "\""  /* \u0022: double quote (") */
+            '\'' -> return "\\'" /* \u0027: single quote (') */
+            '\\' -> return "\\\\"  /* \u005c: backslash (\) */
+            else -> return if (Character.isISOControl(c)) String.format("\\u%04x", c.toInt()) else Character.toString(c)
+        }
+    }
+
+    val result = StringBuilder(value.length + 2)
+    for (i in 0 until value.length) {
+        val c = value[i]
+        // trivial case: single quote must not be escaped
+        if (c == '\'') {
+            result.append("'")
+            continue
+        }
+        // trivial case: double quotes must be escaped
+        if (c == '\"') {
+            result.append("\\\"")
+            continue
+        }
+        // default case: just let character literal do its work
+        result.append(characterLiteralWithoutSingleQuotes(c))
+    }
+    return result.toString()
+}

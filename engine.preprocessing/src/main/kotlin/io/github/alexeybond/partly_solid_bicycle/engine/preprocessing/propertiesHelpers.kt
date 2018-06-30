@@ -1,5 +1,6 @@
 package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing
 
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.metadata.Metadata
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
 import java.util.regex.Pattern
 import javax.annotation.processing.ProcessingEnvironment
@@ -12,7 +13,8 @@ import kotlin.reflect.KClass
 
 class TypeProperty(
         private val name: String,
-        private val type: TypeMirror
+        private val type: TypeMirror,
+        private val metadataImpl: MetadataImpl
 ) : PropertyInfo {
     override fun getGetterName(): String {
         return getterName ?: throw IllegalStateException("No getter")
@@ -58,6 +60,10 @@ class TypeProperty(
         return annotations
     }
 
+    override fun getMetadata(): Metadata {
+        return metadataImpl
+    }
+
     private var readable = false
     private var writable = false
     private var hasSetter = false
@@ -73,6 +79,7 @@ class TypeProperty(
     private fun addElement(element: Element) {
         declaringElements.add(element)
         annotations.addAll(element.annotationMirrors)
+        metadataImpl.addDataFrom(element)
     }
 
     internal fun addField(element: VariableElement) {
@@ -134,7 +141,9 @@ fun TypeElement.publicPropertirs(
                 val name = variable.simpleName.toString()
                 val type = variable.asType()
 
-                val prop = properties.computeIfAbsent(name, { TypeProperty(name, type) })
+                val prop = properties.computeIfAbsent(name, {
+                    TypeProperty(name, type, MetadataImpl(processingEnv))
+                })
                 prop.addField(variable)
             }
     )
@@ -159,7 +168,9 @@ fun TypeElement.publicPropertirs(
                         return@l
                     }
 
-                    val prop = properties.computeIfAbsent(name, { TypeProperty(name, type) })
+                    val prop = properties.computeIfAbsent(name, {
+                        TypeProperty(name, type, MetadataImpl(processingEnv))
+                    })
                     prop.addGetter(method)
                 }
 
@@ -180,7 +191,9 @@ fun TypeElement.publicPropertirs(
                     val type = parameters[0].asType()
 
 
-                    val prop = properties.computeIfAbsent(name, { TypeProperty(name, type) })
+                    val prop = properties.computeIfAbsent(name, {
+                        TypeProperty(name, type, MetadataImpl(processingEnv))
+                    })
                     prop.addSetter(method)
                 }
             }
@@ -227,4 +240,8 @@ fun PropertyInfo.generateRead(srcExpr: String): String {
     } else {
         "$srcExpr.$name"
     }
+}
+
+fun PropertyInfo.serializedName(): String {
+    return metadata["property.serializedName"] ?: name
 }

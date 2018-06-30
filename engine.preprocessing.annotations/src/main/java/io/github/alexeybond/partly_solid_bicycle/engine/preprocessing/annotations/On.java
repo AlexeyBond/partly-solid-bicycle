@@ -5,25 +5,28 @@ package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotatio
  * <pre>
  * {@literal @}Component(/* ...{@literal *}/)
  * class Component {
- *    {@literal @}On(phase="connect")
+ *    {@literal @}On("!connect")
  *     public void onAttached(LogicNode node) {
  *         // ...
  *     }
  *
- *    {@literal @}On(phase="disconnect")
+ *    {@literal @}On("!disconnect")
  *     public void onDetached(LogicNode node) {
  *         // ...
  *     }
  *
- *    {@literal @}On(event="../events/hit")
+ *    {@literal @}On("../events/hit")
  *     public void onHit(HitInfo origin) {
+ *         // ...
+ *     }
+ *
+ *    {@literal @}On("@event|../events/hit")
+ *     public void onEvent() {
  *         // ...
  *     }
  * }
  * </pre>
  */
 public @interface On {
-    String[] event() default "";
-
-    String[] phase() default "";
+    String value();
 }

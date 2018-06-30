@@ -1,5 +1,6 @@
 package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties;
 
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.metadata.Metadata;
 import org.jetbrains.annotations.NotNull;
 
 import javax.lang.model.element.AnnotationMirror;
@@ -58,4 +59,7 @@ public interface PropertyInfo {
      */
     @NotNull
     List<AnnotationMirror> getAnnotations();
+
+    @NotNull
+    Metadata getMetadata();
 }
