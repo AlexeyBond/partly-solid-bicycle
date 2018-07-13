@@ -3,18 +3,19 @@ package io.github.alexeybond.partly_solid_bicycle.test.annotation_processing;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeAttachmentListener;
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Component;
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.From;
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.FromAttribute;
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.FromPath;
 import org.jetbrains.annotations.NotNull;
 
 @Component(name = "component-12", kind = "any")
 public class Component12 implements NodeAttachmentListener {
-    @From("../nodeA")
+    @FromPath("../nodeA")
     public LogicNode nodeA;
 
-    @From("@nodeB")
+    @FromAttribute("nodeB")
     public LogicNode nodeB;
 
-    @From("@nodeC|../nodeC")
+    @FromAttribute(value = "nodeC", defaultPath = "../nodeC")
     public LogicNode nodeC;
 
     private void checkNodes() {

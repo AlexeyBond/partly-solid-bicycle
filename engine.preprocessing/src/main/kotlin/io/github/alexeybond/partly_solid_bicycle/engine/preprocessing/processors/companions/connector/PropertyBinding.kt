@@ -1,7 +1,6 @@
 package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.connector
 
 import com.squareup.javapoet.CodeBlock
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNodePath
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.LinearOrder
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.Mutations
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.add
@@ -9,10 +8,8 @@ import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.generateAs
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ItemContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.ItemProcessor
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operations.makeLocalName
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.connector.util.emitFieldProperty
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.connector.util.parsePathExpression
-import javax.lang.model.element.Modifier
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.connector.util.BindMode
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.connector.util.bindModes
 import javax.tools.Diagnostic
 
 class PropertyBinding : ItemProcessor {
@@ -39,50 +36,30 @@ class PropertyBinding : ItemProcessor {
                     "Cannot bind non-writable property \"${propertyInfo.name}\"",
                     propertyInfo.declaringElements[0]
             )
+            return
         }
 
-        val expressionText = propertyInfo.metadata["property.bindExpression"] ?: run {
-            pEnv.messager.printMessage(
+        val modeName: String = propertyInfo.metadata["property.bindMode"] ?: run {
+            context.context.env.messager.printMessage(
                     Diagnostic.Kind.ERROR,
-                    "Missing binding expression for property ${propertyInfo.name}.",
+                    "No binding mode defined for property \"${propertyInfo.name}\"",
                     propertyInfo.declaringElements[0]
             )
             return
         }
 
-        val parsedExpression = parsePathExpression(expressionText) ?: run {
-            pEnv.messager.printMessage(
+        val mode: BindMode = bindModes[modeName] ?: run {
+            context.context.env.messager.printMessage(
                     Diagnostic.Kind.ERROR,
-                    "Invalid binding expression for property ${propertyInfo.name}: \"$expressionText\"",
+                    "Unknown binding mode \"$modeName\" for property \"${propertyInfo.name}\"",
                     propertyInfo.declaringElements[0]
             )
             return
         }
 
-        val pathType = pEnv.elementUtils.getTypeElement(LogicNodePath::class.java.canonicalName).asType()
+        // TODO:: Bind non-node properties
 
-        if (null != parsedExpression.property) {
-            val pathPropertyName = makeLocalName("path_${propertyInfo.name}")
-
-            val fieldMutations = emitFieldProperty(
-                    componentContext,
-                    pathPropertyName,
-                    propertyInfo.metadata,
-                    pathType,
-                    propertyInfo.declaringElements,
-                    listOf(
-                            "property.serializedName=${propertyInfo.name}",
-                            "property.bind=false"
-                    )
-            )
-
-            fieldMutations.add {
-                addModifiers(Modifier.PUBLIC)
-
-            }
-        }
-
-        // TODO:: -------
+        val expression = mode.process(context)
 
         val connectorContext: ItemContext = componentContext["companion:connector"]
 
@@ -92,7 +69,7 @@ class PropertyBinding : ItemProcessor {
                 connectorContext["codeMutations:method:onDisconnected"]
 
         connectMut.add(ORDER) {
-            add("${propertyInfo.generateAssignment("component", "null" /*TODO::*/)}\n")
+            add("${propertyInfo.generateAssignment("component", expression)}\n")
         }
 
         disconnectMut.add(ORDER.opposite) {
