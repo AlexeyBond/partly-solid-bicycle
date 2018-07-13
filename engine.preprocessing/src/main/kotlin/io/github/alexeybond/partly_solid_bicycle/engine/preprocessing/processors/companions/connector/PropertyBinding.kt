@@ -1,15 +1,13 @@
 package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.connector
 
 import com.squareup.javapoet.CodeBlock
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.LinearOrder
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.Mutations
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.add
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.generateAssignment
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.*
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ItemContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.ItemProcessor
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.connector.util.BindMode
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.connector.util.bindModes
+import javax.lang.model.type.TypeKind
 import javax.tools.Diagnostic
 
 class PropertyBinding : ItemProcessor {
@@ -57,9 +55,12 @@ class PropertyBinding : ItemProcessor {
             return
         }
 
-        // TODO:: Bind non-node properties
+        val isNodeBinding = propertyInfo.type.kind == TypeKind.DECLARED && propertyInfo.type.toString() == nodeCCN
 
         val expression = mode.process(context)
+
+        val fullExpression = if (isNodeBinding) expression else
+            "$expression.getComponent()"
 
         val connectorContext: ItemContext = componentContext["companion:connector"]
 
@@ -69,7 +70,7 @@ class PropertyBinding : ItemProcessor {
                 connectorContext["codeMutations:method:onDisconnected"]
 
         connectMut.add(ORDER) {
-            add("${propertyInfo.generateAssignment("component", expression)}\n")
+            add("${propertyInfo.generateAssignment("component", fullExpression)}\n")
         }
 
         disconnectMut.add(ORDER.opposite) {

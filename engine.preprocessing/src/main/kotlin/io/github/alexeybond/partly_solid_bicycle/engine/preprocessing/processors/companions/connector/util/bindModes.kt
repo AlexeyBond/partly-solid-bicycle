@@ -5,10 +5,10 @@ import com.squareup.javapoet.TypeSpec
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNodePath
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.Mutations
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.add
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.generatePathLiteral
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ItemContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.generatePathLiteral
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.nodePathCN
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.nodePathCN
 import javax.lang.model.element.Modifier
 import javax.tools.Diagnostic
 

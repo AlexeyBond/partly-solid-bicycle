@@ -1,4 +1,4 @@
-package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors
+package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing
 
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
@@ -13,9 +13,9 @@ val nodePathParserCN = ClassName.get(
 const val nodePathParserMethod = "parseString"
 
 fun generatePathLiteral(path: String): CodeBlock {
-    return CodeBlock.of("\$T.$nodePathParserMethod(\$S)", nodePathParserCN, path)
+    return CodeBlock.of("\$T.${nodePathParserMethod}(\$S)", nodePathParserCN, path)
 }
 
 fun generatePathParse(expression: String): CodeBlock {
-    return CodeBlock.of("\$T.$nodePathParserMethod($expression)", nodePathParserCN)
+    return CodeBlock.of("\$T.${nodePathParserMethod}($expression)", nodePathParserCN)
 }
