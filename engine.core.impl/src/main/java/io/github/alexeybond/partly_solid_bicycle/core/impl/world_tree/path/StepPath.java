@@ -34,4 +34,9 @@ public class StepPath implements LogicNodePath {
                 argument
         );
     }
+
+    @Override
+    public String toString() {
+        return basePath + "/" + stepName;
+    }
 }

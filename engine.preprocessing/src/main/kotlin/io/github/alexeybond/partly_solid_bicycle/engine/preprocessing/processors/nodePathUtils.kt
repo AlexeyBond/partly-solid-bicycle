@@ -4,6 +4,7 @@ import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.CodeBlock
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNodePath
 
+val nodePathCCN = LogicNodePath::class.java.canonicalName
 val nodePathCN = ClassName.get(LogicNodePath::class.java)!!
 
 val nodePathParserCN = ClassName.get(
