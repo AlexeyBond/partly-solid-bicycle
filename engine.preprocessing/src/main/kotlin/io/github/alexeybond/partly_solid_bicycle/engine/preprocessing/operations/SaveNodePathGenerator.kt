@@ -3,7 +3,7 @@ package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operation
 import com.squareup.javapoet.CodeBlock
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ProcessingContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.operations.PropertyOperationGenerator
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.reflection.PropertyInfo
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.nodePathCCN
 import javax.lang.model.type.TypeKind
 import javax.lang.model.type.TypeMirror

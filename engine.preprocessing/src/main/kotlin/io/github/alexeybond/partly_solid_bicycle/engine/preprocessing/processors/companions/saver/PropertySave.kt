@@ -6,7 +6,7 @@ import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.add
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.escapeStringLiteral
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ItemContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.ItemProcessor
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.reflection.PropertyInfo
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operations.RootOperationGenerator
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.serializedName
 

@@ -60,7 +60,7 @@ class CompanionOwnershipInit : ItemProcessor {
                     .addAnnotation(NotNull::class.java)
                     .addTypeVariable(companionTypeTV)
                     .returns(companionTypeTV)
-                    .addCode("return $RESOLVER_FIELD_NAME.<T>resolve(name).resolve(this);")
+                    .addCode("return $RESOLVER_FIELD_NAME.<T>resolve(name).resolve(this);\n")
                     .build())
 
             addMethod(MethodSpec
@@ -68,7 +68,7 @@ class CompanionOwnershipInit : ItemProcessor {
                     .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                     .addAnnotation(NotNull::class.java)
                     .returns(classCRTN)
-                    .addCode("return $RESOLVER_FIELD_NAME;")
+                    .addCode("return $RESOLVER_FIELD_NAME;\n")
                     .build())
         }
     }

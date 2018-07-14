@@ -4,7 +4,7 @@ import com.squareup.javapoet.CodeBlock
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.*
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ItemContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.ItemProcessor
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.reflection.PropertyInfo
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.connector.util.BindMode
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.connector.util.bindModes
 import javax.lang.model.type.TypeKind
@@ -57,7 +57,7 @@ class PropertyBinding : ItemProcessor {
 
         val isNodeBinding = propertyInfo.type.kind == TypeKind.DECLARED && propertyInfo.type.toString() == nodeCCN
 
-        val expression = mode.process(context)
+        val expression = mode.process(componentContext, propertyInfo.metadata, propertyInfo)
 
         val fullExpression = if (isNodeBinding) expression else
             "$expression.getComponent()"
@@ -77,5 +77,7 @@ class PropertyBinding : ItemProcessor {
             if (!propertyInfo.hasSetter() || propertyInfo.metadata["property.forceReset"] == "true")
                 add("${propertyInfo.generateAssignment("component", "null")}\n")
         }
+
+        context["processed"] = true
     }
 }

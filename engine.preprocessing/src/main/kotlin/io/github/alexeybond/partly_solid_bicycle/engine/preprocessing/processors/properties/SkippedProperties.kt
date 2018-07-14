@@ -3,7 +3,7 @@ package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processor
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ItemContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.ItemProcessor
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.exceptions.ProcessingInterruptException
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.reflection.PropertyInfo
 
 class SkippedProperties : ItemProcessor {
     override fun getPriority(): Int {

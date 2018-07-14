@@ -6,7 +6,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.generateAssignment
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ProcessingContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.operations.PropertyOperationGenerator
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.reflection.PropertyInfo
 
 class PropertyLoadGenerator : PropertyOperationGenerator {
     override fun generateOperation(

@@ -1,6 +1,5 @@
-package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties;
+package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.reflection;
 
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.metadata.Metadata;
 import org.jetbrains.annotations.NotNull;
 
 import javax.lang.model.element.AnnotationMirror;
@@ -11,11 +10,12 @@ import java.util.List;
 /**
  * Information about property of a class.
  */
-public interface PropertyInfo {
+public interface PropertyInfo extends ReflectionInfo {
     /**
      * @return name of the property
      */
     @NotNull
+    @Override
     String getName();
 
     @NotNull
@@ -46,6 +46,7 @@ public interface PropertyInfo {
      * @return list of all elements associated with this property
      */
     @NotNull
+    @Override
     List<Element> getDeclaringElements();
 
     /**
@@ -59,7 +60,4 @@ public interface PropertyInfo {
      */
     @NotNull
     List<AnnotationMirror> getAnnotations();
-
-    @NotNull
-    Metadata getMetadata();
 }

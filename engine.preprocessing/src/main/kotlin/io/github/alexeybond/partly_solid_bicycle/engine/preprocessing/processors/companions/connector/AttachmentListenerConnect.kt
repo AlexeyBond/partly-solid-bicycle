@@ -9,7 +9,6 @@ import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.ItemProcessor
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.isSubclass
 import javax.lang.model.element.TypeElement
-import javax.lang.model.type.TypeMirror
 
 class AttachmentListenerConnect : ItemProcessor {
     val ORDER = LinearOrder(0)
@@ -27,7 +26,6 @@ class AttachmentListenerConnect : ItemProcessor {
 
         val componentCtx: ItemContext = context["component"]
 
-        val componentTM: TypeMirror = componentCtx["typeMirror"]
         val componentElem: TypeElement = componentCtx["element"]
 
         if (!isSubclass(componentElem, NodeAttachmentListener::class.java, componentCtx.context.env))

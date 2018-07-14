@@ -7,33 +7,38 @@ import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.Mutations
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.add
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.generatePathLiteral
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ItemContext
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.metadata.Metadata
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.reflection.ReflectionInfo
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.nodePathCN
 import javax.lang.model.element.Modifier
 import javax.tools.Diagnostic
 
 interface BindMode {
     fun process(
-            propertyContext: ItemContext
+            componentContext: ItemContext,
+            metadata: Metadata,
+            origin: ReflectionInfo
     ): String
 }
 
 object PathBindMode : BindMode {
-    override fun process(propertyContext: ItemContext): String {
-        val componentContext: ItemContext = propertyContext["componentContext"]
-        val propertyInfo: PropertyInfo = propertyContext["info"]
+    override fun process(
+            componentContext: ItemContext,
+            metadata: Metadata,
+            origin: ReflectionInfo
+    ): String {
         val implMutations: Mutations<TypeSpec.Builder> = componentContext["implMutations"]
 
-        val pathStr = propertyInfo.metadata["property.bindPath"] ?: run {
-            propertyContext.context.env.messager.printMessage(
+        val pathStr = metadata["property.bindPath"] ?: run {
+            componentContext.context.env.messager.printMessage(
                     Diagnostic.Kind.ERROR,
-                    "No binding path defined for property \"${propertyInfo.name}\"",
-                    propertyInfo.declaringElements[0]
+                    "No binding path defined for ${origin.kind} \"${origin.name}\"",
+                    origin.declaringElements[0]
             )
             "."
         }
 
-        val pathField = "path_${propertyInfo.name}"
+        val pathField = "path_${origin.kind}_${origin.name}"
 
         implMutations.add {
             addField(
@@ -49,20 +54,22 @@ object PathBindMode : BindMode {
 }
 
 object AttributeBindMode : BindMode {
-    override fun process(propertyContext: ItemContext): String {
-        val pEnv = propertyContext.context.env
-        val componentContext: ItemContext = propertyContext["componentContext"]
-        val propertyInfo: PropertyInfo = propertyContext["info"]
+    override fun process(
+            componentContext: ItemContext,
+            metadata: Metadata,
+            origin: ReflectionInfo
+    ): String {
+        val pEnv = componentContext.context.env
 
-        val pathField = "path_${propertyInfo.name}"
+        val pathField = "path_${origin.kind}_${origin.name}"
         val pathType = pEnv.elementUtils.getTypeElement(LogicNodePath::class.java.canonicalName).asType()
 
-        var serializedName = propertyInfo.metadata["property.bindAttribute"]
-        if (serializedName == null || serializedName.isEmpty()) serializedName = propertyInfo.name
+        var serializedName = metadata["property.bindAttribute"]
+        if (serializedName == null || serializedName.isEmpty()) serializedName = origin.name
 
-        val defaultPath = propertyInfo.metadata["property.bindPathDefault"]
+        val defaultPath = metadata["property.bindPathDefault"]
         val hasDefaultPath = defaultPath != null && !defaultPath.isEmpty()
-        val defaultPathField = "default_path_${propertyInfo.name}"
+        val defaultPathField = "default_path_${origin.kind}_${origin.name}"
 
         if (hasDefaultPath) {
             val implMutations: Mutations<TypeSpec.Builder> = componentContext["implMutations"]
@@ -82,9 +89,9 @@ object AttributeBindMode : BindMode {
         emitFieldProperty(
                 componentContext,
                 pathField,
-                propertyInfo.metadata,
+                metadata,
                 pathType,
-                propertyInfo.declaringElements,
+                origin.declaringElements,
                 listOf(
                         "property.bind=false",
                         "property.serializedName=$serializedName",

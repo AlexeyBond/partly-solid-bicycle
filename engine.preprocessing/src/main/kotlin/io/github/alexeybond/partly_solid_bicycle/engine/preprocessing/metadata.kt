@@ -18,6 +18,10 @@ class MetadataImpl(
         return map[key] ?: base[key]
     }
 
+    fun isEmpty(): Boolean {
+        return map.isEmpty()
+    }
+
     fun addData(pair: String, referenceAnnotation: AnnotationMirror? = null) {
         val idx = pair.indexOf('=')
         if (idx < 0) {

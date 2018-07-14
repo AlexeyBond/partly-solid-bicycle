@@ -2,7 +2,7 @@ package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.metadata.Metadata
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.reflection.PropertyInfo
 import java.util.regex.Pattern
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.*
@@ -59,6 +59,10 @@ class TypeProperty(
 
     override fun getAnnotations(): List<AnnotationMirror> {
         return annotations
+    }
+
+    override fun getKind(): String {
+        return "property"
     }
 
     override fun getMetadata(): Metadata {
@@ -234,6 +238,10 @@ class SyntheticPropertyInfo(
         private val declaringElements: List<Element>,
         private val metadata: Metadata
 ) : PropertyInfo {
+    override fun getKind(): String {
+        return "property"
+    }
+
     override fun getName(): String {
         return name
     }
