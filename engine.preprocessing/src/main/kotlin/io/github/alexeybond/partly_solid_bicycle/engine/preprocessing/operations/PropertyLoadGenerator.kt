@@ -3,12 +3,10 @@ package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operation
 import com.squareup.javapoet.CodeBlock
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions.UndefinedFieldException
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Optional
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.generateAssignment
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.getAnnotationMirror
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ProcessingContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.operations.PropertyOperationGenerator
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.reflection.PropertyInfo
 
 class PropertyLoadGenerator : PropertyOperationGenerator {
     override fun generateOperation(
@@ -31,7 +29,7 @@ class PropertyLoadGenerator : PropertyOperationGenerator {
                 )
         ) ?: return null
 
-        val isOptional = propertyInfo.getAnnotationMirror(processingContext.env, Optional::class) != null
+        val isOptional = propertyInfo.metadata["property.isOptional"] == "true"
 
         val cb = CodeBlock.builder()
 

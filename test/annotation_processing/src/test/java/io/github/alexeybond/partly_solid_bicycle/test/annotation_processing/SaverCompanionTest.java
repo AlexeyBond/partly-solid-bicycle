@@ -86,4 +86,18 @@ public class SaverCompanionTest {
                 TestUtils.parseJSON("{floats:[3.125,42,21],ints:[[[1,2,3],[4]],[[5]],[[42]]]}")
         );
     }
+
+    @Test
+    public void testRenamedProperty() {
+        Component11$_impl cmp = new Component11$_impl();
+
+        cmp.value = "helloworldfooobarr";
+
+        Component11_saver.RESOLVER.resolve(cmp).save(cmp, data);
+
+        DataMatcher.assertMatch(
+                data,
+                TestUtils.parseJSON("{\"\\\"--the-value--\":helloworldfooobarr}")
+        );
+    }
 }

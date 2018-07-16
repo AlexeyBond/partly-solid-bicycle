@@ -3,10 +3,12 @@ package io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processor
 import com.squareup.javapoet.CodeBlock
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.Mutations
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.add
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.escapeStringLiteral
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ItemContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.ItemProcessor
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.reflection.PropertyInfo
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operations.RootOperationGenerator
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.serializedName
 
 class PropertySave : ItemProcessor {
     override fun getPriority(): Int {
@@ -36,7 +38,7 @@ class PropertySave : ItemProcessor {
                 RootOperationGenerator,
                 mapOf(
                         "rvalue" to "src",
-                        "lvalue" to "data.addField(\"${propertyInfo.name}\")"
+                        "lvalue" to "data.addField(\"${escapeStringLiteral(propertyInfo.serializedName())}\")"
                 )
         )
 

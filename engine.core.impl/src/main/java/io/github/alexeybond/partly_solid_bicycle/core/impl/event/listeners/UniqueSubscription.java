@@ -7,11 +7,11 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class UniqueSubscription<T> implements Listener<T> {
     @NotNull
-    private Topic<T> topic = NullTopic.get();
+    private Topic<? extends T> topic = NullTopic.get();
 
     private Object token;
 
-    public void subscribe(@NotNull Topic<T> newTopic) {
+    public void subscribe(@NotNull Topic<? extends T> newTopic) {
         try {
             topic.unsubscribe(token, this);
         } catch (RuntimeException e) {

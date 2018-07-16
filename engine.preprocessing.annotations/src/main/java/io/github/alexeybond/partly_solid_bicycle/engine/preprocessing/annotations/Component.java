@@ -46,4 +46,8 @@ public @interface Component {
      implement Module interface at the moment when the annotation is parsed :(
      */
     Class<?>[] modules() default {};
+
+    Meta asMeta() default @Meta({
+            "isComponent=true"
+    });
 }

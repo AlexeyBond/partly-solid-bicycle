@@ -4,6 +4,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.systems.pm.
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeAttachmentListener;
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Component;
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.FromAttribute;
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.Optional;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,10 +18,8 @@ import java.util.List;
 public class DefaultProcessManagementSystem
         extends DefaultProcessManager
         implements NodeAttachmentListener {
-    private ProcessManager master;
-
-    @Optional
-    public String masterId = "rootProcessManager";
+    @FromAttribute
+    public ProcessManager master;
 
     @Optional
     public String processName = "default";
@@ -57,7 +56,6 @@ public class DefaultProcessManagementSystem
             }
         }
 
-        master = node.get(node.getTreeContext().getIdSet().get(masterId)).getComponent();
         master.addProcess(processName, this);
     }
 

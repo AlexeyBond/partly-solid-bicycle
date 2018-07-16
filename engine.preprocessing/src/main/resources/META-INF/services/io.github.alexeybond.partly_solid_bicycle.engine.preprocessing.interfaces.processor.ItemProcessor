@@ -26,3 +26,6 @@ io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.compan
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.ImplementedCompanionDiscover
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.saver.PropertySave
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.saver.SaveComponentClass
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.connector.PropertyBinding
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.component.ComponentMethodEnumeration
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.connector.EventSubscription

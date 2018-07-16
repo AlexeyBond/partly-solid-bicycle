@@ -16,15 +16,15 @@ public class DeclarativeComponentNodeFactory<TC> extends NodeFactoryAdapter<Inpu
     private final GenericFactory<TC, Void> factory;
 
     @NotNull
-    private final CompanionResolver<TC, Loader<TC>> loaderResolver;
+    private final CompanionResolver<TC, ? extends Loader<TC>> loaderResolver;
 
     @NotNull
-    private final CompanionResolver<TC, ComponentConnector<TC>> connectorResolver;
+    private final CompanionResolver<TC, ? extends ComponentConnector<TC>> connectorResolver;
 
     public DeclarativeComponentNodeFactory(
             @NotNull GenericFactory<TC, Void> factory,
-            @NotNull CompanionResolver<TC, Loader<TC>> loaderResolver,
-            @NotNull CompanionResolver<TC, ComponentConnector<TC>> connectorResolver) {
+            @NotNull CompanionResolver<TC, ? extends Loader<TC>> loaderResolver,
+            @NotNull CompanionResolver<TC, ? extends ComponentConnector<TC>> connectorResolver) {
         this.factory = factory;
         this.loaderResolver = loaderResolver;
         this.connectorResolver = connectorResolver;

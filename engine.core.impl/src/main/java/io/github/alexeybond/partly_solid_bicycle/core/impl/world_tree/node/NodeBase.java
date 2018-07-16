@@ -4,6 +4,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ChildLogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.TreeContext;
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.annotations.SkipProperty;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class NodeBase implements ChildLogicNode {
@@ -17,6 +18,7 @@ public abstract class NodeBase implements ChildLogicNode {
 
     @NotNull
     @Override
+    @SkipProperty
     public LogicNode getParent() {
         LogicNode parent = this.parent;
         if (null == parent) throw new IllegalStateException();
@@ -67,6 +69,7 @@ public abstract class NodeBase implements ChildLogicNode {
 
     @NotNull
     @Override
+    @SkipProperty
     public TreeContext getTreeContext() {
         return getParent().getTreeContext();
     }
@@ -74,4 +77,9 @@ public abstract class NodeBase implements ChildLogicNode {
     protected abstract void onConnected0(@NotNull LogicNode parent, Id<LogicNode> id);
 
     protected abstract void onDisconnected0(@NotNull LogicNode parent);
+
+    @NotNull
+    @Override
+    @SkipProperty
+    public abstract <T> T getComponent();
 }

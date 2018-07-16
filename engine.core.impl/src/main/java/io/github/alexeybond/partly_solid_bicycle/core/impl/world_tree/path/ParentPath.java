@@ -26,4 +26,9 @@ public class ParentPath implements LogicNodePath {
     public <A> LogicNode lookupOrAdd(@NotNull LogicNode start, @NotNull NodeFactory<A> factory, A argument) {
         return lookup(start);
     }
+
+    @Override
+    public String toString() {
+        return basePath + "/..";
+    }
 }

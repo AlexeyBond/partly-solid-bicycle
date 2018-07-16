@@ -43,4 +43,10 @@ public interface LogicNodePath {
      */
     @NotNull
     <A> LogicNode lookupOrAdd(@NotNull LogicNode start, @NotNull NodeFactory<A> factory, A argument);
+
+    /**
+     * @return text representation of this path
+     */
+    @Override
+    String toString();
 }

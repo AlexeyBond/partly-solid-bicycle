@@ -5,7 +5,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.OutputData
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.generateRead
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ProcessingContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.operations.PropertyOperationGenerator
-import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.properties.PropertyInfo
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.reflection.PropertyInfo
 
 class PropertySaveGenerator : PropertyOperationGenerator {
     override fun generateOperation(

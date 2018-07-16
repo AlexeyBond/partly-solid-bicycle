@@ -2,7 +2,9 @@ package io.github.alexeybond.partly_solid_bicycle.test.annotation_processing;
 
 import generated.io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.*;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.data.dynamic.DynamicNode;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.InputDataObject;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.data.exceptions.UndefinedFieldException;
+import io.github.alexeybond.partly_solid_bicycle.test.annotation_processing.test_utils.TestUtils;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -150,5 +152,16 @@ public class LoaderCompanionTest {
 
         assertEquals("hello, kotlin", component.getProp1());
         assertEquals(Collections.singletonList("hello"), component.getProp2());
+    }
+
+    @Test
+    public void doTestRenamedProperty() {
+        InputDataObject in = TestUtils.parseJSON("{\"\\\"--the-value--\":lol}");
+
+        Component11$_impl component = new Component11$_impl();
+
+        Component11_loader.RESOLVER.resolve(component).load(component, in);
+
+        assertEquals("lol", component.value);
     }
 }

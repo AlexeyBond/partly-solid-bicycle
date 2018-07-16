@@ -5,3 +5,5 @@ io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operations.LoadLi
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operations.PropertySaveGenerator
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operations.SaveBasicGenerator
 io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operations.SaveListGenerator
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operations.LoadNodePathGenerator
+io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operations.SaveNodePathGenerator
