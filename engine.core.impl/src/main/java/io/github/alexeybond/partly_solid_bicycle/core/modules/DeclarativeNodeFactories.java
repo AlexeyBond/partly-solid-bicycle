@@ -46,7 +46,7 @@ public class DeclarativeNodeFactories extends BaseModule {
                 Object kind = args[0];
 
                 CompositeNodeFactory<InputDataObject, String> factory
-                        = new CompositeDeclarativeNodeFactory("class");
+                        = new CompositeDeclarativeNodeFactory("class", String.valueOf(kind));
 
                 IdSet<LogicNode> idSet = IoC.resolve("id set for node kind", kind);
 

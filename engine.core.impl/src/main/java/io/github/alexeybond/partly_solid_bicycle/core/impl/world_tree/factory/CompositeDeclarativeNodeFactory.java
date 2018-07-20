@@ -8,12 +8,13 @@ public class CompositeDeclarativeNodeFactory extends CompositeNodeFactoryImpl<In
     private final @NotNull
     String typeField;
 
-    public CompositeDeclarativeNodeFactory(@NotNull String typeField) {
+    public CompositeDeclarativeNodeFactory(@NotNull String typeField, @NotNull String kind) {
+        super(kind);
         this.typeField = typeField;
     }
 
-    public CompositeDeclarativeNodeFactory() {
-        this("class");
+    public CompositeDeclarativeNodeFactory(@NotNull String kind) {
+        this("class", kind);
     }
 
     @NotNull

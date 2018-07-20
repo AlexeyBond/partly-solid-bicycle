@@ -80,6 +80,9 @@ public class StorageNode extends GroupNode {
     @NotNull
     private ObjectVariable<InputDataObject> variable;
 
+    @NotNull
+    private NodeFactory<InputDataObject> childFactory;
+
     public StorageNode(@NotNull final InputDataObject initialValue) {
         this(initialValue, new DefaultObjectVariable<InputDataObject>(0));
     }
@@ -112,6 +115,7 @@ public class StorageNode extends GroupNode {
 
         this.variable = variable;
         this.variable.set(new DataStorageView(this));
+        this.childFactory = childFactory;
     }
 
     @NotNull
@@ -119,5 +123,9 @@ public class StorageNode extends GroupNode {
     @SuppressWarnings({"unchecked"})
     public <T> T getComponent() throws NoSuchElementException {
         return (T) variable;
+    }
+
+    protected void loadDefaults(InputDataObject data) {
+        populate(new DeclarativePopulator(childFactory, data));
     }
 }

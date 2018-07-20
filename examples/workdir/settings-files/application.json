@@ -1,0 +1,11 @@
+{
+  "settings": {
+    "class": "fileStorage",
+    "filePath": "settings-files/currentSettings.json",
+    "defaultFilePath": "settings-files/defaultSettings.json",
+    "defaults": {
+      "test.key_1": "foo",
+      "test.key_2": "foo"
+    }
+  }
+}

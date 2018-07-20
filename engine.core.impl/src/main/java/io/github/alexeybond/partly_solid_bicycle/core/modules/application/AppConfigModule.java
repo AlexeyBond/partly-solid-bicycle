@@ -19,6 +19,7 @@ public class AppConfigModule extends BaseModule {
         provide("application_config");
 
         depend("application_root");
+        depend("core_components");
     }
 
     private static final String DEFAULT_PATH = "application.json";

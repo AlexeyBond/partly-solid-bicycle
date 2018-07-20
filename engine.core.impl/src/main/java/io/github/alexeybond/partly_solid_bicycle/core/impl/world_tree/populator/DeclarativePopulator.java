@@ -52,6 +52,10 @@ public class DeclarativePopulator implements NodePopulator {
             }
 
             @Override
+            public void visitNull() {
+            }
+
+            @Override
             protected void visitAnyValue(Object value) {
                 fail();
             }

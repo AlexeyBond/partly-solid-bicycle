@@ -13,7 +13,15 @@ import java.util.Map;
 public abstract class CompositeNodeFactoryImpl<A, K>
         extends NodeFactoryAdapter<A>
         implements CompositeNodeFactory<A, K> {
+    @NotNull
+    private final String kind;
+
+    @NotNull
     private final Map<K, NodeFactory<A>> map = new HashMap<K, NodeFactory<A>>();
+
+    protected CompositeNodeFactoryImpl(@NotNull String kind) {
+        this.kind = kind;
+    }
 
     protected abstract @NotNull
     K getKey(@Nullable A arg);
@@ -28,7 +36,7 @@ public abstract class CompositeNodeFactoryImpl<A, K>
             return factory.create(arg);
         } catch (NullPointerException e) {
             if (null == factory) {
-                throw new IllegalArgumentException("Illegal key: " + key);
+                throw new IllegalArgumentException("Illegal " + kind + " node type: " + key);
             }
             throw e;
         }
