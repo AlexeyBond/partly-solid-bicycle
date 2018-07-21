@@ -14,7 +14,9 @@ public interface Schedule {
     void init(@NotNull ScheduleCallback callback);
 
     /**
-     * Initialize new scheduler entry.
+     * Called after the scheduler entry was triggered.
+     * <p>
+     * Schedule may cancel the entry or reschedule it.
      * <p>
      * No calls to {@code callback} methods will cause undefined behavior.
      * Interaction with {@code callback} after return will cause undefined behavior.

@@ -2,18 +2,18 @@ package io.github.alexeybond.partly_solid_bicycle.core.impl.app.systems.schedule
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.systems.scheduler.Schedule;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.systems.scheduler.Scheduler;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.event.Topic;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.app.systems.scheduler.SchedulerEntry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.PriorityQueue;
 
 public class DefaultScheduler implements Scheduler {
-    private final PriorityQueue<SchedulerEntry> queue = new PriorityQueue<SchedulerEntry>();
+    private final PriorityQueue<SchedulerEntryImpl> queue = new PriorityQueue<SchedulerEntryImpl>();
 
     @NotNull
     @Override
-    public Topic<Void> schedule(@NotNull Schedule schedule) {
-        return new SchedulerEntry(queue, schedule).getTopic();
+    public SchedulerEntry schedule(@NotNull Schedule schedule) {
+        return new SchedulerEntryImpl(queue, schedule);
     }
 
     public void executeUntil(final double time) {
