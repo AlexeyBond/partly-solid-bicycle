@@ -1,0 +1,44 @@
+{
+  "entities": [
+    {
+      "components": {
+        "tag": { "tag": "input" },
+        "resetButton": {
+          "type": "controller-button",
+          "button": 7,
+          "output": "resetAdaptiveAxes"
+        },
+        "axisX": {
+          "type": "controller-axis-adaptive",
+          "axis": 1,
+          "output": "axisX"
+        },
+        "axisY": {
+          "type": "controller-axis-adaptive",
+          "axis": 0,
+          "output": "axisY"
+        },
+        "button0": {
+          "type": "controller-button",
+          "button": 0,
+          "output": "button0"
+        },
+        "button1": {
+          "type": "controller-button",
+          "button": 1,
+          "output": "button1"
+        },
+        "button2": {
+          "type": "controller-button",
+          "button": 2,
+          "output": "button2"
+        },
+        "button3": {
+          "type": "controller-button",
+          "button": 3,
+          "output": "button3"
+        }
+      }
+    }
+  ]
+}

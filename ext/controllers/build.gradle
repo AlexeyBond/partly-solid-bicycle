@@ -1,0 +1,16 @@
+apply plugin: "java"
+
+sourceCompatibility = 1.6
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets.main.java.srcDirs = [ "src/" ]
+
+dependencies {
+    compile project(":engine_core")
+    compile group: 'com.badlogicgames.gdx', name: 'gdx-controllers', version: '1.9.8'
+}
+
+eclipse.project {
+    name = "controllers"
+}
+

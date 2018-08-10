@@ -5,6 +5,7 @@ include '3rd_party:spriter'
 
 include 'ext:spriter_animation'
 include 'ext:destruction'
+include 'ext:controllers'
 
 include 'demo:demo_core'
 include 'demo:desktop'

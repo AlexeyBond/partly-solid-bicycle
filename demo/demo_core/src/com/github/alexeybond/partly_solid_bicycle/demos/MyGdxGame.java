@@ -5,6 +5,7 @@ import com.github.alexeybond.partly_solid_bicycle.ext.destruction.modules.Destro
 import com.github.alexeybond.partly_solid_bicycle.ext.destruction.modules.DestructibleComponentModule;
 import com.github.alexeybond.partly_solid_bicycle.ioc.modules.Modules;
 import com.github.alexeybond.partly_solid_bicycle.demos.test_game.InitialScreenModule;
+import main.java.com.github.alexeybond.partly_solid_bicycle.ext.controllers.ControllersModule;
 
 public class MyGdxGame extends GameApplication {
     @Override
@@ -13,6 +14,8 @@ public class MyGdxGame extends GameApplication {
 
         modules.add(new DestroyersPoolModule());
         modules.add(new DestructibleComponentModule());
+
+        modules.add(new ControllersModule());
 
         modules.add(new InitialScreenModule());
 

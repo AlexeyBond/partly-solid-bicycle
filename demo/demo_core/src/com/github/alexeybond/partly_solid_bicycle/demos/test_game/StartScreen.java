@@ -12,6 +12,7 @@ import com.github.alexeybond.partly_solid_bicycle.application.Layer;
 import com.github.alexeybond.partly_solid_bicycle.application.Screen;
 import com.github.alexeybond.partly_solid_bicycle.application.impl.DefaultScreen;
 import com.github.alexeybond.partly_solid_bicycle.application.impl.layers.StageLayer;
+import com.github.alexeybond.partly_solid_bicycle.demos.test_game.test5.Test5Screen;
 import com.github.alexeybond.partly_solid_bicycle.drawing.Drawable;
 import com.github.alexeybond.partly_solid_bicycle.drawing.DrawingContext;
 import com.github.alexeybond.partly_solid_bicycle.drawing.Technique;
@@ -71,6 +72,14 @@ public class StartScreen extends DefaultScreen {
             }
         });
 
+        TextButton textButton5 = new TextButton("CONTROLLER", skin);
+        textButton5.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                next(new Test5Screen());
+            }
+        });
+
         TextButton textButton3 = new TextButton("EXIT", skin);
         textButton3.addListener(new ChangeListener() {
             @Override
@@ -85,6 +94,7 @@ public class StartScreen extends DefaultScreen {
         group.addActor(textButton2);
         group.addActor(textButton25);
         group.addActor(textButton26);
+        group.addActor(textButton5);
         group.addActor(textButton3);
 
         group.setFillParent(true);

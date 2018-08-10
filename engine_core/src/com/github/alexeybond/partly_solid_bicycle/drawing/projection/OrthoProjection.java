@@ -30,7 +30,7 @@ public enum OrthoProjection implements ProjectionMode {
         public void setup(Matrix4 projectionMatrix, float targetWidth, float targetHeight) {
             float hw = 0.5f * targetWidth;
             float hh = 0.5f * targetHeight;
-            projectionMatrix.setToOrtho2D(-hw,-hh,hw,hh);
+            projectionMatrix.setToOrtho2D(-hw,-hh,targetWidth,targetHeight);
         }
     }
 }

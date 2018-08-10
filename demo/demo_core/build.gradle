@@ -4,6 +4,7 @@ dependencies {
     compile project(":engine_core")
     compile project(":ext:spriter_animation")
     compile project(":ext:destruction")
+    compile project(":ext:controllers")
 }
 
 sourceCompatibility = 1.6
