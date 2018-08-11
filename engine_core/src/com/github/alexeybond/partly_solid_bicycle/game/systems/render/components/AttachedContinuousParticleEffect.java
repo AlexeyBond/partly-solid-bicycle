@@ -1,10 +1,12 @@
 package com.github.alexeybond.partly_solid_bicycle.game.systems.render.components;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 import com.github.alexeybond.partly_solid_bicycle.drawing.DrawingContext;
 import com.github.alexeybond.partly_solid_bicycle.game.Component;
 import com.github.alexeybond.partly_solid_bicycle.game.Entity;
@@ -19,7 +21,7 @@ import com.github.alexeybond.partly_solid_bicycle.util.event.props.FloatProperty
  */
 public class AttachedContinuousParticleEffect
         extends BaseRenderComponent implements EventListener<BooleanProperty> {
-    private final ParticleEffectPool effectPool;
+    private final Pool<ParticleEffectPool.PooledEffect> effectPool;
     private final Vector2 relativePos;
     private final float relativeRotation;
     private final String enablePropertyName;
