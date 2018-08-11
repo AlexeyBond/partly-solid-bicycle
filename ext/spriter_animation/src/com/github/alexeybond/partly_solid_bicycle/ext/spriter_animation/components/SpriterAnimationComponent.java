@@ -84,11 +84,11 @@ public class SpriterAnimationComponent implements RenderComponent {
             lastUpdTime = time;
         }
 
-        player.update();
 
         Vector2 pos = tmp.set(offset).rotate(rotationProp.get()).add(positionProp.ref());
         player.setPosition(pos.x, pos.y);
         player.setAngle(rotationProp.get() + angle);
+        player.update();
         drawer.draw(player, context.state());
     }
 
