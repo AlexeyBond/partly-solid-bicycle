@@ -72,7 +72,7 @@ public class SimpleTemplateDataObject implements InputDataObject {
         } catch (UndefinedFieldException e) {
             return new SimpleTemplateDataObject(value, arguments);
         } catch (InvalidInputDataTypeException e) {
-            return value;
+            return new SimpleTemplateDataObject(value, arguments);
         }
 
         String argName = argNameDO.getString();
