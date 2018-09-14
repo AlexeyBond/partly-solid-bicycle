@@ -1,0 +1,30 @@
+{
+  "resourceManagers": {
+    "class": "group",
+    "items": {
+      "textures": {
+        "class": "textureManager"
+      },
+      "sounds": {
+        "class": "soundManager"
+      }
+    }
+  },
+  "resources": {
+    "class": "resourceManager",
+    "typeManagersRoot": "../resourceManagers"
+  },
+  "screens": {
+    "class": "group",
+    "items": {
+      "initial": {
+        "class": "defaultScreen",
+        "events": {},
+        "screen": {
+          "class": "resoursish screen",
+          "image": "/config/resources/textures/resource-manager.test-image"
+        }
+      }
+    }
+  }
+}

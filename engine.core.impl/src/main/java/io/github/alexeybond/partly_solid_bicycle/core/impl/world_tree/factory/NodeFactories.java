@@ -4,7 +4,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.child_reso
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.connector.NullConnector;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node.ComponentNode;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node.GroupNode;
-import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node.NullNode;
+import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node.NullChildNode;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.populator.NullPopulator;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.ChildLogicNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
@@ -16,7 +16,7 @@ public enum NodeFactories implements NodeFactory<Object> {
         @NotNull
         @Override
         public ChildLogicNode create(@Nullable Object arg) {
-            return new NullNode();
+            return new NullChildNode();
         }
     },
 

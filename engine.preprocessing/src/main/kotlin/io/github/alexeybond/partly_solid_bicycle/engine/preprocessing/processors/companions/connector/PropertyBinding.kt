@@ -5,6 +5,7 @@ import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.*
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.context.ItemContext
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.processor.ItemProcessor
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.reflection.PropertyInfo
+import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.operations.makeLocalName
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.connector.util.BindMode
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.processors.companions.connector.util.bindModes
 import javax.lang.model.type.TypeKind
@@ -59,8 +60,7 @@ class PropertyBinding : ItemProcessor {
 
         val expression = mode.process(componentContext, propertyInfo.metadata, propertyInfo)
 
-        val fullExpression = if (isNodeBinding) expression else
-            "$expression.getComponent()"
+        val componentLocalName = makeLocalName("component");
 
         val connectorContext: ItemContext = componentContext["companion:connector"]
 
@@ -70,7 +70,14 @@ class PropertyBinding : ItemProcessor {
                 connectorContext["codeMutations:method:onDisconnected"]
 
         connectMut.add(ORDER) {
-            add("${propertyInfo.generateAssignment("component", fullExpression)}\n")
+            if (!isNodeBinding) {
+                add("\$T ${componentLocalName} = $expression.getComponent();\n",
+                        propertyInfo.type)
+            }
+            add("${propertyInfo.generateAssignment(
+                    "component",
+                    if (isNodeBinding) expression else componentLocalName
+            )}\n")
         }
 
         disconnectMut.add(ORDER.opposite) {

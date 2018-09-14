@@ -15,9 +15,22 @@ import javax.tools.Diagnostic
 @SupportedAnnotationTypes("*")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 class AnnotationProcessorImpl : AbstractProcessor() {
-    private val itemProcessors = ServiceLoader.load(ItemProcessor::class.java, javaClass.classLoader)
-            .sortedBy { it.priority }
+    private val itemProcessors: List<ItemProcessor>
     private var roundCounter = 0
+
+    init {
+        try {
+            itemProcessors = ServiceLoader.load(ItemProcessor::class.java, javaClass.classLoader)
+                    .sortedBy { it.priority }
+        } catch (e: Throwable) {
+            // Java compiler itself is not verbose enough in this case
+            System.err.println("Fatal error in annotation processor initializer: $e")
+            // Gradle daemons are really the goddamn daemons...
+            System.err.println("THIS MIGHT BE CAUSED BY PREPROCESSING CODE CHANGES WITH RUNNING GRADLE DAEMON")
+            e.printStackTrace(System.err)
+            throw e
+        }
+    }
 
     private fun doProcessRound(roundEnv: RoundEnvironment) {
         val pContext = ProcessingContextImpl(processingEnv, itemProcessors)

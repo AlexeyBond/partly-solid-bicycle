@@ -13,7 +13,7 @@ import io.github.alexeybond.partly_solid_bicycle.core.modules.ioc.NonThreadSafeI
 import io.github.alexeybond.partly_solid_bicycle.core.modules.ioc.SingleApplicationIoCHolderModule
 import java.io.FileInputStream
 
-fun launchApp(app: (List<String>) -> ApplicationListener) {
+fun launchApp(app: (List<String>) -> ApplicationListener): LwjglApplication {
     val conf = FileInputStream("lwjgl.json").use {
         Json().fromJson(LwjglApplicationConfiguration::class.java, it)
     }
@@ -22,7 +22,7 @@ fun launchApp(app: (List<String>) -> ApplicationListener) {
 
     val listener = app(environmentFlags)
 
-    LwjglApplication(listener, conf)
+    return LwjglApplication(listener, conf)
 }
 
 fun moduleSet(env: List<String>, ini: ModuleSetBuilder.() -> Unit): ModuleSetBuilder {

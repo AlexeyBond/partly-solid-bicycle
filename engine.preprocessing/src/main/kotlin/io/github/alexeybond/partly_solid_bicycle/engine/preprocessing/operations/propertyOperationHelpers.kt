@@ -6,10 +6,14 @@ import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces
 import io.github.alexeybond.partly_solid_bicycle.engine.preprocessing.interfaces.reflection.PropertyInfo
 import java.util.*
 
+private val LV_COUNTER_MASK = 0xFFFFFFF;
 private var lvCounter = 0
 
 fun makeLocalName(prefix: String): String {
-    return "$prefix${lvCounter++}"
+    // Avoid negative values when amount of local variables causes
+    // lvCounter overflow (why not?)
+    lvCounter = LV_COUNTER_MASK and (lvCounter + 1);
+    return "$prefix${lvCounter}"
 }
 
 object RootOperationGenerator : PropertyOperationGenerator {

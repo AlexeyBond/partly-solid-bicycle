@@ -43,8 +43,10 @@ public interface LogicNode extends Visitable<NodeVisitor> {
 
     /**
      * Populate this node with child nodes provided by given populator.
+     *
+     * @throws UnsupportedOperationException if this node doesn't support child population
      */
-    void populate(@NotNull NodePopulator populator);
+    void populate(@NotNull NodePopulator populator) throws UnsupportedOperationException;
 
     /**
      * Remove child with given id.

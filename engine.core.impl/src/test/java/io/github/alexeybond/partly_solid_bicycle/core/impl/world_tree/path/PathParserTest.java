@@ -2,7 +2,7 @@ package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.path;
 
 import io.github.alexeybond.partly_solid_bicycle.core.impl.test_utils.TestUtils;
 import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.factory.NodeFactories;
-import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node.NullNode;
+import io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node.NullChildNode;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.IdSet;
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
 import org.junit.Before;
@@ -88,7 +88,7 @@ public class PathParserTest {
         LogicNode res = PathParser.parseString("0").lookupOrAdd(nodeB, NodeFactories.NULL, null);
 
         assertSame(nodeB, res.getParent());
-        assertTrue(res instanceof NullNode);
+        assertTrue(res instanceof NullChildNode);
     }
 
     @Test

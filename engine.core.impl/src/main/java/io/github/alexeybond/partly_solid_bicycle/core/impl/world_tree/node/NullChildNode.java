@@ -1,18 +1,25 @@
 package io.github.alexeybond.partly_solid_bicycle.core.impl.world_tree.node;
 
 import io.github.alexeybond.partly_solid_bicycle.core.interfaces.common.id.Id;
-import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.*;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.LogicNode;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeFactory;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodePopulator;
+import io.github.alexeybond.partly_solid_bicycle.core.interfaces.world_tree.NodeVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.NoSuchElementException;
 
-/**
- * Warning: Some methods of this class violate {@link LogicNode} contract
- * use with caution
- */
-public enum NullNode implements LogicNode {
-    INSTANCE;
+public class NullChildNode extends NodeBase {
+    @Override
+    protected void onConnected0(@NotNull LogicNode parent, Id<LogicNode> id) {
+
+    }
+
+    @Override
+    protected void onDisconnected0(@NotNull LogicNode parent) {
+
+    }
 
     @NotNull
     @Override
@@ -25,8 +32,7 @@ public enum NullNode implements LogicNode {
     public <A> LogicNode getOrAdd(
             @NotNull Id<LogicNode> id,
             @NotNull NodeFactory<A> factory,
-            @Nullable A arg
-    ) throws RuntimeException, UnsupportedOperationException {
+            @Nullable A arg) throws RuntimeException, UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
@@ -36,19 +42,15 @@ public enum NullNode implements LogicNode {
     }
 
     @Override
-    public void remove(@NotNull Id<LogicNode> id) throws IllegalStateException {
+    public void remove(@NotNull Id<LogicNode> id)
+            throws UnsupportedOperationException, IllegalStateException {
 
     }
 
     @Override
-    public void remove(@NotNull LogicNode child) throws IllegalStateException, IllegalArgumentException {
-        throw new IllegalArgumentException();
-    }
+    public void remove(@NotNull LogicNode child)
+            throws UnsupportedOperationException, IllegalStateException, IllegalArgumentException {
 
-    @NotNull
-    @Override
-    public LogicNode getParent() {
-        return this;
     }
 
     @NotNull
@@ -57,13 +59,8 @@ public enum NullNode implements LogicNode {
         throw new NoSuchElementException();
     }
 
-    @NotNull
-    @Override
-    public TreeContext getTreeContext() {
-        return null;
-    }
-
     @Override
     public void accept(@NotNull NodeVisitor visitor) {
+
     }
 }
